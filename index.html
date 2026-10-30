@@ -983,8 +983,8 @@ function addInterior(b,cx,zb){
   scene.background=new THREE.Color(0xf1ede6)}
 function oakMat(){return rmats.legOak||(rmats.legOak=roomMat('oakLeg',oakCanvas,0.3,{roughness:.5},3))}
 /* eye-level product framing for the interior */
-function renderCam(){const b=bbox(),c=new THREE.Vector3((b.x0+b.x1)/2*MM+0.35,Math.min(1.05,(b.y1*MM)*0.62+0.25),(b.z0+b.z1)/2*MM);const R=Math.max(1.6,radius()*2.6);
-  controls.target.copy(c);camera.position.set(c.x-R*0.28,c.y+0.12,c.z+R);controls.update();camDirty=true;lastMove=performance.now()}
+function renderCam(){const b=bbox(),x0=b.x0*MM,x1=b.x1*MM,top=b.y1*MM,H=Math.max(1.95,top+0.35),tv=Math.tan(camera.fov*Math.PI/360),th=tv*camera.aspect,W=(x1-x0)+1.75;
+  const d=Math.max((W/2)/th,(H/2)/tv)*1.08,c=new THREE.Vector3((x0-0.3+x1+1.45)/2,H/2-0.05,(b.z0+b.z1)/2*MM);controls.target.copy(c);camera.position.set(c.x-d*0.22,c.y+0.05,c.z+d);controls.update();camDirty=true;lastMove=performance.now()}
 
 function buildRoom(){room.children.slice().forEach(c=>{room.remove(c);c.traverse(o=>{if(o.geometry)o.geometry.dispose()})});const b=bbox(),cx=(b.x0+b.x1)/2*MM,zb=b.z0*MM-0.003;
   if(state.env==='wall'){addInterior(b,cx,zb);ptSceneDirty=true;return}
