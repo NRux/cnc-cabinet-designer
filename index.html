@@ -466,7 +466,7 @@ function makeGeo(p){const s=[p.w*MM,p.h*MM,p.d*MM],g=new THREE.BoxGeometry(s[0],
   const idx=g.index.array,fA=[],eA=[];for(let f=0;f<6;f++){const dst=(f>>1)===ti?fA:eA;for(let k=0;k<6;k++)dst.push(idx[f*6+k])}
   g.setIndex([...fA,...eA]);g.addGroup(0,fA.length,0);g.addGroup(fA.length,eA.length,1);return g}
 const isSel=id=>selIds().includes(id);
-function edgeMat(id){return isSel(id)?edgeMatSel:id===hoverId?edgeMatHov:edgeMatAll}
+function edgeMat(id){return isSel(id)&&!(state.sub&&state.sub.id===id)?edgeMatSel:id===hoverId?edgeMatHov:edgeMatAll}
 /* pockets (offset regions pushed in) are cut with boolean subtraction */
 let CSG=null,csgEval=null,fidN=1;
 import('three-bvh-csg').then(mod=>{CSG=mod;csgEval=new mod.Evaluator();csgEval.attributes=['position','uv','normal'];csgEval.useGroups=true;state.panels.forEach(p=>{if((p.feat||[]).some(f=>f.depth>0))buildMesh(p)})}).catch(e=>console.warn('CSG недоступен',e));
@@ -499,7 +499,7 @@ function gripTex(hot){const c=document.createElement('canvas');c.width=c.height=
   g.fillStyle=hot?'#fff':'#111';g.beginPath();g.arc(48,48,7,0,7);g.fill();const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
 const gripMat=new THREE.SpriteMaterial({map:gripTex(false),depthTest:false,sizeAttenuation:false}),gripHot=new THREE.SpriteMaterial({map:gripTex(true),depthTest:false,sizeAttenuation:false});
 const handles=[];for(let i=0;i<6;i++){const h=new THREE.Sprite(gripMat);h.renderOrder=10;h.visible=false;h.scale.set(.03,.03,1);scene.add(h);handles.push(h)}
-function placeHandles(){const p=selP();handles.forEach(h=>h.visible=false);if(!p||view!=='build'||selIds().length>1||!['select','push'].includes(state.tool)||op)return;let i=0;
+function placeHandles(){const p=selP();handles.forEach(h=>h.visible=false);if(!p||view!=='build'||state.sub||selIds().length>1||!['select','push'].includes(state.tool)||op)return;let i=0;
   AX.forEach(a=>{if(a===p.t)return;[-1,1].forEach(dir=>{const h=handles[i++];const c=[p.x+p.w/2,p.y+p.h/2,p.z+p.d/2];const ai=AX.indexOf(a);c[ai]+=dir*p[SZ[a]]/2;h.position.set(c[0]*MM,c[1]*MM,c[2]*MM);h.userData={axis:a,dir};h.visible=true})})}
 
 /* ---------- overlays: face highlight, rubber band, rectangle preview ---------- */
@@ -508,8 +508,10 @@ const faceHL2=faceHL.clone();faceHL2.material=faceHL.material.clone();faceHL2.ma
 function showFace(m,p,a,sign){if(!p){m.visible=false;return}const k=SZ[a],c=[p.x+p.w/2,p.y+p.h/2,p.z+p.d/2],ai=AX.indexOf(a);c[ai]=sign>0?p[a]+p[k]:p[a];m.position.set(c[0]*MM,c[1]*MM,c[2]*MM);
   const [u,v]=AX.filter(q=>q!==a);m.rotation.set(0,0,0);if(a==='x')m.rotation.y=Math.PI/2;else if(a==='y')m.rotation.x=-Math.PI/2;
   m.scale.set((a==='x'?p.d:p.w)*MM,(a==='y'?p.d:p.h)*MM,1);m.visible=view==='build'}
-const subHL=faceHL.clone();subHL.material=faceHL.material.clone();subHL.material.opacity=.32;scene.add(subHL);
-const subLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x1f5fe0,depthTest:false,transparent:true}));subLine.renderOrder=13;subLine.visible=false;scene.add(subLine);
+const subHL=faceHL.clone();subHL.material=faceHL.material.clone();subHL.material.color.set(0xff6a00);subHL.material.opacity=.28;scene.add(subHL);
+const subLine=new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,10),new THREE.MeshBasicMaterial({color:0xff6a00,depthTest:false,transparent:true}));subLine.renderOrder=13;subLine.visible=false;scene.add(subLine);
+const subEnds=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),subLine.material);m.renderOrder=13;m.visible=false;scene.add(m);return m});
+function thickLine(A,B){const d=B.clone().sub(A),L=d.length(),mid=A.clone().add(B).multiplyScalar(.5),r=camera.position.distanceTo(mid)*0.0028;subLine.scale.set(r,L,r);subLine.position.copy(mid);subLine.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());subLine.visible=true;[A,B].forEach((v,i)=>{subEnds[i].position.copy(v);subEnds[i].scale.setScalar(r*1.9);subEnds[i].visible=true})}
 const offLine=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x1f5fe0,depthTest:false,transparent:true}));offLine.renderOrder=13;offLine.visible=false;scene.add(offLine);
 const guideG=new THREE.Group();scene.add(guideG);const guideMat=new THREE.LineDashedMaterial({color:0x3c3c42,dashSize:.025,gapSize:.015});
 const guidePrev=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),guideMat.clone());guidePrev.material.color.set(0x1f5fe0);guidePrev.visible=false;scene.add(guidePrev);
@@ -517,12 +519,12 @@ function buildGuides(){guideG.children.slice().forEach(c=>{guideG.remove(c);c.ge
 function rectPts(p,a,s,r,dep){const [u,v]=AX.filter(q=>q!==a),k=SZ[a],F=(s>0?p[a]+p[k]:p[a])-s*(dep||0)+s*0.3;const P=(uu,vv)=>{const o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[a]=F;return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)};return[P(r.u0,r.v0),P(r.u1,r.v0),P(r.u1,r.v1),P(r.u0,r.v1)]}
 function showRegion(m,p,a,s,r,dep){const [u,v]=AX.filter(q=>q!==a),k=SZ[a],c={};c[u]=p[u]+(r.u0+r.u1)/2;c[v]=p[v]+(r.v0+r.v1)/2;c[a]=(s>0?p[a]+p[k]:p[a])-s*(dep||0)+s*0.3;m.position.set(c.x*MM,c.y*MM,c.z*MM);
   m.rotation.set(0,0,0);if(a==='x')m.rotation.y=Math.PI/2;else if(a==='y')m.rotation.x=-Math.PI/2;const ex={};ex[u]=r.u1-r.u0;ex[v]=r.v1-r.v0;m.scale.set((a==='x'?ex.z:ex.x)*MM,(a==='y'?ex.z:ex.y)*MM,1);m.visible=view==='build'}
-function showSub(){const S=state.sub;subHL.visible=subLine.visible=false;if(!S||view!=='build')return;const p=panelById(S.id);if(!p){state.sub=null;return}
+function showSub(){const S=state.sub;subHL.visible=subLine.visible=subEnds[0].visible=subEnds[1].visible=false;if(!S||view!=='build')return;const p=panelById(S.id);if(!p){state.sub=null;return}
   if(S.kind==='face'){const {Su,Sv}=faceRect(p,S.a);showRegion(subHL,p,S.a,S.s,{u0:0,u1:Su,v0:0,v1:Sv},0)}
   else if(S.kind==='region'){const f=featById(p,S.fid);if(!f){state.sub=null;return}showRegion(subHL,p,f.a,f.s,f,Math.min(f.depth,p[SZ[f.a]]-0.6))}
-  else if(S.kind==='edge'){const C=corners(p);setLine(subLine,C[S.i],C[S.j])}
-  else if(S.kind==='redge'){const f=featById(p,S.fid);if(!f){state.sub=null;return}const [A,B]=redgePts(p,f,S.side,true);setLine(subLine,A,B)}}
-function setSub(S){state.sub=S;if(S&&!isSel(S.id))setSel(S.id);showSub();renderHint();renderInsp()}
+  else if(S.kind==='edge'){const C=corners(p);thickLine(C[S.i],C[S.j])}
+  else if(S.kind==='redge'){const f=featById(p,S.fid);if(!f){state.sub=null;return}const [A,B]=redgePts(p,f,S.side,true);thickLine(A,B)}}
+function setSub(S){state.sub=S;if(S&&!isSel(S.id))setSel(S.id);refreshEdges();placeHandles();showSub();renderHint();renderInsp()}
 const rubber=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x111111,depthTest:false,transparent:true}));rubber.renderOrder=11;rubber.visible=false;scene.add(rubber);
 const axisGuide=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineDashedMaterial({color:0xd2342c,dashSize:.02,gapSize:.012,depthTest:false,transparent:true}));axisGuide.renderOrder=11;axisGuide.visible=false;scene.add(axisGuide);
 const rectPrev=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0x1f5fe0,transparent:true,opacity:.18,depthWrite:false}));rectPrev.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1,1,1)),edgeMatSel));rectPrev.visible=false;scene.add(rectPrev);
@@ -573,7 +575,7 @@ const loc=(p,pt)=>({x:pt.x*1000-p.x,y:pt.y*1000-p.y,z:pt.z*1000-p.z});
 function pickFace(h){const p=panelById(h.object.userData.id),n=h.face.normal,a=domAxis(n),s=Math.sign(n.getComponent(AX.indexOf(a))),L=loc(p,h.point);
   for(const f of p.feat||[]){const [u,v]=AX.filter(q=>q!==f.a);if(L[u]>=f.u0-0.6&&L[u]<=f.u1+0.6&&L[v]>=f.v0-0.6&&L[v]<=f.v1+0.6){const T=p[SZ[f.a]],dd=((f.s>0?T:0)-L[f.a])*f.s;if(dd>=-0.6&&dd<=Math.min(f.depth,T)+0.6)return{p,a:f.a,s:f.s,f}}}
   return{p,a,s}}
-function pickEdge(mx,my,p){let best=null,bd=7;const C=corners(p);
+function pickEdge(mx,my,p){let best=null,bd=10;const C=corners(p);
   for(const f of p.feat||[])for(const side of ['u0','u1','v0','v1']){const [A,B]=redgePts(p,f,side);const d=segDistPx(mx,my,A,B);if(d<bd){bd=d;best={kind:'redge',id:p.id,fid:f.id,side}}}
   if(!best)for(const [i,j] of EDGES){const d=segDistPx(mx,my,C[i],C[j]);if(d<bd){bd=d;best={kind:'edge',id:p.id,i,j}}}return best}
 const featById=(p,fid)=>(p.feat||[]).find(f=>f.id===fid);
@@ -630,7 +632,7 @@ function onDown(e){if(view!=='build')return;const [mx,my]=setRay(e);if(e.button!
   if(hh){startResize(selP(),hh.object.userData.axis,hh.object.userData.dir,hh.object.position);return}
   const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;const id=h.object.userData.id;
   if(e.shiftKey){setSel(id,true);grab();drag={type:'none'};return}
-  if(state.sub){state.sub=null;showSub();renderHint()}
+  if(state.sub){state.sub=null;refreshEdges();showSub();renderHint()}
   if(!isSel(id)){setSel(id);return}
   startMove(panelById(id),h.point,e.altKey)}
 let op_last_from=null,tapeEnd=null;
@@ -761,7 +763,7 @@ function applyVCB(txt){txt=txt.trim().replace(/мм|mm/gi,'').trim().replace(/,/
   if(op.type==='tape')return}
 vcbEl.addEventListener('keydown',e=>{if(e.key==='Enter'){applyVCB(vcbEl.value);vcbEl.value='';vcbEl.blur();e.preventDefault()}else if(e.key==='Escape'){vcbEl.value='';vcbEl.blur()}e.stopPropagation()});
 
-function setTool(t){if(op)opCancel();state.tool=t;state.sub=null;showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
+function setTool(t){if(op)opCancel();state.tool=t;state.sub=null;refreshEdges();showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
   controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
 let clip=null;
 function copyP(){const ps=selPanels();if(!ps.length)return;clip=ps.map(p=>({...p}));toast('Скопировано — Ctrl+V')}
