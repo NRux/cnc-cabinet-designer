@@ -811,13 +811,12 @@ async function loadPT(){if(PT||ptState==='fail'||ptState==='loading')return;if(!
   try{PT=await import('three-gpu-pathtracer');pt=new PT.WebGLPathTracer(renderer);pt.filterGlossyFactor=0.6;pt.renderDelay=0;pt.fadeDuration=200;pt.minSamples=1;pt.bounces=7;pt.transmissiveBounces=4;pt.dynamicLowRes=true;pt.lowResScale=0.3;pt.tiles.set(2,2);
     physCam=new PT.PhysicalCamera(34,1,0.02,80);physCam.fStop=6.3;physCam.apertureBlades=7;ptState='ready';ptSceneDirty=true}catch(e){console.warn('Path tracer недоступен',e);ptState='fail'}progress()}
 function skyEnv(){const L=LIGHTS[state.light],key=state.light;if(skyTex&&skyKey===key)return skyTex;if(skyTex)skyTex.dispose();
-  const W=1024,H=512,data=new Float32Array(W*H*4),sd=lightDir(L.az,L.el),sc=new THREE.Color(L.col),cosR=Math.cos(1.4*Math.PI/180),sunL=2600*L.I/1.75,warm=L.el<25;
+  const W=1024,H=512,data=new Float32Array(W*H*4),sd=lightDir(L.az,L.el),sc=new THREE.Color(L.col),cosR=Math.cos(1.4*Math.PI/180),sunL=4200*L.I/1.75,warm=L.el<25;
   for(let y=0;y<H;y++){const el=((y+.5)/H-.5)*Math.PI,ce=Math.cos(el),se=Math.sin(el);for(let x=0;x<W;x++){const ph=((x+.5)/W-.5)*2*Math.PI,dx=ce*Math.cos(ph),dy=se,dz=ce*Math.sin(ph),i=(y*W+x)*4;let r,g,b;
     if(dy>0){const t=Math.pow(dy,.45);r=1.05*(1-t)+0.55*t;g=1.0*(1-t)+0.68*t;b=(warm?0.9:0.95)*(1-t)+0.95*t}else{r=.42;g=.40;b=.37}
     const cd=dx*sd.x+dy*sd.y+dz*sd.z;if(cd>cosR){r=sc.r*sunL;g=sc.g*sunL;b=sc.b*sunL}else if(cd>0){const gl=Math.pow(cd,48)*3;r+=sc.r*gl;g+=sc.g*gl;b+=sc.b*gl}
     data[i]=r;data[i+1]=g;data[i+2]=b;data[i+3]=1}}
   skyTex=new THREE.DataTexture(data,W,H,THREE.RGBAFormat,THREE.FloatType);skyTex.mapping=THREE.EquirectangularReflectionMapping;skyTex.magFilter=skyTex.minFilter=THREE.LinearFilter;skyTex.needsUpdate=true;skyKey=key;return skyTex}
-window.__bureau={get pt(){return pt},get ptState(){return ptState},renderer,camera,scene};
 function syncPhysCam(){physCam.copy(camera);physCam.fStop=6.3;physCam.apertureBlades=7;physCam.focusDistance=camera.position.distanceTo(controls.target);physCam.updateMatrixWorld()}
 /* separate scene for the path tracer: one material per mesh (its merge step maps one material per mesh) */
 const ptScene=new THREE.Scene();
@@ -825,7 +824,7 @@ function buildPTScene(){ptScene.clear();
   state.panels.forEach(p=>{const m=meshes[p.id];if(!m)return;const g=m.geometry;g.groups.forEach(gr=>{const sg=new THREE.BufferGeometry();for(const k in g.attributes)sg.setAttribute(k,g.attributes[k]);sg.setIndex(Array.from(g.index.array.slice(gr.start,gr.start+gr.count)));const mm=new THREE.Mesh(sg,m.material[gr.materialIndex]);mm.position.copy(m.position);ptScene.add(mm)})});
   const rc=room.clone();rc.visible=true;ptScene.add(rc);ptScene.environment=skyEnv();ptScene.background=scene.background;ptScene.updateMatrixWorld(true)}
 function ptFrame(){if(ptState!=='ready'){vizFrame();return}
-  if(ptSceneDirty){buildPTScene();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.82;syncPhysCam();pt.setScene(ptScene,physCam);ptSceneDirty=false;camDirty=false}
+  if(ptSceneDirty){buildPTScene();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.7;syncPhysCam();pt.setScene(ptScene,physCam);ptSceneDirty=false;camDirty=false}
   if(camDirty){syncPhysCam();pt.updateCamera();camDirty=false}
   if(pt.samples<maxPT)pt.renderSample();progress()}
 function ptExit(){renderer.toneMappingExposure=0.95}
