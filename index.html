@@ -106,6 +106,9 @@ td.n{font-family:var(--f-mono);text-align:right}
 .dw text.s{fill:var(--mute);text-anchor:start}
 .dw .gr{stroke:var(--hi);stroke-width:.8;vector-effect:non-scaling-stroke;stroke-dasharray:6 4}
 .dw .pk{fill:rgba(31,95,224,.06);stroke:#1f5fe0;stroke-width:1;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}.dw .pk.thr{fill:rgba(0,0,0,.08);stroke-dasharray:none}
+.dw .np{stroke:#5d6270;stroke-width:.8;vector-effect:non-scaling-stroke;cursor:pointer}.dw .np:hover{stroke:#1f5fe0;stroke-width:2}.dw .ws{fill:url(#hatch);stroke:#c9c9ce;stroke-width:.6;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;cursor:help}
+.dw text.nl{fill:#2a2c33;text-anchor:start;pointer-events:none}.dw text.nd{fill:#2a2c33;pointer-events:none}.dw text.nn{fill:#1d1f26;font-family:var(--f-display);font-weight:700;pointer-events:none}.dw text.wt{fill:#9a9aa0;text-anchor:start;pointer-events:none}
+.ntip{position:absolute;z-index:6;background:#1d1f26;color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.25);min-width:200px}.ntip b{display:block;color:#f3c76b;margin-bottom:6px;font-weight:600}.ntip div{display:flex;justify-content:space-between;gap:14px;color:#c9cad1}.ntip div span:last-child{color:#fff;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .dw .tb{fill:none;stroke:var(--ink);stroke-width:1.2;vector-effect:non-scaling-stroke}
 #exp{overflow:auto;background:var(--bg);padding-block:40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .exw{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
@@ -1112,6 +1115,16 @@ function pack(items,SW,SH,kerf=4,trim=10){const sheets=[],over=[];const W=SW-2*t
       if(!placed){for(const [w,h,rot] of ors){if(s.used+h<=H){const sh={y:s.used,h,x:w+kerf};s.shelves.push(sh);s.parts.push({x:trim,y:trim+sh.y,w,h,rot,no:it.no});s.used+=h+kerf;placed=true;break}}}if(placed)break}
     if(!placed){const [w,h,rot]=ors[0];const s={shelves:[{y:0,h,x:w+kerf}],parts:[{x:trim,y:trim,w,h,rot,no:it.no}],used:h+kerf};sheets.push(s)}}
   sheets.forEach(s=>s.util=s.parts.reduce((a,p)=>a+p.w*p.h,0)/(SW*SH));return{sheets,over}}
+function sheetStats(s,SW,SH,trim=10,kerf=4){const W=SW-2*trim,H=SH-2*trim,waste=[];let cut=0;
+  s.shelves.forEach(sh=>{const ps=s.parts.filter(q=>q.y===trim+sh.y);ps.forEach(q=>{cut+=q.h;if(sh.h-q.h>kerf){waste.push({x:q.x,y:q.y+q.h+kerf,w:q.w,h:sh.h-q.h-kerf});cut+=q.w}});
+    if(W-sh.x>1)waste.push({x:trim+sh.x,y:trim+sh.y,w:W-sh.x,h:sh.h});cut+=W});
+  if(H-s.used>1)waste.push({x:trim,y:trim+s.used,w:W,h:H-s.used});
+  return{waste:waste.map(r=>({...r,w:Math.round(r.w),h:Math.round(r.h)})).filter(r=>r.w>=5&&r.h>=5),cut}}
+function nestSummary(){const groups=nestAll(),parts=partsList();let sheets=0,sheetA=0,partA=0,cut=0,per=0,cnt=0;const waste=new Map();
+  groups.forEach(g=>g.sheets.forEach(sh=>{sheets++;sheetA+=g.SW*g.SH;const st=sh.stats||(sh.stats=sheetStats(sh,g.SW,g.SH));cut+=st.cut;st.waste.forEach(r=>{const a=Math.max(r.w,r.h),b=Math.min(r.w,r.h),k=`${a}×${b}|${g.T}`;waste.set(k,(waste.get(k)||0)+1)});
+    sh.parts.forEach(q=>{partA+=q.w*q.h;per+=2*(q.w+q.h);cnt++})}));
+  return{groups,parts,sheets,sheetA:sheetA/1e6,partA:partA/1e6,wasteA:(sheetA-partA)/1e6,cut:cut/1000,per:per/1000,cnt,util:sheetA?partA/sheetA:0,waste:[...waste.entries()].map(([k,n])=>{const [sz,T]=k.split('|');return{sz,T:+T,n,a:sz.split('×').reduce((x,y)=>x*y,1)}}).sort((a,b)=>b.a-a.a)}}
+const NPAL=['#cdd8f4','#f4d0c9','#d2ecd8','#f3e2bb','#ddd3f3','#cbe6ee','#f2d4e4','#e3e3cd','#d9e8c6','#f0d9c4'];
 function nestAll(){const [SW,SH]=SHEETS[state.sheet],parts=partsList(),groups=new Map();parts.forEach(p=>{const k=p.T+'|'+p.mat;if(!groups.has(k))groups.set(k,{T:p.T,mat:p.mat,items:[]});for(let i=0;i<p.qty;i++)groups.get(k).items.push({L:p.L,W:p.W,no:p.no})});
   return[...groups.values()].map(g=>({...g,...pack(g.items,SW,SH),SW,SH}))}
 
@@ -1147,7 +1160,11 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
   o.push(Tx(0,oy,k*1.6,'Карта раскроя','h'));oy+=k*4;cx=fx;rowH=0;
   nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
     const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW}×${g.SH} · ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
-    s.parts.forEach(p=>{o.push(R(x+p.x,y+p.y,p.w,p.h,'pc'),Tx(x+p.x+p.w/2,y+p.y+p.h/2+k*.35,Math.min(k,p.h*.5),'Д'+p.no))});
+    const st=s.stats||(s.stats=sheetStats(s,g.SW,g.SH));
+    st.waste.forEach(r=>{o.push(`<rect class="ws" x="${f1(x+r.x)}" y="${f1(y+r.y)}" width="${f1(r.w)}" height="${f1(r.h)}" data-t="w|${r.w}|${r.h}|${Math.round(r.x)}|${Math.round(r.y)}|${i+1}|${g.T}"/>`);if(r.w>k*6&&r.h>k*1.6)o.push(`<text class="wt" x="${f1(x+r.x+k*.4)}" y="${f1(y+r.y+k*1.1)}" font-size="${f1(Math.min(k*.75,r.h*.5))}">${r.w}×${r.h}</text>`)});
+    s.parts.forEach(p=>{const X=x+p.x,Y=y+p.y,fs=Math.min(k*.9,p.h*.28,p.w*.12);o.push(`<rect class="np" style="fill:${NPAL[(p.no-1)%NPAL.length]}" x="${f1(X)}" y="${f1(Y)}" width="${f1(p.w)}" height="${f1(p.h)}" data-t="p|${p.no}|${p.w}|${p.h}|${Math.round(p.x)}|${Math.round(p.y)}|${i+1}|${g.T}|${g.mat}"/>`);
+      if(fs>3){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h}</text>`,`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
+      const bs=Math.min(k*2.6,p.h*.45,p.w*.3);if(bs>3)o.push(`<text class="nn" x="${f1(X+p.w/2)}" y="${f1(Y+p.h/2+bs*.35)}" font-size="${f1(bs)}" text-anchor="middle">${p.no}</text>`)});
     cx+=g.SW+G*.6;rowH=Math.max(rowH,g.SH+k*5)});
     g.over.forEach(it=>o.push(Tx(cx,oy+k,k*.9,`Д${it.no} больше листа ${g.SW}×${g.SH}`,'s')))});
   oy+=rowH+G*.4;
@@ -1156,8 +1173,9 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
   o.push(Tx(tx+k,oy+k*2,k*1.3,'artem terekhov ©','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Деталей: ${P.length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Размеры в мм','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
   oy+=th;ex=Math.max(ex,tx+tw);
   const box=[-k*2,-k*3,ex+k*6,oy+k*5];
-  const css=forFile?`<style>.pn,.pc{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}.sh{fill:#efece6;stroke:#222;vector-effect:non-scaling-stroke}.dm line{stroke:#777;stroke-width:.6;vector-effect:non-scaling-stroke}.dm line.tk{stroke:#222;stroke-width:1.1}.gr{stroke:#9a6a3a;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.tb{fill:none;stroke:#222;vector-effect:non-scaling-stroke}text{fill:#222;font-family:IBM Plex Mono,monospace;text-anchor:middle}text.h{font-family:Jost,sans-serif;letter-spacing:.2em;text-anchor:start}text.s{fill:#666;text-anchor:start}</style><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#fff"/>`:'';
-  return{svg:`<svg class="dw" xmlns="http://www.w3.org/2000/svg" viewBox="${box.map(f1).join(' ')}" preserveAspectRatio="xMidYMid meet">${css}${o.join('')}</svg>`,vb:box}}
+  const css=forFile?`<style>.pn,.pc{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}.sh{fill:#efece6;stroke:#222;vector-effect:non-scaling-stroke}.dm line{stroke:#777;stroke-width:.6;vector-effect:non-scaling-stroke}.dm line.tk{stroke:#222;stroke-width:1.1}.gr{stroke:#9a6a3a;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.tb{fill:none;stroke:#222;vector-effect:non-scaling-stroke}text{fill:#222;font-family:IBM Plex Mono,monospace;text-anchor:middle}text.h{font-family:Jost,sans-serif;letter-spacing:.2em;text-anchor:start}text.s{fill:#666;text-anchor:start}.np{stroke:#5d6270;vector-effect:non-scaling-stroke}.ws{fill:url(#hatch);stroke:#ccc;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}text.nl,text.wt{text-anchor:start}text.wt{fill:#999}text.nn{font-weight:700;fill:#111}</style><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#fff"/>`:'';
+  const defs=`<defs><pattern id="hatch" width="${f1(k*.8)}" height="${f1(k*.8)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="${f1(k*.8)}" height="${f1(k*.8)}" fill="#f6f6f8"/><line x1="0" y1="0" x2="0" y2="${f1(k*.8)}" stroke="#dcdce2" stroke-width="${f1(k*.14)}"/></pattern></defs>`;
+  return{svg:`<svg class="dw" xmlns="http://www.w3.org/2000/svg" viewBox="${box.map(f1).join(' ')}" preserveAspectRatio="xMidYMid meet">${defs}${css}${o.join('')}</svg>`,vb:box}}
 function renderDrawing(){sheetEl.querySelector(':scope>svg.dw')?.remove();const d=buildDrawing(false);sheetEl.insertAdjacentHTML('beforeend',d.svg);svg=sheetEl.querySelector(':scope>svg.dw');vb0=d.vb.slice();vb=d.vb.slice();drawDirty=false}
 function applyVB(){svg.setAttribute('viewBox',vb.map(f1).join(' '))}
 function svgPt(cx,cy){const r=sheetEl.getBoundingClientRect(),s=Math.max(vb[2]/r.width,vb[3]/r.height),ox=vb[0]-(r.width*s-vb[2])/2,oy=vb[1]-(r.height*s-vb[3])/2;return[ox+(cx-r.left)*s,oy+(cy-r.top)*s,s]}
@@ -1167,14 +1185,22 @@ let pan=null;sheetEl.addEventListener('pointerdown',e=>{if(e.target.closest('.zo
 sheetEl.addEventListener('pointermove',e=>{if(!pan||!svg)return;const s=svgPt(0,0)[2];vb[0]-=(e.clientX-pan[0])*s;vb[1]-=(e.clientY-pan[1])*s;pan=[e.clientX,e.clientY];applyVB()});
 sheetEl.addEventListener('pointerup',()=>{pan=null;sheetEl.style.cursor=''});
 const zc=f=>{const r=sheetEl.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,f)};
+const ntip=document.createElement('div');ntip.className='ntip';ntip.hidden=true;sheetEl.appendChild(ntip);
+sheetEl.addEventListener('pointermove',e=>{const t=e.target.closest&&e.target.closest('[data-t]');if(!t||pan){ntip.hidden=true;return}const d=t.dataset.t.split('|'),r=sheetEl.getBoundingClientRect();const row=(a,b)=>`<div><span>${a}</span><span>${b}</span></div>`;
+  if(d[0]==='p'){const w=+d[2],h=+d[3],pt=partsList().find(q=>q.no===+d[1]);ntip.innerHTML=`<b>Деталь №${d[1]}${pt?' · '+esc(pt.names[0]):''}</b>`+row('Размер:',`${w} × ${h} мм`)+row('Толщина:',`${d[7]} мм · ${MATS[d[8]]?MATS[d[8]].short:''}`)+row('Площадь:',`${(w*h/1e6).toFixed(4)} м²`)+row('Периметр:',`${2*(w+h)} мм`)+row('Позиция на листе:',`x=${d[4]}, y=${d[5]}`)+row('Лист:',d[6])}
+  else{const w=+d[1],h=+d[2];ntip.innerHTML=`<b>Отход</b>`+row('Размер:',`${w} × ${h} мм`)+row('Площадь:',`${(w*h/1e6).toFixed(4)} м²`)+row('Позиция:',`x=${d[3]}, y=${d[4]}`)+row('Лист:',d[5])}
+  ntip.hidden=false;let x=e.clientX-r.left+14,y=e.clientY-r.top+14;if(x+ntip.offsetWidth>r.width-8)x-=ntip.offsetWidth+28;if(y+ntip.offsetHeight>r.height-8)y-=ntip.offsetHeight+28;ntip.style.left=x+'px';ntip.style.top=y+'px'});
+sheetEl.addEventListener('pointerleave',()=>ntip.hidden=true);
 $('#zin').onclick=()=>zc(1/1.4);$('#zout').onclick=()=>zc(1.4);$('#zfit').onclick=()=>{vb=vb0.slice();applyVB()};
 function renderSpec(){const parts=partsList(),groups=nestAll();
   $('#spec').innerHTML=`<div class="grp"><h2 style="font:500 12px var(--f-body);color:var(--mute);margin:0">Спецификация · Product sheet</h2><h3 style="font:600 26px/1.1 var(--f-display);letter-spacing:-.02em;margin:6px 0 0">${esc(state.name)}</h3></div>
-  <div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th>Д×Ш</th><th>Т</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div>
+  <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th>Д×Ш</th><th>Т</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
   <label class="fld" style="grid-template-columns:1fr 140px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x','×')}</option>`).join('')}</select></label>
-  <div class="kv">${groups.map(g=>`<span>${g.T} мм · ${MATS[g.mat].short}</span><b>${g.sheets.length} л.${g.over.length?' · есть крупные':''}</b>`).join('')}</div>
+  ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b></div></div>
+  <div class="grp"><span class="lbl">Листы по толщинам</span><div class="kv">${S.groups.map(g=>`<span>${g.T} мм · ${MATS[g.mat].short}</span><b>${g.sheets.length} л.${g.over.length?' · есть крупнее листа':''}</b>`).join('')}</div></div>
+  <div class="grp"><span class="lbl">Таблица отходов</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Размер</th><th>Т</th><th>шт</th></tr></thead><tbody>${S.waste.map((w,i)=>`<tr><td class="n">${i+1}</td><td class="n" style="text-align:left">${w.sz} мм</td><td class="n">${w.T}</td><td class="n">${w.n}</td></tr>`).join('')||'<tr><td colspan="4">Нет отходов</td></tr>'}</tbody></table></div></div>`})()}
   <button class="btn pri" id="pdfBtn">Скачать паспорт PDF</button>
-  <p class="note">Пропил 4 мм, обрезка кромки листа 10 мм. Волокна лицевого шпона идут вдоль длинной стороны детали. Колесо мыши — масштаб, перетаскивание — сдвиг.</p>`;
+  <p class="note">Пропил 4 мм, обрезка кромки листа 10 мм. Наведите курсор на деталь или отход на карте — появится подробная карточка. Колесо мыши — масштаб, перетаскивание — сдвиг.</p>`;
   $('#pdfBtn').onclick=makePDF;$('#sheetSel').onchange=e=>{state.sheet=e.target.value;renderDrawing();renderSpec()}}
 
 /* ---------- export ---------- */
