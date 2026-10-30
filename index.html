@@ -817,6 +817,7 @@ function skyEnv(){const L=LIGHTS[state.light],key=state.light;if(skyTex&&skyKey=
     const cd=dx*sd.x+dy*sd.y+dz*sd.z;if(cd>cosR){r=sc.r*sunL;g=sc.g*sunL;b=sc.b*sunL}else if(cd>0){const gl=Math.pow(cd,48)*3;r+=sc.r*gl;g+=sc.g*gl;b+=sc.b*gl}
     data[i]=r;data[i+1]=g;data[i+2]=b;data[i+3]=1}}
   skyTex=new THREE.DataTexture(data,W,H,THREE.RGBAFormat,THREE.FloatType);skyTex.mapping=THREE.EquirectangularReflectionMapping;skyTex.magFilter=skyTex.minFilter=THREE.LinearFilter;skyTex.needsUpdate=true;skyKey=key;return skyTex}
+window.__bureau={get pt(){return pt},get ptState(){return ptState},renderer,camera,scene};
 function syncPhysCam(){physCam.copy(camera);physCam.fStop=6.3;physCam.apertureBlades=7;physCam.focusDistance=camera.position.distanceTo(controls.target);physCam.updateMatrixWorld()}
 function ptFrame(){if(ptState!=='ready'){vizFrame();return}
   if(ptSceneDirty){sun.visible=fill.visible=false;hemi.visible=false;scene.environment=skyEnv();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.82;syncPhysCam();pt.setScene(scene,physCam);ptSceneDirty=false;camDirty=false}
