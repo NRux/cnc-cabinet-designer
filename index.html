@@ -126,9 +126,9 @@ td.n{font-family:var(--f-mono);text-align:right}
 .dl.tape{background:var(--hi)}
 .toast{border-radius:980px;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;font-size:13px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
-.rail{display:grid;grid-template-columns:repeat(2,40px);gap:2px;padding:6px}
-.rail hr{grid-column:1/-1;border:0;border-top:1px solid var(--line);margin:4px 2px;width:auto}
-.ib{position:relative;width:40px;height:40px;border-radius:10px}
+.rail{display:grid;grid-template-columns:36px;gap:1px;padding:5px}
+.rail hr{grid-column:1/-1;border:0;border-top:1px solid var(--line);margin:3px 2px;width:auto}
+.ib{position:relative;width:36px;height:36px;border-radius:9px}
 .ib svg{width:20px;height:20px;stroke-width:1.65;stroke-linejoin:round;stroke-linecap:round}
 .ib b{position:absolute;right:3px;bottom:3px;font:600 9px/1 var(--f-mono);color:#6b6b70;pointer-events:none}
 .ib[aria-pressed="true"] b{color:rgba(255,255,255,.7)}
@@ -162,7 +162,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 .grip:hover{background-color:var(--soft)}
 .insp .grip{flex:none;width:60px;align-self:center;margin:-10px 0 -6px}
 .rail{align-content:start;overflow:visible}
-.rail.h{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:repeat(2,40px)}
+.rail.h{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:36px}
 .rail.h hr{grid-column:auto;grid-row:1/-1;border-top:0;border-left:1px solid var(--line);margin:2px 4px}
 .rail.h .grip{grid-column:auto;grid-row:1/-1;width:12px;height:auto;margin:0 2px 0 -2px}
 .rail.h .ib[data-tip]:hover::after{left:50%;top:calc(100% + 8px);transform:translateX(-50%)}
@@ -175,6 +175,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 #stage[data-dockhint=left]::after,#stage[data-dockhint=right]::after,#stage[data-dockhint=top]::after,#stage[data-dockhint=bottom]::after{content:"";position:absolute;background:rgba(31,95,224,.12);border:2px dashed #1f5fe0;border-radius:14px;pointer-events:none;z-index:4}
 #stage[data-dockhint=left]::after{left:8px;top:8px;bottom:8px;width:90px}#stage[data-dockhint=right]::after{right:8px;top:8px;bottom:8px;width:90px}
 #stage[data-dockhint=top]::after{left:8px;right:8px;top:8px;height:90px}#stage[data-dockhint=bottom]::after{left:8px;right:8px;bottom:8px;height:90px}
+.tplpop{position:absolute;z-index:7;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.14);padding:14px;display:flex;flex-direction:column;gap:10px;width:260px}
 .multi.sub{background:#eaf0fd;color:#1a3f8f}
 @media (max-width:760px){
   .grip{display:none}
@@ -231,9 +232,10 @@ td.n{font-family:var(--f-mono);text-align:right}
       <button class="ib" data-act="dup" data-tip="Дублировать" data-key="Ctrl+D"><svg viewBox="0 0 20 20"><rect x="6" y="6" width="10" height="10"/><path d="M4 13V4h9"/></svg></button>
       <button class="ib" data-act="rot" data-tip="Повернуть на 90°" data-key="Q"><svg viewBox="0 0 20 20"><path d="M15 6a6 6 0 1 0 1.5 5"/><path d="M15 2v4h-4"/></svg><b>Q</b></button>
       <button class="ib" data-act="del" data-tip="Удалить" data-key="Del"><svg viewBox="0 0 20 20"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg></button>
-      <button class="ib" data-act="snap" data-tip="Шаг сетки 10 мм" data-key="S" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14"/></svg><b>S</b></button>
+      <button class="ib" data-act="snap" data-tip="Шаг 10 мм (по умолчанию выключен)" data-key="S" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14"/></svg><b>S</b></button>
       <button class="ib" data-act="undo" data-tip="Отменить" data-key="Ctrl+Z"><svg viewBox="0 0 20 20"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10H9"/></svg></button>
       <button class="ib" data-act="redo" data-tip="Повторить" data-key="Ctrl+Y"><svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4"/><path d="M17 9H8a5 5 0 0 0 0 10h3"/></svg></button>
+      <button class="ib" data-act="tplpop" data-tip="Шаблоны и новый проект" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
       <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button>
     </div>
     <div class="keys" id="keys" hidden>
@@ -244,6 +246,7 @@ td.n{font-family:var(--f-mono);text-align:right}
         <div><span class="lbl">Вид и правка</span><dl><dt>O · H</dt><dd>Орбита · панорама</dd><dt>Shift+Z</dt><dd>Показать всё</dd><dt>1 2 3 4 5 0</dt><dd>Спереди, сверху, справа, слева, сзади, изо</dd><dt>Ctrl+Z / Y</dt><dd>Отменить / повторить</dd><dt>Ctrl+C / V</dt><dd>Копировать / вставить</dd><dt>Ctrl+D</dt><dd>Дублировать</dd><dt>Ctrl+A</dt><dd>Выделить всё</dd><dt>Del</dt><dd>Удалить</dd><dt>S</dt><dd>Шаг сетки 10 мм</dd></dl></div>
       </div>
     </div>
+    <div class="tplpop" id="tplpop" hidden><span class="lbl">Начать с шаблона</span><div class="row" id="tplRow"></div><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>
     <aside class="insp" id="insp" aria-label="Параметры" data-dock="right"></aside><datalist id="thkL"><option value="3"><option value="4"><option value="6"><option value="9"><option value="12"><option value="15"><option value="18"><option value="21"><option value="24"><option value="27"><option value="30"></datalist>
     <div class="status" id="status">
       <span id="hint"></span>
@@ -340,7 +343,7 @@ const THK=[6,9,12,15,18,21,24];
 const PLIES={6:5,9:7,12:9,15:11,18:13,21:15,24:17};
 const SHEETS={'1525x1525':[1525,1525],'2500x1250':[2500,1250],'3000x1500':[3000,1500]};
 const LIGHTS={morning:{az:-55,el:20,col:0xffdcb6,I:1.7,exp:1.0},day:{az:-28,el:46,col:0xfff3e6,I:1.75,exp:0.95},evening:{az:58,el:11,col:0xffb47a,I:1.5,exp:1.05}};
-const state={name:'Тумба TR-01',panels:[],sel:null,tool:'select',snap:true,env:'wall',light:'day',q:1,sheet:'1525x1525',multi:null,lock:null,sub:null,guides:[],nb:{w:600,h:18,d:300,t:'y',mat:'birch'}};
+const state={name:'Тумба TR-01',panels:[],sel:null,tool:'select',snap:false,env:'wall',light:'day',q:1,sheet:'1525x1525',multi:null,lock:null,sub:null,guides:[],nb:{w:600,h:18,d:300,t:'y',mat:'birch'}};
 let nextId=1;const undoS=[],redoS=[];
 const thick=p=>p[SZ[p.t]];
 const mk=(name,w,h,d,x,y,z,t,mat='birch')=>({id:nextId++,name,w,h,d,x,y,z,t,mat});
@@ -355,7 +358,8 @@ const TPL={
 const toastEl=$('#toast');let tt;
 function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),2200)}
 function num(v){v=String(v).replace(/,/g,'.').trim();const m=v.match(/^(-?\d+(?:\.\d+)?)\s*(?:([+\-*/])\s*(-?\d+(?:\.\d+)?))?$/);if(!m)return NaN;let a=+m[1];if(!m[2])return a;const b=+m[3];return m[2]==='+'?a+b:m[2]==='-'?a-b:m[2]==='*'?a*b:b?a/b:NaN}
-const snapV=v=>state.snap?Math.round(v/10)*10:Math.round(v);
+const r4=v=>Math.round(v*10000)/10000;
+const snapV=v=>state.snap?Math.round(v/10)*10:r4(v);
 function rnd(seed){let s=seed%2147483647||1;return()=>(s=s*16807%2147483647)/2147483647}
 const selP=()=>state.panels.find(p=>p.id===state.sel)||null;
 function save(){try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
@@ -425,12 +429,18 @@ function faceCanvas(kind){const S=2048,c=document.createElement('canvas');c.widt
   if(!blk){for(let i=0;i<26;i++){const x=r()*S,y=r()*S,w=2.5+r()*6;g.fillStyle=`rgba(${90+r()*30|0},58,28,${0.3+r()*0.45})`;g.beginPath();g.ellipse(x,y,w*1.7,w,0,0,7);g.fill();g.strokeStyle='rgba(120,80,40,.14)';g.lineWidth=2;g.beginPath();g.ellipse(x,y,w*4,w*2.2,0,0,7);g.stroke()}
     for(let i=0;i<4;i++){const x=r()*S,y=r()*S;g.fillStyle='rgba(240,222,188,.55)';g.strokeStyle='rgba(130,95,55,.25)';g.lineWidth=1.5;g.beginPath();g.ellipse(x,y,70+r()*30,14+r()*5,0,0,7);g.fill();g.stroke()}}
   const id=g.getImageData(0,0,S,S),d=id.data;for(let i=0;i<d.length;i+=4){const n=(r()-0.5)*(blk?6:9);d[i]+=n;d[i+1]+=n;d[i+2]+=n}g.putImageData(id,0,0);return c}
-function edgeCanvas(T){const n=PLIES[T]||(Math.round(T/1.4)|1),ph=24,W=512,H=n*ph,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d'),r=rnd(T*13);
-  for(let i=0;i<n;i++){const y=i*ph,along=i%2===0;g.fillStyle=along?'#e4cda2':'#d2b585';g.fillRect(0,y,W,ph);
-    if(along){for(let k=0;k<8;k++){g.strokeStyle=`rgba(140,100,55,${0.05+r()*0.1})`;g.lineWidth=0.6+r();g.beginPath();const yy=y+2+r()*(ph-4);g.moveTo(0,yy);g.lineTo(W,yy+(r()-0.5)*3);g.stroke()}}
-    else{for(let k=0;k<260;k++){g.fillStyle=`rgba(110,75,40,${0.08+r()*0.18})`;g.fillRect(r()*W,y+2+r()*(ph-6),1+r()*1.5,2+r()*5)}}
-    g.fillStyle='rgba(105,75,42,.6)';g.fillRect(0,y,W,1.4)}
-  return c}
+function edgeCanvas(T){T=Math.round(T);const n=PLIES[T]||Math.max(3,Math.round(T/1.4)|1),ph=32,W=1024,H=n*ph,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d'),r=rnd(T*13+7);
+  /* birch plywood on a saw cut: long-grain plies (light, fine fibres) alternate with cross-grain plies (end grain: pores), thin dark glue lines, slightly wavy */
+  const wav=(x,i,a)=>Math.sin(x*0.011+i*1.7)*a+Math.sin(x*0.037+i*3.1)*a*.4;
+  for(let i=0;i<n;i++){const y=i*ph,along=i%2===0,tone=(r()-.5)*14;
+    for(let x=0;x<W;x+=4){const top=y+wav(x,i,1.6),bot=y+ph+wav(x,i+1,1.6);g.fillStyle=along?`rgb(${232+tone|0},${212+tone|0},${170+tone|0})`:`rgb(${218+tone|0},${190+tone|0},${142+tone|0})`;g.fillRect(x,top,4,bot-top)}
+    if(along){for(let k=0;k<26;k++){const yy=y+3+r()*(ph-6),al=.05+r()*.12;g.strokeStyle=`rgba(150,112,64,${al})`;g.lineWidth=.5+r()*.9;g.beginPath();for(let x=0;x<=W;x+=16){const v=yy+wav(x,i,1.6)+Math.sin(x*.05+k)*.4;x?g.lineTo(x,v):g.moveTo(x,v)}g.stroke()}
+      for(let k=0;k<3;k++){g.fillStyle=`rgba(190,150,98,${.08+r()*.08})`;const x=r()*W;g.fillRect(x,y+4,20+r()*120,ph-8)}}
+    else{for(let k=0;k<1100;k++){const x=r()*W,yy=y+3+r()*(ph-6)+wav(x,i,1.6);g.fillStyle=`rgba(${110+r()*30|0},${78+r()*20|0},${40+r()*15|0},${.18+r()*.3})`;g.beginPath();g.ellipse(x,yy,.6+r()*.9,1+r()*2.2,0,0,7);g.fill()}
+      for(let k=0;k<40;k++){g.strokeStyle=`rgba(255,240,210,${.08+r()*.1})`;g.lineWidth=.6;const x=r()*W;g.beginPath();g.moveTo(x,y+3);g.lineTo(x+(r()-.5)*2,y+ph-3);g.stroke()}}}
+  for(let i=0;i<=n;i++){g.strokeStyle='rgba(96,66,36,.75)';g.lineWidth=1.3;g.beginPath();for(let x=0;x<=W;x+=8){const v=i*ph+wav(x,i,1.6);x?g.lineTo(x,v):g.moveTo(x,v)}g.stroke()}
+  for(let x=0;x<W;x+=5+r()*7){g.fillStyle=`rgba(255,255,255,${r()*.035})`;g.fillRect(x,0,1,H)}
+  const id=g.getImageData(0,0,W,H),d=id.data;for(let i=0;i<d.length;i+=4){const q=(r()-.5)*8;d[i]+=q;d[i+1]+=q;d[i+2]+=q}g.putImageData(id,0,0);return c}
 /* height (luminance) -> tangent-space normal map */
 function normalCanvas(src,str){const S=Math.min(src.width,1024),H=Math.max(2,Math.round(src.height*S/src.width)),c=document.createElement('canvas');c.width=S;c.height=H;const g=c.getContext('2d');g.drawImage(src,0,0,S,H);
   const p=g.getImageData(0,0,S,H).data,h=new Float32Array(S*H);for(let i=0;i<S*H;i++)h[i]=(p[i*4]*.3+p[i*4+1]*.59+p[i*4+2]*.11)/255;
@@ -472,13 +482,29 @@ let CSG=null,csgEval=null,fidN=1;
 import('three-bvh-csg').then(mod=>{CSG=mod;csgEval=new mod.Evaluator();csgEval.attributes=['position','uv','normal'];csgEval.useGroups=true;state.panels.forEach(p=>{if((p.feat||[]).some(f=>f.depth>0))buildMesh(p)})}).catch(e=>console.warn('CSG недоступен',e));
 function pocketGeo(p,f){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2;const q={id:p.id*7+f.id,t:f.a};q[SZ[u]]=f.u1-f.u0;q[SZ[v]]=f.v1-f.v0;q[SZ[f.a]]=dd+1;
   const g=makeGeo(q),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(1-dd)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}
+function innerMat(){if(matC.inner)return matC.inner;const ft=canvasTex('fw',()=>cnv('fw',()=>faceCanvas('birch'))),fn=canvasTex('fwn',()=>normalCanvas(cnv('fw',()=>faceCanvas('birch')),5),false,true);
+  const m=new THREE.MeshStandardMaterial({map:ft,normalMap:fn,normalScale:new THREE.Vector2(.9,.9),color:0xd9c19a,roughness:.88});allMats.push(m);return matC.inner=m}
+/* after a boolean cut: plies on every wall follow the panel thickness; pocket floors show the inner veneer whose grain turns 90° every ply */
+function remapCut(geo,p){const g=geo.index?geo.toNonIndexed():geo,pos=g.attributes.position,N=pos.count,ti=AX.indexOf(p.t),S=[p.w*MM,p.h*MM,p.d*MM],T=S[ti],off=hashOff(p.id),Tmm=thick(p),n=PLIES[Math.round(Tmm)]||Math.max(3,Math.round(Tmm/1.4)|1),ply=T/n;
+  const fa=[0,1,2].filter(a=>a!==ti),[a1,a2]=S[fa[0]]>=S[fa[1]]?fa:[fa[1],fa[0]];const out=[[],[],[]];const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3(),nn=new THREE.Vector3(),e1=new THREE.Vector3(),e2=new THREE.Vector3();
+  for(let i=0;i<N;i+=3){A.fromBufferAttribute(pos,i);B.fromBufferAttribute(pos,i+1);C.fromBufferAttribute(pos,i+2);nn.crossVectors(e1.subVectors(B,A),e2.subVectors(C,A));if(nn.lengthSq()<1e-16)continue;nn.normalize();
+    const na=[0,1,2].reduce((m,k)=>Math.abs(nn.getComponent(k))>Math.abs(nn.getComponent(m))?k:m,0);let grp,uvf;
+    if(na===ti){const c=(A.getComponent(ti)+B.getComponent(ti)+C.getComponent(ti))/3,inner=Math.abs(c)<T/2-1e-5;grp=inner?2:0;let u1=a1,u2=a2;if(inner){const dep=T/2-Math.abs(c),layer=Math.floor(dep/ply+1e-6);if(layer%2===1){u1=a2;u2=a1}}uvf=v=>[(v.getComponent(u1)+off)/0.9,(v.getComponent(u2)+off*0.7)/0.9]}
+    else{grp=1;const o=[0,1,2].find(k=>k!==ti&&k!==na);uvf=v=>[(v.getComponent(o)+off)/0.35,v.getComponent(ti)/T+0.5]}
+    for(const v of [A,B,C]){const [u,w]=uvf(v);out[grp].push(v.x,v.y,v.z,nn.x,nn.y,nn.z,u,w)}}
+  const tot=out.reduce((s,a)=>s+a.length/8,0),P=new Float32Array(tot*3),Nn=new Float32Array(tot*3),U=new Float32Array(tot*2),res=new THREE.BufferGeometry();let k=0;
+  out.forEach((arr,gi)=>{const st=k;for(let j=0;j<arr.length;j+=8){P.set(arr.slice(j,j+3),k*3);Nn.set(arr.slice(j+3,j+6),k*3);U.set(arr.slice(j+6,j+8),k*2);k++}if(k>st)res.addGroup(st,k-st,gi)});
+  res.setAttribute('position',new THREE.BufferAttribute(P,3));res.setAttribute('normal',new THREE.BufferAttribute(Nn,3));res.setAttribute('uv',new THREE.BufferAttribute(U,2));return res}
 function meshParts(p){const base=makeGeo(p),mats=matsFor(p),fs=(p.feat||[]).filter(f=>f.depth>0.01);if(!fs.length||!CSG)return{geo:base,mat:mats};
-  try{let r=new CSG.Brush(base,mats);r.updateMatrixWorld();for(const f of fs){const b=new CSG.Brush(pocketGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}return{geo:r.geometry,mat:r.material}}catch(e){console.warn(e);return{geo:base,mat:mats}}}
+  try{let r=new CSG.Brush(base,mats);r.updateMatrixWorld();for(const f of fs){const b=new CSG.Brush(pocketGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}return{geo:remapCut(r.geometry,p),mat:[mats[0],mats[1],innerMat()]}}catch(e){console.warn(e);return{geo:base,mat:mats}}}
 const regionMat=new THREE.LineBasicMaterial({color:0x2a2a2a,transparent:true,opacity:.8});
-function regionLines(p){const pts=[];(p.feat||[]).forEach(f=>{['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
+function panelLines(p){const pts=[],C=corners(p);EDGES.forEach(([i,j])=>pts.push(C[i].clone(),C[j].clone()));
+  (p.feat||[]).filter(f=>f.depth>0.01).forEach(f=>{const T=p[SZ[f.a]],dep=Math.min(f.depth,T),off=AXV[f.a].clone().multiplyScalar(-f.s*dep*MM);const top=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));top.forEach(([A,B])=>{pts.push(A.clone(),B.clone(),A.clone().add(off),B.clone().add(off))});[top[0][0],top[0][1],top[1][0],top[1][1]].forEach(v=>pts.push(v.clone(),v.clone().add(off)))});
+  const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c)))}
+function regionLines(p){const pts=[];(p.feat||[]).filter(f=>f.depth<=0.01).forEach(f=>{['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
 function buildMesh(p){const old=meshes[p.id];if(old){scene.remove(old);old.geometry.dispose();old.children.forEach(c=>c.geometry.dispose())}
   const {geo,mat}=meshParts(p);const m=new THREE.Mesh(geo,mat);m.castShadow=m.receiveShadow=true;m.userData.id=p.id;
-  const e=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,25),edgeMat(p.id));e.renderOrder=isSel(p.id)?5:1;e.visible=view==='build';m.add(e);
+  const e=new THREE.LineSegments(panelLines(p),edgeMat(p.id));e.renderOrder=isSel(p.id)?5:1;e.visible=view==='build';m.add(e);
   const rl=regionLines(p);if(rl){rl.visible=view==='build';rl.renderOrder=2;m.add(rl)}
   placeMesh(p,m);scene.add(m);meshes[p.id]=m}
 function placeMesh(p,m=meshes[p.id]){if(m)m.position.set((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM)}
@@ -566,7 +592,7 @@ function showSnap(s){if(!s||view!=='build'){snapEl.hidden=true;axisGuide.visible
 function rayHit2D(){return 0}
 function snapGeo(p){const C=corners(p),pts=[...C],segs=EDGES.map(([i,j])=>[C[i],C[j]]);
   for(const f of p.feat||[]){const s4=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));s4.forEach(sg=>segs.push(sg));pts.push(s4[0][0],s4[0][1],s4[1][0],s4[1][1]);
-    if(f.depth>0.01){const off=AXV[f.a].clone().multiplyScalar(-f.s*Math.min(f.depth,p[SZ[f.a]])*MM);const fl=s4.map(([A,B])=>[A.clone().add(off),B.clone().add(off)]);fl.forEach(sg=>segs.push(sg));pts.push(fl[0][0],fl[0][1],fl[1][0],fl[1][1])}}
+    if(f.depth>0.01){const off=AXV[f.a].clone().multiplyScalar(-f.s*Math.min(f.depth,p[SZ[f.a]])*MM);const fl=s4.map(([A,B])=>[A.clone().add(off),B.clone().add(off)]);fl.forEach(sg=>segs.push(sg));[s4[0][0],s4[0][1],s4[1][0],s4[1][1]].forEach(v=>segs.push([v,v.clone().add(off)]));pts.push(fl[0][0],fl[0][1],fl[1][0],fl[1][1])}}
   return{pts,segs}}
 function redgePts(p,f,side,lift){const [u,v]=AX.filter(q=>q!==f.a),T=p[SZ[f.a]],F=(f.s>0?p[f.a]+T:p[f.a])+(lift?f.s*0.25:0);const P=(uu,vv)=>{const o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[f.a]=F;return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)};
   return side==='u0'?[P(f.u0,f.v0),P(f.u0,f.v1)]:side==='u1'?[P(f.u1,f.v0),P(f.u1,f.v1)]:side==='v0'?[P(f.u0,f.v0),P(f.u1,f.v0)]:[P(f.u0,f.v1),P(f.u1,f.v1)]}
@@ -579,7 +605,7 @@ function pickEdge(mx,my,p){let best=null,bd=10;const C=corners(p);
   for(const f of p.feat||[])for(const side of ['u0','u1','v0','v1']){const [A,B]=redgePts(p,f,side);const d=segDistPx(mx,my,A,B);if(d<bd){bd=d;best={kind:'redge',id:p.id,fid:f.id,side}}}
   if(!best)for(const [i,j] of EDGES){const d=segDistPx(mx,my,C[i],C[j]);if(d<bd){bd=d;best={kind:'edge',id:p.id,i,j}}}return best}
 const featById=(p,fid)=>(p.feat||[]).find(f=>f.id===fid);
-const fmtMM=v=>{v=Math.round(v*10)/10;return String(v).replace('.',',')+' мм'};
+const fmtMM=v=>{v=Math.round(v*10000)/10000;return String(v).replace('.',',')+' мм'};
 function faceRect(p,a){const [u,v]=AX.filter(q=>q!==a);return{u,v,Su:p[SZ[u]],Sv:p[SZ[v]]}}
 
 /* ---------- magnet helpers (contact & alignment) ---------- */
@@ -603,7 +629,7 @@ function opCancel(){if(!op)return;if(op.type==='move'){if(op.copy){state.panels=
   else if(op.type==='offset'){offLine.visible=false}
   else if(op.type==='tape')tapeClear();opEnd()}
 let downTool=false;
-function onDown(e){if(view!=='build')return;const [mx,my]=setRay(e);if(e.button!==0)return;downXY=[e.clientX,e.clientY];downTool=false;const t=state.tool;
+function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;const [mx,my]=setRay(e);if(e.button!==0)return;downXY=[e.clientX,e.clientY];downTool=false;const t=state.tool;
   if(t==='orbit'||t==='pan')return;
   const grab=()=>{controls.enabled=false;downTool=true};
   if(t==='move'&&!op&&state.sub&&isSel(state.sub.id)){const s=infer(mx,my,{exclude:new Set([state.sub.id])})||infer(mx,my);if(!s)return;startSubMove(s.pt);grab();return}
@@ -643,7 +669,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;const [mx,my]=set
   if(op&&(op.type==='push'||op.type==='rpush')){const s=infer(mx,my,{exclude:new Set([op.p.id])});const ai=AX.indexOf(op.a);let target,snapped=false;
     if(s&&(['end','mid','edge','guide'].includes(s.type)||(e.shiftKey&&s.type!=='ground'))){target=s.pt.getComponent(ai)*1000;showSnap(s);snapped=true}else{target=rayLine(op.from,AXV[op.a]).getComponent(ai)*1000;snapEl.hidden=true}
     let face0;if(op.type==='push'){const st=op.start,k=SZ[op.a];face0=op.sign>0?st[op.a]+st[k]:st[op.a]}else{const T=op.p[SZ[op.a]];face0=(op.sign>0?op.p[op.a]+T:op.p[op.a])-op.sign*op.start}
-    let amt=(target-face0)*op.sign;if(!snapped)amt=state.snap?Math.round(amt/10)*10:Math.round(amt*10)/10;else amt=Math.round(amt*10)/10;
+    let amt=(target-face0)*op.sign;if(!snapped)amt=state.snap?Math.round(amt/10)*10:r4(amt);else amt=r4(amt);
     if(op.type==='push')applyPush(amt);else applyRPush(amt);return}
   if(op&&op.type==='emove'){const s=infer(mx,my,{exclude:new Set([op.p.id]),from:op.from});if(!s)return;showSnap(s);applyEMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
   if(op&&(op.type==='rmove'||op.type==='redge')){const s=infer(mx,my,{from:op.from});if(!s)return;showSnap(s);applyRegionMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
@@ -670,16 +696,16 @@ cv.addEventListener('dblclick',e=>{if(view!=='build'||!['select','move','push','
 cv.addEventListener('pointerleave',()=>{snapEl.hidden=true;faceHL.visible=false;setHover(null)});
 
 /* move (point to point) */
-function applyMove(dv,type){const d=[Math.round(dv.x*1000),Math.round(dv.y*1000),Math.round(dv.z*1000)];
+function applyMove(dv,type){const d=[r4(dv.x*1000),r4(dv.y*1000),r4(dv.z*1000)];
   if(type==='face'||type==='ground'){if(state.snap)for(let i=0;i<3;i++)d[i]=Math.round(d[i]/10)*10;const p=panelById(op.ids[op.ids.length-1]),s0=op.start[p.id],ex=new Set(op.ids);AX.forEach((a,i)=>{d[i]=magnet(p,a,s0[a]+d[i],ex)-s0[a]})}
   op.d.set(d[0],d[1],d[2]);op.ids.forEach(id=>{const p=panelById(id),s=op.start[id];p.x=s.x+d[0];p.y=Math.max(0,s.y+d[1]);p.z=s.z+d[2];placeMesh(p)});
   updateInspVals();setVCB('Расстояние',fmtMM(op.d.length()),false)}
 function finishMove(){if(!op)return;setVCB('Расстояние',fmtMM(op.d.length()),false);lastCopy=op.copy?{d:op.d.clone(),base:op.ids.map(id=>({...panelById(id)}))}:null;opEnd();save();fitShadows();renderInsp();if(lastCopy)setVCB('Массив: 3x или /3','',false)}
 /* push/pull */
-function applyPush(amt){const p=op.p,s=op.start,a=op.a,k=SZ[a];let size=Math.max(1,s[k]+amt);if(a===p.t){const n=THK.find(t=>Math.abs(t-size)<1.2);if(n)size=n}size=Math.round(size*10)/10;p[k]=size;p[a]=op.sign>0?s[a]:Math.round((s[a]+s[k]-size)*10)/10;
+function applyPush(amt){const p=op.p,s=op.start,a=op.a,k=SZ[a];let size=Math.max(1,s[k]+amt);if(a===p.t){const n=THK.find(t=>Math.abs(t-size)<1.2);if(n)size=n}size=r4(size);p[k]=size;p[a]=op.sign>0?s[a]:r4(s[a]+s[k]-size);
   (p.feat||[]).forEach(f=>{const [u,v]=AX.filter(q=>q!==f.a);if(a===u||a===v){const S=p[SZ[a]],lo=a===u?'u0':'v0',hi=a===u?'u1':'v1';if(op.sign<0){const sh=size-s[k];f[lo]+=sh;f[hi]+=sh}f[lo]=Math.max(0,Math.min(f[lo],S-1));f[hi]=Math.max(f[lo]+1,Math.min(f[hi],S))}});
   buildMesh(p);updateInspVals();setVCB(a===p.t?'Толщина':'Расстояние',fmtMM(a===p.t?size:amt),false);showFace(faceHL,p,a,op.sign)}
-function applyRPush(amt){const p=op.p,T=p[SZ[op.a]];let d=Math.max(0,Math.min(T,op.start-amt));if(T-d<0.6)d=T;op.f.depth=Math.round(d*10)/10;buildMesh(p);setVCB(op.f.depth>=T?'Сквозь':'Глубина',fmtMM(op.f.depth),false);showRegion(faceHL,p,op.a,op.sign,op.f,Math.min(op.f.depth,T-0.6))}
+function applyRPush(amt){const p=op.p,T=p[SZ[op.a]];let d=Math.max(0,Math.min(T,op.start-amt));if(T-d<0.6)d=T;op.f.depth=r4(d);buildMesh(p);setVCB(op.f.depth>=T?'Сквозь':'Глубина',fmtMM(op.f.depth),false);showRegion(faceHL,p,op.a,op.sign,op.f,Math.min(op.f.depth,T-0.6))}
 function finishSub(){if(!op)return;const p=op.p;opEnd();if(p)buildMesh(p);save();fitShadows();renderInsp()}
 /* move a selected face, edge, region or region edge */
 function startSubMove(pt){const S=state.sub,p=panelById(S.id);pushUndo();
@@ -687,16 +713,16 @@ function startSubMove(pt){const S=state.sub,p=panelById(S.id);pushUndo();
   else if(S.kind==='edge'){const ax=[0,1,2].filter(b=>((S.i^S.j)>>b&1)===0).map(b=>[AX[b],(S.i>>b&1)?1:-1]);op={type:'emove',p,cands:ax,from:pt.clone(),start:{...p}}}
   else{const f=featById(p,S.fid);op={type:S.kind==='region'?'rmove':'redge',p,f,side:S.side,from:pt.clone(),start:{...f}}}
   placeHandles();renderHint()}
-function applyEMove(d,type){const p=op.p,st=op.start;Object.assign(p,st);let best=op.cands[0];if(Math.abs(d[op.cands[1][0]])>Math.abs(d[best[0]]))best=op.cands[1];const [a,sg]=best,k=SZ[a];let amt=d[a]*sg;if(type==='face'||type==='ground')amt=state.snap?Math.round(amt/10)*10:Math.round(amt);amt=Math.round(amt*10)/10;
+function applyEMove(d,type){const p=op.p,st=op.start;Object.assign(p,st);let best=op.cands[0];if(Math.abs(d[op.cands[1][0]])>Math.abs(d[best[0]]))best=op.cands[1];const [a,sg]=best,k=SZ[a];let amt=d[a]*sg;amt=(type==='face'||type==='ground')&&state.snap?Math.round(amt/10)*10:r4(amt);
   const size=Math.max(1,st[k]+amt);p[k]=size;p[a]=sg>0?st[a]:st[a]+st[k]-size;op.a=a;op.sign=sg;op.amt=amt;buildMesh(p);updateInspVals();setVCB('Расстояние',fmtMM(amt),false)}
-function applyRegionMove(d,type){const p=op.p,f=op.f,st=op.start,[u,v]=AX.filter(q=>q!==f.a),Su=p[SZ[u]],Sv=p[SZ[v]];let du=d[u],dv=d[v];if(type==='face'||type==='ground'){du=state.snap?Math.round(du/5)*5:Math.round(du);dv=state.snap?Math.round(dv/5)*5:Math.round(dv)}du=Math.round(du*10)/10;dv=Math.round(dv*10)/10;
+function applyRegionMove(d,type){const p=op.p,f=op.f,st=op.start,[u,v]=AX.filter(q=>q!==f.a),Su=p[SZ[u]],Sv=p[SZ[v]];let du=d[u],dv=d[v];if(type==='face'||type==='ground'){du=state.snap?Math.round(du/5)*5:du;dv=state.snap?Math.round(dv/5)*5:dv}du=r4(du);dv=r4(dv);
   if(op.type==='rmove'){du=Math.max(-st.u0,Math.min(Su-st.u1,du));dv=Math.max(-st.v0,Math.min(Sv-st.v1,dv));f.u0=st.u0+du;f.u1=st.u1+du;f.v0=st.v0+dv;f.v1=st.v1+dv;op.dir=new THREE.Vector2(du,dv);setVCB('Расстояние',fmtMM(Math.hypot(du,dv)),false)}
   else{const sd=op.side,isU=sd[0]==='u',val=st[sd]+(isU?du:dv),S=isU?Su:Sv;f[sd]=sd[1]==='0'?Math.max(0,Math.min(val,(isU?f.u1:f.v1)-1)):Math.min(S,Math.max(val,(isU?f.u0:f.v0)+1));op.dir=isU?du:dv;setVCB('Расстояние',fmtMM(isU?du:dv),false)}
   buildMesh(p)}
 /* offset: inset rectangle on a face */
 function startOffset(p,a,s){if(!isSel(p.id))setSel(p.id);const {Su,Sv}=faceRect(p,a);if(Math.min(Su,Sv)<4){toast('Грань слишком узкая для смещения');return}op={type:'offset',p,a,s,d:Math.round(Math.min(Su,Sv)/6)};renderHint();previewOffset()}
 function moveOffset(){const p=op.p,a=op.a,{u,v,Su,Sv}=faceRect(p,a),k=SZ[a],pl=(op.s>0?p[a]+p[k]:p[a])*MM,pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(AXV[a].clone(),-pl),pt))return;const L=loc(p,pt);
-  let d=Math.min(L[u],Su-L[u],L[v],Sv-L[v]);d=Math.max(1,Math.min(d,Math.min(Su,Sv)/2-1));d=state.snap?Math.max(5,Math.round(d/5)*5):Math.round(d*10)/10;op.d=d;previewOffset()}
+  let d=Math.min(L[u],Su-L[u],L[v],Sv-L[v]);d=Math.max(1,Math.min(d,Math.min(Su,Sv)/2-1));d=state.snap?Math.max(5,Math.round(d/5)*5):r4(d);op.d=d;previewOffset()}
 function previewOffset(){const p=op.p,{Su,Sv}=faceRect(p,op.a),d=op.d;const pts=rectPts(p,op.a,op.s,{u0:d,u1:Su-d,v0:d,v1:Sv-d});offLine.geometry.setFromPoints(pts);offLine.visible=true;setVCB('Смещение',fmtMM(d),false)}
 function finishOffset(dd){if(!op||op.type!=='offset')return;const p=op.p,a=op.a,s=op.s,{Su,Sv}=faceRect(p,a),d=dd!=null?dd:op.d;if(d<=0||d*2>=Math.min(Su,Sv)){toast('Смещение больше половины грани');return}
   pushUndo();const f={id:fidN++,a,s,u0:d,u1:Su-d,v0:d,v1:Sv-d,depth:0};p.feat=(p.feat||[]).concat(f);opEnd();buildMesh(p);setSub({kind:'region',id:p.id,fid:f.id});save();toast('Область создана — P, чтобы вдавить или сделать сквозной вырез')}
@@ -707,11 +733,11 @@ function tapeParallel(mx,my){const {P,D}=op.line;const s=infer(mx,my);let Q;if(s
   op.w=w;const foot=P.clone().addScaledVector(D,Q.clone().sub(P).dot(D));setLine(tapeLine,foot,foot.clone().add(w));const G=P.clone().add(w);setLine(guidePrev,G.clone().addScaledVector(D,-3),G.clone().addScaledVector(D,3));
   setVCB('Длина',fmtMM(w.length()*1000),false);if(axn&&!s){snapEl.hidden=false;snapEl.className='snapmk axis';snapEl.style.setProperty('--c',AXCSS[axn]);snapEl.querySelector('span').textContent='по оси '+axn.toUpperCase();const sp=scr(foot.clone().add(w));snapEl.style.transform=`translate(${sp.x}px,${sp.y}px)`}}
 /* rectangle -> board */
-function rectDims(){const ai=AX.indexOf(op.a),[u,v]=AX.filter(q=>q!==op.a);const f=op.from,c=op.cur;let du=(c.getComponent(AX.indexOf(u))-f.getComponent(AX.indexOf(u)))*1000,dv=(c.getComponent(AX.indexOf(v))-f.getComponent(AX.indexOf(v)))*1000;return{u,v,du:Math.round(du),dv:Math.round(dv)}}
+function rectDims(){const ai=AX.indexOf(op.a),[u,v]=AX.filter(q=>q!==op.a);const f=op.from,c=op.cur;let du=(c.getComponent(AX.indexOf(u))-f.getComponent(AX.indexOf(u)))*1000,dv=(c.getComponent(AX.indexOf(v))-f.getComponent(AX.indexOf(v)))*1000;return{u,v,du:r4(du),dv:r4(dv)}}
 function rectBox(du,dv){const nb=state.nb,T=nb[SZ[nb.t]],{u,v}=rectDims(),a=op.a,f=op.from,b={};
-  b[u]=Math.round(Math.min(f.getComponent(AX.indexOf(u))*1000,f.getComponent(AX.indexOf(u))*1000+du));b[SZ[u]]=Math.max(1,Math.abs(du));
-  b[v]=Math.round(Math.min(f.getComponent(AX.indexOf(v))*1000,f.getComponent(AX.indexOf(v))*1000+dv));b[SZ[v]]=Math.max(1,Math.abs(dv));
-  const pl=Math.round(f.getComponent(AX.indexOf(a))*1000);b[a]=op.sign>0?pl:pl-T;b[SZ[a]]=T;if(b.y<0)b.y=0;return b}
+  b[u]=r4(Math.min(f.getComponent(AX.indexOf(u))*1000,f.getComponent(AX.indexOf(u))*1000+du));b[SZ[u]]=Math.max(1,Math.abs(du));
+  b[v]=r4(Math.min(f.getComponent(AX.indexOf(v))*1000,f.getComponent(AX.indexOf(v))*1000+dv));b[SZ[v]]=Math.max(1,Math.abs(dv));
+  const pl=r4(f.getComponent(AX.indexOf(a))*1000);b[a]=op.sign>0?pl:pl-T;b[SZ[a]]=T;if(b.y<0)b.y=0;return b}
 function previewRect(){const {du,dv}=rectDims(),b=rectBox(du,dv);rectPrev.scale.set(b.w*MM,b.h*MM,b.d*MM);rectPrev.position.set((b.x+b.w/2)*MM,(b.y+b.h/2)*MM,(b.z+b.d/2)*MM);rectPrev.visible=true;setVCB('Размеры',`${Math.abs(du)}; ${Math.abs(dv)} мм`,false)}
 function finishRect(du,dv){if(!op)return;let r=rectDims();if(du==null){du=r.du;dv=r.dv;if(state.snap){du=Math.round(du/10)*10;dv=Math.round(dv/10)*10}}
   if(Math.abs(du)<5&&Math.abs(dv)<5){du=state.nb.w;dv=state.nb.d}
@@ -720,9 +746,9 @@ function finishRect(du,dv){if(!op)return;let r=rectDims();if(du==null){du=r.du;d
 /* tape */
 function tapeClear(){tapeLine.visible=false;tapeEnd=null;op_last_from=null;$('#dlt').hidden=true}
 function tapeShow(a,b){op_last_from=a.clone();setLine(tapeLine,a,b);setVCB('Длина',fmtMM(a.distanceTo(b)*1000),false)}
-function tapeLabel(){const d=$('#dlt');if(!tapeLine.visible||view!=='build'){d.hidden=true;return}const pos=tapeLine.geometry.attributes.position;const a=new THREE.Vector3().fromBufferAttribute(pos,0),b=new THREE.Vector3().fromBufferAttribute(pos,1);const len=String(Math.round(a.distanceTo(b)*10000)/10).replace('.',',');
+function tapeLabel(){const d=$('#dlt');if(!tapeLine.visible||view!=='build'){d.hidden=true;return}const pos=tapeLine.geometry.attributes.position;const a=new THREE.Vector3().fromBufferAttribute(pos,0),b=new THREE.Vector3().fromBufferAttribute(pos,1);const len=String(r4(a.distanceTo(b)*1000)).replace('.',',');
   const m=scr(a.clone().add(b).multiplyScalar(.5));if(m.z>1){d.hidden=true;return}d.hidden=false;
-  const dx=Math.round(Math.abs(b.x-a.x)*1000),dy=Math.round(Math.abs(b.y-a.y)*1000),dz=Math.round(Math.abs(b.z-a.z)*1000);d.textContent=`${len} мм · X ${dx} · Y ${dy} · Z ${dz}`;d.style.transform=`translate(${m.x+8}px,${m.y-10}px)`}
+  const dx=r4(Math.abs(b.x-a.x)*1000),dy=r4(Math.abs(b.y-a.y)*1000),dz=r4(Math.abs(b.z-a.z)*1000);d.textContent=`${len} мм · X ${dx} · Y ${dy} · Z ${dz}`;d.style.transform=`translate(${m.x+8}px,${m.y-10}px)`}
 /* magnet: face of A to face of B (contact or flush), then align edges */
 function doMagnet(A,a,sa,B,b,sb){if(a!==b){toast('Нужны параллельные грани');return}
   pushUndo();const k=SZ[a],target=sb>0?B[a]+B[k]:B[a];A[a]=sa>0?target-A[k]:target;if(a==='y'&&A.y<0)A.y=0;
@@ -752,7 +778,7 @@ function applyVCB(txt){txt=txt.trim().replace(/мм|mm/gi,'').trim().replace(/,/
   if(op.type==='rect'){const m=txt.split(/[;\sxх*]+/i).map(Number);if(m.length<2||m.some(v=>!isFinite(v)||v<=0))return toast('Введите размеры так: 600;300');const r=rectDims();finishRect(m[0]*(r.du<0?-1:1),m[1]*(r.dv<0?-1:1));return}
   const v=num(txt);if(!isFinite(v))return toast('Введите число в миллиметрах');
   if(op.type==='move'){let dir=state.lock?AXV[state.lock].clone().multiplyScalar(op.d.getComponent(AX.indexOf(state.lock))<0?-1:1):op.d.clone();if(dir.lengthSq()<1e-6)return toast('Сначала покажите направление мышью');dir.normalize();
-    const d=dir.multiplyScalar(v);op.ids.forEach(id=>{const p=panelById(id),s=op.start[id];p.x=Math.round(s.x+d.x);p.y=Math.max(0,Math.round(s.y+d.y));p.z=Math.round(s.z+d.z);placeMesh(p)});op.d.set(Math.round(d.x),Math.round(d.y),Math.round(d.z));finishMove();return}
+    const d=dir.multiplyScalar(v);op.ids.forEach(id=>{const p=panelById(id),s=op.start[id];p.x=r4(s.x+d.x);p.y=Math.max(0,r4(s.y+d.y));p.z=r4(s.z+d.z);placeMesh(p)});op.d.set(r4(d.x),r4(d.y),r4(d.z));finishMove();return}
   if(op.type==='push'){applyPush(v);finishSub();return}
   if(op.type==='rpush'){applyRPush(op.start-v);finishSub();return}
   if(op.type==='emove'){if(!op.a)return toast('Сначала покажите направление мышью');const d={x:0,y:0,z:0};d[op.a]=v*op.sign*(op.amt<0?-1:1);applyEMove(d,'end');finishSub();return}
@@ -774,7 +800,9 @@ function toggleHelp(on){const k=$('#keys');k.hidden=on===undefined?!k.hidden:!on
 function act(a){
   if(a==='undo')return undo();if(a==='redo')return redo();
   if(a==='fit')return fitView();if(a==='help')return toggleHelp();
-  if(a==='snap'){state.snap=!state.snap;$('[data-act="snap"]').setAttribute('aria-pressed',state.snap);return toast(state.snap?'Шаг 10 мм включён':'Шаг 10 мм выключен')}
+  if(a==='tplpop'){const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.keys(TPL).map(n=>`<button class="btn" data-act="tpl" data-n="${n}">${n}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
+    const rr=$('#rail').getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=(rr.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?rr.top-sr.top-pp.offsetHeight-8:rr.bottom-sr.top+8)+'px'}else{pp.style.top=(rr.top-sr.top)+'px';pp.style.left=(DOCK.rail.side==='right'?rr.left-sr.left-pp.offsetWidth-8:rr.right-sr.left+8)+'px'}return}
+  if(a==='snap'){state.snap=!state.snap;$('[data-act="snap"]').setAttribute('aria-pressed',state.snap);return toast(state.snap?'Шаг 10 мм включён':'Шаг выключен — точность 0,0001 мм')}
   if(a==='del'&&state.sub){const S=state.sub,p=panelById(S.id);if(S.kind==='region'||S.kind==='redge'){pushUndo();p.feat=p.feat.filter(f=>f.id!==S.fid);state.sub=null;buildMesh(p);showSub();save();renderInsp();toast('Область удалена');return}
     toast(S.kind==='edge'?'Ребро детали удалить нельзя — это край доски. Удалите деталь целиком или сдвиньте ребро (M)':'Грань детали удалить нельзя — сдвиньте её (M или P)');return}
   const ps=selPanels();if(!ps.length)return toast('Сначала выберите деталь');
@@ -802,6 +830,10 @@ window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/
   const ps=selPanels();if(!ps.length)return;const st=e.shiftKey?1:10,mv={arrowleft:['x',-st],arrowright:['x',st],arrowup:['z',-st],arrowdown:['z',st],pageup:['y',st],pagedown:['y',-st]}[k];
   if(mv){e.preventDefault();pushUndo();ps.forEach(p=>{p[mv[0]]+=mv[1];if(p.y<0)p.y=0;placeMesh(p)});placeHandles();save();updateInspVals()}});
 
+$('#tplpop').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
+  if(a==='tpl'){pushUndo();state.panels=TPL[b.dataset.n]();state.name=b.dataset.n+' TR-01';state.sel=null;state.multi=null;rebuildAll();save();renderInsp();fitView();$('#tplpop').hidden=true;return}
+  if(a==='clear'){if(b.dataset.armed){pushUndo();state.panels=[];state.sel=null;state.multi=null;rebuildAll();save();renderInsp()}else{b.dataset.armed=1;b.textContent='Точно очистить? Нажмите ещё раз'}return}});
+$('#keys').addEventListener('click',e=>{if(e.target.closest('[data-act="help"]'))toggleHelp(false)});
 /* ---------- dockable toolbar & inspector ---------- */
 const DOCK={rail:{side:'left'},insp:{side:'right'}};try{Object.assign(DOCK,JSON.parse(localStorage.getItem('bat_dock2')||'{}'))}catch(e){}
 function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');if(innerWidth<=760){[railEl,ins,st].forEach(el=>el.removeAttribute('style'));railEl.classList.remove('h');return}
@@ -822,7 +854,7 @@ let dockDrag=null;
 stageEl.addEventListener('pointerdown',e=>{const gp=e.target.closest('.grip');if(!gp)return;e.preventDefault();const key=gp.dataset.drag,el=key==='rail'?$('#rail'):$('#insp'),r=el.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();
   dockDrag={key,el,dx:e.clientX-r.left,dy:e.clientY-r.top,sr};el.classList.add('dragging');gp.setPointerCapture(e.pointerId)});
 stageEl.addEventListener('pointermove',e=>{if(!dockDrag)return;const {el,dx,dy,sr}=dockDrag;el.style.right=el.style.bottom='auto';el.style.left=(e.clientX-sr.left-dx)+'px';el.style.top=(e.clientY-sr.top-dy)+'px';
-  const x=e.clientX-sr.left,y=e.clientY-sr.top,W=sr.width,H=sr.height,m=Math.min(x,y,W-x,H-y);let side=null;if(m<70)side=m===x?'left':m===y?'top':m===W-x?'right':'bottom';stageEl.dataset.dockhint=side||''});
+  const x=e.clientX-sr.left,y=e.clientY-sr.top,W=sr.width,H=sr.height,m=Math.min(x,y,W-x,H-y);let side=null;if(dockDrag.key==='insp'){if(x<110)side='left';else if(W-x<110)side='right'}else if(m<70)side=m===x?'left':m===y?'top':m===W-x?'right':'bottom';stageEl.dataset.dockhint=side||''});
 stageEl.addEventListener('pointerup',e=>{if(!dockDrag)return;const {key,el,sr}=dockDrag,side=stageEl.dataset.dockhint;el.classList.remove('dragging');stageEl.dataset.dockhint='';
   DOCK[key]=side?{side:key==='insp'&&(side==='top'||side==='bottom')?'right':side}:{side:'float',x:parseFloat(el.style.left),y:parseFloat(el.style.top)};
   if(side&&DOCK.rail.side===side&&DOCK.insp.side===side&&key==='rail'&&(side==='top'||side==='bottom')){}
@@ -843,22 +875,18 @@ function renderInsp0(){const p=selP();
   if(state.tool==='board'){const nb=state.nb;insp.innerHTML=`<div class="grp"><h2>Инструмент · R</h2><h3>Доска</h3><p class="note">Кликните угол на полу или на грани детали, ведите мышь и кликните второй угол. Для точного размера наберите <b>600;300</b> и Enter. Один клик без движения ставит доску размером по умолчанию.</p></div>
     <div class="grp"><span class="lbl">Толщина</span><div class="fld"><span>Фанера</span><select id="nb-T" data-k="T" data-scope="nb">${THK.map(t=>`<option ${t===nb[SZ[nb.t]]?'selected':''}>${t}</option>`).join('')}</select><i>мм</i></div></div>
     <div class="grp"><span class="lbl">Материал</span>${matHTML(nb,'nb')}</div>
-    <div class="grp"><span class="lbl">Размер по умолчанию</span><div class="fld"><span>Длина</span><input id="nb-w" data-k="w" data-scope="nb" value="${nb.w}"><i>мм</i></div><div class="fld"><span>Ширина</span><input id="nb-d" data-k="d" data-scope="nb" value="${nb.d}"><i>мм</i></div></div>
-    <div class="row"><button class="btn" data-act="cancelTool">Готово · Esc</button></div>`;return}
+    <div class="grp"><span class="lbl">Размер по умолчанию</span><div class="fld"><span>Длина</span><input id="nb-w" data-k="w" data-scope="nb" value="${nb.w}"><i>мм</i></div><div class="fld"><span>Ширина</span><input id="nb-d" data-k="d" data-scope="nb" value="${nb.d}"><i>мм</i></div></div>`;return}
   if(p){const T=thick(p),n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
     ${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
     <div class="grp"><span class="lbl">Материал · ${T} мм</span>${matHTML(p,'sel')}</div>
-    <div class="row"><button class="btn" data-act="dup">Копия</button><button class="btn" data-act="rot">Повернуть 90°</button><button class="btn warn" data-act="del">Удалить</button></div>
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
   const b=bbox(),parts=partsList(),area=state.panels.reduce((s,p)=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]);return s+d[0]*d[1]},0)/1e6;const sh=nestAll().reduce((s,g)=>s+g.sheets.length,0);
   insp.innerHTML=`<div class="grp"><h2>Проект</h2><input class="txt" id="pname" data-k="pname" value="${esc(state.name)}" aria-label="Название проекта" style="font:600 18px var(--f-display)"></div>
     <div class="kv"><span>Деталей</span><b>${state.panels.length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${b.x1-b.x0}×${b.y1-b.y0}×${b.z1-b.z0}`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${state.sheet.replace('x','×')}</span><b>${sh}</b></div>
-    <div class="grp"><span class="lbl">Детали · дважды кликните имя, чтобы переименовать</span>${outliner()}</div>
-    <div class="grp"><span class="lbl">Начать с шаблона</span><div class="row">${Object.keys(TPL).map(n=>`<button class="btn" data-act="tpl" data-n="${n}">${n}</button>`).join('')}</div></div>
-    <div class="row"><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>`}
+    <div class="grp"><span class="lbl">Детали · дважды кликните имя, чтобы переименовать</span>${outliner()}</div>`}
 function outliner(){return `<div class="ol">${state.panels.map(p=>`<div class="olr${isSel(p.id)?' on':''}" data-id="${p.id}"><input id="ol-${p.id}" data-k="olname" data-id="${p.id}" value="${esc(p.name)}" readonly aria-label="Имя детали"><span>${dimsTxt(p)}</span></div>`).join('')||'<p class="note">Пока пусто — нажмите R и нарисуйте доску.</p>'}</div>`}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function updateInspVals(){const p=selP();if(!p)return;['w','h','d','x','y','z'].forEach(k=>{const el=$('#sel-'+k);if(el&&document.activeElement!==el)el.value=p[k]})}
@@ -867,7 +895,7 @@ insp.addEventListener('change',e=>{const el=e.target,k=el.dataset.k;if(!k)return
   if(k==='olname'){const p=panelById(+el.dataset.id);if(!p)return;pushUndo();p.name=el.value.trim()||'Деталь';el.readOnly=true;save();renderInsp();return}
   const o=el.dataset.scope==='nb'?state.nb:selP();if(!o)return;
   if(k==='name'){pushUndo();o.name=el.value.trim()||'Деталь';save();renderInsp();return}
-  let v=num(el.value);if(!isFinite(v)||v<=0){toast('Введите число в миллиметрах');renderInsp();return}v=Math.round(v*10)/10;
+  let v=num(el.value);if(!isFinite(v)||v<=0){toast('Введите число в миллиметрах');renderInsp();return}v=r4(v);
   if(o!==state.nb)pushUndo();
   if(k==='T')o[SZ[o.t]]=Math.max(1,Math.min(100,v));else if('whd'.includes(k))o[k]=Math.min(3000,Math.max(10,v));else o[k]=k==='y'?Math.max(0,v):v;
   if(o!==state.nb){buildMesh(o);placeHandles();save();fitShadows()}renderInsp()});
@@ -878,8 +906,6 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
   if(a==='orient'||a==='mat'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels();tgt.forEach(q=>{if(a==='orient')orient(q,b.dataset.t);else q.mat=b.dataset.m;if(q!==state.nb)buildMesh(q)});if(o!==state.nb){placeHandles();save();fitShadows()}renderInsp();return}
   if(a==='cancelTool')return setTool('select');
-  if(a==='tpl'){pushUndo();state.panels=TPL[b.dataset.n]();state.name=b.dataset.n+' TR-01';state.sel=null;state.multi=null;rebuildAll();save();renderInsp();fitView();return}
-  if(a==='clear'){if(b.dataset.armed){pushUndo();state.panels=[];state.sel=null;state.multi=null;rebuildAll();save();renderInsp()}else{b.dataset.armed=1;b.textContent='Точно очистить? Нажмите ещё раз'}return}
   if(a)act(a)});
 function renderHint(){const t=state.tool,o=op&&op.type;
   $('#hint').textContent=
