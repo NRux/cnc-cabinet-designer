@@ -521,7 +521,7 @@ function panelLines(p){const pts=[],C=cornersLocal(p);EDGES.forEach(([i,j])=>pts
   (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{const T=p[SZ[f.a]],dep=Math.min(f.depth,T),off=AXV[f.a].clone().multiplyScalar(-f.s*dep*MM);const top=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));top.forEach(([A,B])=>{pts.push(A.clone(),B.clone(),A.clone().add(off),B.clone().add(off))});[top[0][0],top[0][1],top[1][0],top[1][1]].forEach(v=>pts.push(v.clone(),v.clone().add(off)))});
   const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c)))}
 function regionLines(p){const pts=[];(p.feat||[]).filter(f=>Math.abs(f.depth)<=0.01).forEach(f=>{['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
-function buildMesh(p){const old=meshes[p.id];if(old){scene.remove(old);old.geometry.dispose();old.children.forEach(c=>c.geometry.dispose())}
+function buildMesh(p){(p.feat||[]).forEach(f=>{if(f.id>=fidN)fidN=f.id+1});const old=meshes[p.id];if(old){scene.remove(old);old.geometry.dispose();old.children.forEach(c=>c.geometry.dispose())}
   const {geo,mat}=meshParts(p);const m=new THREE.Mesh(geo,mat);m.castShadow=m.receiveShadow=true;m.userData.id=p.id;
   const e=new THREE.LineSegments(panelLines(p),edgeMat(p.id));e.renderOrder=isSel(p.id)?5:1;e.visible=view==='build';m.add(e);
   const rl=regionLines(p);if(rl){rl.visible=view==='build';rl.renderOrder=2;m.add(rl)}
@@ -719,7 +719,7 @@ function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#viewpop
   if(t==='rotate'){rotClick(mx,my,e);grab();return}
   if(t==='board'){const s=infer(mx,my,op?{from:op.from,lock:state.lock}:{});if(!s)return;
     if(!op){let a='y',sign=1;if(s.type==='face'){a=s.a;sign=s.sign}else if(s.id!=null){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&h.object.userData.id===s.id){a=domAxis(h.face.normal);sign=Math.sign(h.face.normal.getComponent(AX.indexOf(a)))}}
-      op={type:'rect',from:s.pt.clone(),a,sign,cur:s.pt.clone()};renderHint();grab()}
+      op={type:'rect',from:s.pt.clone(),a,sign,cur:s.pt.clone(),pid:s.id};renderHint();grab()}
     else{finishRect();grab()}return}
   if(t==='tape'){if(!op){const s=infer(mx,my);if(!s)return;tapeClear();if((s.type==='edge'||s.type==='mid')&&s.seg){const D=s.seg[1].clone().sub(s.seg[0]).normalize();op={type:'tape',from:s.pt.clone(),line:{P:s.pt.clone(),D}}}else if(s.type==='guide'){op={type:'tape',from:s.pt.clone(),line:{P:s.pt.clone(),D:new THREE.Vector3(...s.guide.d)}}}else op={type:'tape',from:s.pt.clone()};renderHint()}
     else{if(op.line){if(op.w&&op.w.lengthSq()>1e-10){state.guides.push({p:op.line.P.clone().add(op.w).toArray().map(v=>+v.toFixed(5)),d:op.line.D.toArray()});buildGuides();save()}opEnd();tapeClear();guidePrev.visible=false}else{const s=infer(mx,my,{from:op.from,lock:state.lock});const f=op.from;opEnd();if(s)tapeShow(f,s.pt)}}grab();return}
@@ -857,6 +857,10 @@ function previewRect(){const {du,dv}=rectDims(),b=rectBox(du,dv);rectPrev.scale.
 function finishRect(du,dv){if(!op)return;let r=rectDims();if(du==null){du=r.du;dv=r.dv;if(state.snap){du=Math.round(du/10)*10;dv=Math.round(dv/10)*10}}
   if(Math.abs(du)<5&&Math.abs(dv)<5){du=state.nb.w;dv=state.nb.d}
   if(Math.abs(du)<10||Math.abs(dv)<10){toast('Слишком маленькая доска');return}
+  {const pp=op.pid!=null&&panelById(op.pid);if(pp&&!pp.rot&&(isoId==null||pp.id===isoId)){const a=op.a,ai=AX.indexOf(a),[u,v]=AX.filter(q=>q!==a),fu=op.from.getComponent(AX.indexOf(u))*1000-pp[u],fv=op.from.getComponent(AX.indexOf(v))*1000-pp[v],pl=op.sign>0?pp[a]+pp[SZ[a]]:pp[a];
+    const u0=r4(Math.min(fu,fu+du)),u1=r4(Math.max(fu,fu+du)),v0=r4(Math.min(fv,fv+dv)),v1=r4(Math.max(fv,fv+dv)),Su=pp[SZ[u]],Sv=pp[SZ[v]];
+    if(Math.abs(op.from.getComponent(ai)*1000-pl)<0.5&&u0>-0.01&&v0>-0.01&&u1<Su+0.01&&v1<Sv+0.01){if(u1-u0>=Su-0.01&&v1-v0>=Sv-0.01){toast('Прямоугольник равен всей грани — используйте «Выдавить» сразу');opEnd();return}
+      pushUndo();const f={id:fidN++,a,s:op.sign,u0:Math.max(0,u0),u1:Math.min(Su,u1),v0:Math.max(0,v0),v1:Math.min(Sv,v1),depth:0};pp.feat=(pp.feat||[]).concat(f);opEnd();buildMesh(pp);setSel(pp.id);setSub({kind:'region',id:pp.id,fid:f.id});save();toast('Область на грани «'+pp.name+'» — P: внутрь — выборка (пойдёт в фрезеровку), наружу — выступ');return}}}
   const b=rectBox(du,dv);pushUndo();const p=mk('Доска '+(state.panels.length+1),b.w,b.h,b.d,b.x,b.y,b.z,op.a,state.nb.mat);state.panels.push(p);buildMesh(p);opEnd();setSel(p.id);save();fitShadows();renderInsp()}
 /* tape */
 function tapeClear(){tapeLine.visible=false;tapeEnd=null;op_last_from=null;$('#dlt').hidden=true}
