@@ -1014,7 +1014,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
   const b=bbox(),parts=partsList(),area=state.panels.reduce((s,p)=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]);return s+d[0]*d[1]},0)/1e6;const sh=nestAll().reduce((s,g)=>s+g.sheets.length,0);
   insp.innerHTML=`<div class="grp"><h2>Проект</h2><input class="txt" id="pname" data-k="pname" value="${esc(state.name)}" aria-label="Название проекта" style="font:600 18px var(--f-display)"></div>
-    <div class="kv"><span>Деталей</span><b>${state.panels.length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${b.x1-b.x0}×${b.y1-b.y0}×${b.z1-b.z0}`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${state.sheet.replace('x','×')}</span><b>${sh}</b></div>
+    <div class="kv"><span>Деталей</span><b>${state.panels.length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${b.x1-b.x0}×${b.y1-b.y0}×${b.z1-b.z0} мм`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${state.sheet.replace('x','×')}</span><b>${sh}</b></div>
     <div class="grp"><span class="lbl">Детали · дважды кликните имя, чтобы переименовать</span>${outliner()}</div>`}
 function outliner(){return `<div class="ol">${state.panels.map(p=>`<div class="olr${isSel(p.id)?' on':''}" data-id="${p.id}"><input id="ol-${p.id}" data-k="olname" data-id="${p.id}" value="${esc(p.name)}" readonly aria-label="Имя детали"><span>${dimsTxt(p)}</span></div>`).join('')||'<p class="note">Пока пусто — нажмите R и нарисуйте доску.</p>'}</div>`}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -1056,7 +1056,7 @@ const dls={x:$('#dlx'),y:$('#dly'),z:$('#dlz')};
 function updateLabels(){const p=selP();if(view!=='build'||!p||op){Object.values(dls).forEach(d=>d.hidden=true);return}
   const x0=p.x*MM,x1=(p.x+p.w)*MM,y0=p.y*MM,y1=(p.y+p.h)*MM,z0=p.z*MM,z1=(p.z+p.d)*MM;
   const pts={x:[(x0+x1)/2,y0,z1],y:[x1,(y0+y1)/2,z1],z:[x1,y0,(z0+z1)/2]};
-  AX.forEach(a=>{const s=scr(new THREE.Vector3(...pts[a]));const d=dls[a];if(s.z>1){d.hidden=true;return}d.hidden=false;d.textContent=p[SZ[a]]+(a===p.t?' · толщ.':'');d.style.transform=`translate(${s.x+8}px,${s.y-10}px)`})}
+  AX.forEach(a=>{const s=scr(new THREE.Vector3(...pts[a]));const d=dls[a];if(s.z>1){d.hidden=true;return}d.hidden=false;d.textContent=p[SZ[a]]+' мм'+(a===p.t?' · толщ.':'');d.style.transform=`translate(${s.x+8}px,${s.y-10}px)`})}
 
 /* ---------- camera / shadows ---------- */
 function center(){const b=bbox();return new THREE.Vector3((b.x0+b.x1)/2*MM,(b.y0+b.y1)/2*MM,(b.z0+b.z1)/2*MM)}
@@ -1251,7 +1251,7 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
   const e=k*0.45,tick=(x,y)=>`<line class="tk" x1="${f1(x-e)}" y1="${f1(y+e)}" x2="${f1(x+e)}" y2="${f1(y-e)}"/>`;
   const dH=(x1,x2,y,ref,t)=>{const s=Math.sign(y-ref)||1;return`<g class="dm"><line x1="${f1(x1)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x1)}" y2="${f1(y+s*e)}"/><line x1="${f1(x2)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x2)}" y2="${f1(y+s*e)}"/><line x1="${f1(x1-e)}" y1="${f1(y)}" x2="${f1(x2+e)}" y2="${f1(y)}"/>${tick(x1,y)}${tick(x2,y)}<text x="${f1((x1+x2)/2)}" y="${f1(y-k*.35)}" font-size="${f1(k)}">${t}</text></g>`};
   const dV=(y1,y2,x,ref,t)=>{const s=Math.sign(x-ref)||1,ty=(y1+y2)/2,tx=x-k*.35;ex=Math.max(ex,x+k);return`<g class="dm"><line x1="${f1(ref+s*k*.3)}" y1="${f1(y1)}" x2="${f1(x+s*e)}" y2="${f1(y1)}"/><line x1="${f1(ref+s*k*.3)}" y1="${f1(y2)}" x2="${f1(x+s*e)}" y2="${f1(y2)}"/><line x1="${f1(x)}" y1="${f1(y1-e)}" x2="${f1(x)}" y2="${f1(y2+e)}"/>${tick(x,y1)}${tick(x,y2)}<text x="${f1(tx)}" y="${f1(ty)}" font-size="${f1(k)}" transform="rotate(-90 ${f1(tx)} ${f1(ty)})">${t}</text></g>`};
-  let oy=0;o.push(Tx(0,oy,k*1.6,'Общий вид','h'));oy+=k*4;
+  let oy=0;o.push(Tx(0,oy,k*1.6,'Общий вид','h'),Tx(0,oy+k*1.9,k*.95,'Все размеры на чертежах — в миллиметрах (мм)','s'));oy+=k*5.5;
   const fx=k*5,fy=oy;
   [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>o.push(R(fx+p.x-b.x0,fy+b.y1-p.y-p.h,p.w,p.h)));
   o.push(dH(fx,fx+W,fy+H+k*2.4,fy+H,W),dV(fy,fy+H,fx-k*2.4,fx,H),Tx(fx,fy+H+k*5,k*.9,'Фасад','s'));
@@ -1267,7 +1267,7 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
     (pt.fe||[]).forEach(f=>{o.push(`<rect class="pk${f.thr?' thr':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*1.6,k*.8,f.thr?'вырез насквозь':f.depth>0?`выборка ${f1(f.depth)}${f.s<0?' (снизу)':''}`:f.depth<0?`выступ ${f1(-f.depth)}`:'разметка'))});
     if(pt.mat!=='black'){const gy=y+pt.W/2,gl=Math.min(pt.L*0.5,k*12);o.push(`<line class="gr" x1="${f1(x+pt.L/2-gl/2)}" y1="${f1(gy)}" x2="${f1(x+pt.L/2+gl/2)}" y2="${f1(gy)}"/>`)}
     o.push(Tx(x+pt.L/2,y+pt.W/2-k*.6,k*1.5,'Д'+pt.no));
-    o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ×${pt.qty}`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
+    o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ${pt.L} × ${pt.W} мм · ${pt.qty} шт.`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
     cx+=Math.max(bw,k*22)+k*3;rowH=Math.max(rowH,bh+k*3)});
   oy+=rowH+G*0.6;
   const mill=parts.filter(pt=>(pt.fe||[]).some(f=>Math.abs(f.depth)>0.001)||pt.edgeF);
@@ -1307,11 +1307,11 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
     oy+=G*.3}
   o.push(Tx(0,oy,k*1.6,'Карта раскроя','h'));oy+=k*4;cx=fx;rowH=0;
   nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
-    const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW}×${g.SH} · ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
+    const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW} × ${g.SH} мм · использовано ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
     const st=s.stats||(s.stats=sheetStats(s,g.SW,g.SH));
-    st.waste.forEach(r=>{o.push(`<rect class="ws" x="${f1(x+r.x)}" y="${f1(y+r.y)}" width="${f1(r.w)}" height="${f1(r.h)}" data-t="w|${r.w}|${r.h}|${Math.round(r.x)}|${Math.round(r.y)}|${i+1}|${g.T}"/>`);if(r.w>k*6&&r.h>k*1.6)o.push(`<text class="wt" x="${f1(x+r.x+k*.4)}" y="${f1(y+r.y+k*1.1)}" font-size="${f1(Math.min(k*.75,r.h*.5))}">${r.w}×${r.h}</text>`)});
+    st.waste.forEach(r=>{o.push(`<rect class="ws" x="${f1(x+r.x)}" y="${f1(y+r.y)}" width="${f1(r.w)}" height="${f1(r.h)}" data-t="w|${r.w}|${r.h}|${Math.round(r.x)}|${Math.round(r.y)}|${i+1}|${g.T}"/>`);if(r.w>k*6&&r.h>k*1.6)o.push(`<text class="wt" x="${f1(x+r.x+k*.4)}" y="${f1(y+r.y+k*1.1)}" font-size="${f1(Math.min(k*.75,r.h*.5))}">отход ${r.w}×${r.h} мм</text>`)});
     s.parts.forEach(p=>{const X=x+p.x,Y=y+p.y,fs=Math.min(k*.9,p.h*.28,p.w*.12);o.push(`<rect class="np" style="fill:${NPAL[(p.no-1)%NPAL.length]}" x="${f1(X)}" y="${f1(Y)}" width="${f1(p.w)}" height="${f1(p.h)}" data-t="p|${p.no}|${p.w}|${p.h}|${Math.round(p.x)}|${Math.round(p.y)}|${i+1}|${g.T}|${g.mat}"/>`);
-      if(fs>3){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h}</text>`,`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
+      if(fs>3){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h} мм</text>`,`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
       const bs=Math.min(k*2.6,p.h*.45,p.w*.3);if(bs>3)o.push(`<text class="nn" x="${f1(X+p.w/2)}" y="${f1(Y+p.h/2+bs*.35)}" font-size="${f1(bs)}" text-anchor="middle">${p.no}</text>`)});
     cx+=g.SW+G*.6;rowH=Math.max(rowH,g.SH+k*5)});
     g.over.forEach(it=>o.push(Tx(cx,oy+k,k*.9,`Д${it.no} больше листа ${g.SW}×${g.SH}`,'s')))});
@@ -1342,12 +1342,12 @@ sheetEl.addEventListener('pointerleave',()=>ntip.hidden=true);
 $('#zin').onclick=()=>zc(1/1.4);$('#zout').onclick=()=>zc(1.4);$('#zfit').onclick=()=>{vb=vb0.slice();applyVB()};
 function renderSpec(){const parts=partsList(),groups=nestAll();
   $('#spec').innerHTML=`<div class="grp"><h2 style="font:500 12px var(--f-body);color:var(--mute);margin:0">Спецификация · Product sheet</h2><h3 style="font:600 26px/1.1 var(--f-display);letter-spacing:-.02em;margin:6px 0 0">${esc(state.name)}</h3></div>
-  <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th>Д×Ш</th><th>Т</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
-  <label class="fld" style="grid-template-columns:1fr 140px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x','×')}</option>`).join('')}<option value="custom" ${state.sheet==='custom'?'selected':''}>Свой размер</option></select></label>
+  <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th style="white-space:nowrap">Д×Ш, мм</th><th style="white-space:nowrap">Т, мм</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
+  <label class="fld" style="grid-template-columns:1fr 160px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x',' × ')} мм</option>`).join('')}<option value="custom" ${state.sheet==='custom'?'selected':''}>Свой размер</option></select></label>
   ${state.sheet==='custom'?`<div class="fld"><span>Длина листа</span><input id="shW" inputmode="decimal" value="${state.sheetW||2500}"><i>мм</i></div><div class="fld"><span>Ширина листа</span><input id="shH" inputmode="decimal" value="${state.sheetH||1250}"><i>мм</i></div>`:''}
   ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b></div></div>
   <div class="grp"><span class="lbl">Листы по толщинам</span><div class="kv">${S.groups.map(g=>`<span>${g.T} мм · ${MATS[g.mat].short}</span><b>${g.sheets.length} л.${g.over.length?' · есть крупнее листа':''}</b>`).join('')}</div></div>
-  <div class="grp"><span class="lbl">Таблица отходов</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Размер</th><th>Т</th><th>шт</th></tr></thead><tbody>${S.waste.map((w,i)=>`<tr><td class="n">${i+1}</td><td class="n" style="text-align:left">${w.sz} мм</td><td class="n">${w.T}</td><td class="n">${w.n}</td></tr>`).join('')||'<tr><td colspan="4">Нет отходов</td></tr>'}</tbody></table></div></div>`})()}
+  <div class="grp"><span class="lbl">Таблица отходов</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Размер</th><th style="white-space:nowrap">Т, мм</th><th>шт</th></tr></thead><tbody>${S.waste.map((w,i)=>`<tr><td class="n">${i+1}</td><td class="n" style="text-align:left">${w.sz} мм</td><td class="n">${w.T}</td><td class="n">${w.n}</td></tr>`).join('')||'<tr><td colspan="4">Нет отходов</td></tr>'}</tbody></table></div></div>`})()}
   <button class="btn pri" id="pdfBtn">Скачать паспорт PDF</button>
   <p class="note">Пропил 4 мм, обрезка кромки листа 10 мм. Наведите курсор на деталь или отход на карте — появится подробная карточка. Колесо мыши — масштаб, перетаскивание — сдвиг.</p>`;
   $('#pdfBtn').onclick=makePDF;const shIn=(id,k)=>{const el=$(id);if(el)el.onchange=()=>{const v=num(el.value);if(isFinite(v)&&v>=200&&v<=6000){state[k]=r4(v);save();renderDrawing();renderSpec()}else toast('Размер листа от 200 до 6000 мм')}};shIn('#shW','sheetW');shIn('#shH','sheetH');
@@ -1450,7 +1450,7 @@ function sheetPages(img){const PW=595.28,PH=841.89,S=2480/PW,M=45,pages=[];
   const cols=[[M,'№'],[M+28,'Деталь'],[M+230,'Длина × ширина'],[M+330,'Толщина'],[M+385,'Кол-во'],[M+430,'Материал']];
   const head=()=>{rule(g,y,1,'#111');g.fillStyle='#111';g.font=PF(600,8);g.fillText('Детали',M,y+13);y+=20;rule(g,y);g.font=PF(400,6.5);g.fillStyle='#888';cols.forEach(([x,t])=>g.fillText(t,x,y+11));y+=17;rule(g,y)};
   head();
-  parts.forEach(pt=>{if(y>PH-68){footer(g);g=newPage();y=70;head()}g.fillStyle='#111';g.font=PF(400,7.5);const row=['Д'+pt.no,pt.names.join(', '),`${pt.L} × ${pt.W}`,pt.T+' мм',String(pt.qty),MATS[pt.mat].short];
+  parts.forEach(pt=>{if(y>PH-68){footer(g);g=newPage();y=70;head()}g.fillStyle='#111';g.font=PF(400,7.5);const row=['Д'+pt.no,pt.names.join(', '),`${pt.L} × ${pt.W} мм`,pt.T+' мм',String(pt.qty),MATS[pt.mat].short];
     row.forEach((t,i)=>{let tx=t;if(i===1)while(g.measureText(tx).width>195&&tx.length>3)tx=tx.slice(0,-2)+'…';g.fillText(tx,cols[i][0],y+12)});y+=18;rule(g,y)});
   footer(g);return pages}
 function pdfBlob(imgs,wpx,hpx){const enc=new TextEncoder(),chunks=[],offs=[];let len=0;const put=x=>{const b=typeof x==='string'?enc.encode(x):x;chunks.push(b);len+=b.length};const PW=595.28,PH=841.89,n=imgs.length;
