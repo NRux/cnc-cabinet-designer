@@ -98,12 +98,12 @@ td{padding:9px 4px;border-bottom:1px solid var(--line);font-variant-numeric:tabu
 td.n{font-family:var(--f-mono);text-align:right}
 .dw .pn{fill:var(--paper);stroke:var(--ink);stroke-width:1.1;vector-effect:non-scaling-stroke}
 .dw .sh{fill:var(--soft);stroke:var(--ink);stroke-width:1;vector-effect:non-scaling-stroke}
-.dw .pc{fill:var(--paper);stroke:var(--ink);stroke-width:.8;vector-effect:non-scaling-stroke}
+.dw .pc{fill:var(--paper);stroke:var(--ink);stroke-width:.8;vector-effect:non-scaling-stroke}.dw .callout{fill:none;stroke:#d2342c;stroke-width:1;vector-effect:non-scaling-stroke}.dw .sep{stroke:var(--line,#ddd);stroke-width:1;vector-effect:non-scaling-stroke}
 .dw .dm line{stroke:var(--mute);stroke-width:.7;vector-effect:non-scaling-stroke}
 .dw .dm line.tk{stroke:var(--ink);stroke-width:1.2}
 .dw text{fill:var(--ink);font-family:var(--f-mono);text-anchor:middle}
 .dw text.h{font-family:var(--f-display);font-weight:600;text-anchor:start}
-.dw text.s{fill:var(--mute);text-anchor:start}
+.dw text.s{fill:var(--mute);text-anchor:start}.dw text.mh{fill:var(--ink,#111);text-anchor:start;font-weight:600}
 .dw .gr{stroke:var(--hi);stroke-width:.8;vector-effect:non-scaling-stroke;stroke-dasharray:6 4}
 .dw .pk{fill:rgba(31,95,224,.06);stroke:#1f5fe0;stroke-width:1;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}.dw .pk.boss{fill:rgba(140,106,69,.12);stroke:#8c6a45}.dw .pk.thr{fill:rgba(0,0,0,.08);stroke-dasharray:none}
 .dw .np{stroke:#5d6270;stroke-width:.8;vector-effect:non-scaling-stroke;cursor:pointer}.dw .np:hover{stroke:#1f5fe0;stroke-width:2}.dw .ws{fill:url(#hatch);stroke:#c9c9ce;stroke-width:.6;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;cursor:help}
@@ -855,12 +855,12 @@ function rectBox(du,dv){const nb=state.nb,T=nb[SZ[nb.t]],{u,v}=rectDims(),a=op.a
   const pl=r4(f.getComponent(AX.indexOf(a))*1000);b[a]=op.sign>0?pl:pl-T;b[SZ[a]]=T;if(b.y<0)b.y=0;return b}
 function previewRect(){const {du,dv}=rectDims(),b=rectBox(du,dv);rectPrev.scale.set(b.w*MM,b.h*MM,b.d*MM);rectPrev.position.set((b.x+b.w/2)*MM,(b.y+b.h/2)*MM,(b.z+b.d/2)*MM);rectPrev.visible=true;setVCB('Размеры',`${Math.abs(du)}; ${Math.abs(dv)} мм`,false)}
 function finishRect(du,dv){if(!op)return;let r=rectDims();if(du==null){du=r.du;dv=r.dv;if(state.snap){du=Math.round(du/10)*10;dv=Math.round(dv/10)*10}}
-  if(Math.abs(du)<5&&Math.abs(dv)<5){du=state.nb.w;dv=state.nb.d}
-  if(Math.abs(du)<10||Math.abs(dv)<10){toast('Слишком маленькая доска');return}
   {const pp=op.pid!=null&&panelById(op.pid);if(pp&&!pp.rot&&(isoId==null||pp.id===isoId)){const a=op.a,ai=AX.indexOf(a),[u,v]=AX.filter(q=>q!==a),fu=op.from.getComponent(AX.indexOf(u))*1000-pp[u],fv=op.from.getComponent(AX.indexOf(v))*1000-pp[v],pl=op.sign>0?pp[a]+pp[SZ[a]]:pp[a];
     const u0=r4(Math.min(fu,fu+du)),u1=r4(Math.max(fu,fu+du)),v0=r4(Math.min(fv,fv+dv)),v1=r4(Math.max(fv,fv+dv)),Su=pp[SZ[u]],Sv=pp[SZ[v]];
-    if(Math.abs(op.from.getComponent(ai)*1000-pl)<0.5&&u0>-0.01&&v0>-0.01&&u1<Su+0.01&&v1<Sv+0.01){if(u1-u0>=Su-0.01&&v1-v0>=Sv-0.01){toast('Прямоугольник равен всей грани — используйте «Выдавить» сразу');opEnd();return}
+    if(Math.abs(du)>=0.5&&Math.abs(dv)>=0.5&&Math.abs(op.from.getComponent(ai)*1000-pl)<0.5&&u0>-0.01&&v0>-0.01&&u1<Su+0.01&&v1<Sv+0.01){if(u1-u0>=Su-0.01&&v1-v0>=Sv-0.01){toast('Прямоугольник равен всей грани — используйте «Выдавить» сразу');opEnd();return}
       pushUndo();const f={id:fidN++,a,s:op.sign,u0:Math.max(0,u0),u1:Math.min(Su,u1),v0:Math.max(0,v0),v1:Math.min(Sv,v1),depth:0};pp.feat=(pp.feat||[]).concat(f);opEnd();buildMesh(pp);setSel(pp.id);setSub({kind:'region',id:pp.id,fid:f.id});save();toast('Область на грани «'+pp.name+'» — P: внутрь — выборка (пойдёт в фрезеровку), наружу — выступ');return}}}
+  if(Math.abs(du)<5&&Math.abs(dv)<5){du=state.nb.w;dv=state.nb.d}
+  if(Math.abs(du)<10||Math.abs(dv)<10){toast('Слишком маленькая доска');return}
   const b=rectBox(du,dv);pushUndo();const p=mk('Доска '+(state.panels.length+1),b.w,b.h,b.d,b.x,b.y,b.z,op.a,state.nb.mat);state.panels.push(p);buildMesh(p);opEnd();setSel(p.id);save();fitShadows();renderInsp()}
 /* tape */
 function tapeClear(){tapeLine.visible=false;tapeEnd=null;op_last_from=null;$('#dlt').hidden=true}
@@ -1219,8 +1219,8 @@ function loop(){requestAnimationFrame(loop);if(capturing)return;if(view==='build
 
 /* ---------- parts & nesting ---------- */
 function partsList(){const g=new Map();state.panels.forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
-  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+JSON.stringify(fe);
-  if(!g.has(key))g.set(key,{L:dm[0],W:dm[1],T,mat:p.mat,names:[],qty:0,fe,edgeF:(p.feat||[]).filter(f=>f.a!==p.t).length});const o=g.get(key);o.qty++;if(!o.names.includes(p.name))o.names.push(p.name)});
+  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s}}),ed=(p.feat||[]).filter(f=>f.a!==p.t&&Math.abs(f.depth)>0.01).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];const e=AX.find(q=>q!==f.a&&q!==p.t);return{len:p[SZ[e]],long:e===ax[0],s:f.s,x0:r[e][0],x1:r[e][1],y0:r[p.t][0],y1:r[p.t][1],depth:f.depth,thr:f.depth>=p[SZ[f.a]]}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+JSON.stringify(fe)+JSON.stringify(ed);
+  if(!g.has(key))g.set(key,{L:dm[0],W:dm[1],T,mat:p.mat,names:[],qty:0,fe,ed,edgeF:ed.length});const o=g.get(key);o.qty++;if(!o.names.includes(p.name))o.names.push(p.name)});
   const arr=[...g.values()].sort((a,b)=>b.T-a.T||b.L*b.W-a.L*a.W);arr.forEach((o,i)=>o.no=i+1);return arr}
 function pack(items,SW,SH,kerf=4,trim=10){const sheets=[],over=[];const W=SW-2*trim,H=SH-2*trim;
   items.sort((a,b)=>Math.max(b.L,b.W)-Math.max(a.L,a.W)||b.W-a.W);
@@ -1271,17 +1271,41 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
     o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ×${pt.qty}`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
     cx+=Math.max(bw,k*22)+k*3;rowH=Math.max(rowH,bh+k*3)});
   oy+=rowH+G*0.6;
-  const mill=parts.filter(pt=>(pt.fe||[]).some(f=>Math.abs(f.depth)>0.01)||pt.edgeF);
-  if(mill.length){oy+=k*2;o.push(Tx(0,oy,k*1.6,'Фрезерная обработка','h'),Tx(k*14,oy,k*.85,'после раскроя · фреза Ø6 мм · внутренние углы R3 · размеры от левого верхнего угла детали','s'));oy+=k*4;cx=fx;rowH=0;
-    mill.forEach(pt=>{const ops=(pt.fe||[]).filter(f=>Math.abs(f.depth)>0.01),bw=pt.L+k*(6+ops.length*2.6);if(cx+bw>maxW&&cx>fx){cx=fx;oy+=rowH;rowH=0}
-      const x=cx,y=oy+k*3.4;o.push(R(x,y,pt.L,pt.W),Tx(x,y-k*2.2,k*1.05,`Д${pt.no} · ${pt.names[0]} · ${pt.L}×${pt.W}×${pt.T} · ${pt.qty} шт.`,'s'));
-      ops.forEach((f,i)=>{const w=f.x1-f.x0,h=f.y1-f.y0;o.push(`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(w)}" height="${f1(h)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*.5,Math.min(k*1.6,h*.6),String(i+1)));
-        const yy=y+pt.W+k*(2.4+i*2.6);if(f.x0>0.5)o.push(dH(x,x+f.x0,yy,y+pt.W,f1(f.x0)));o.push(dH(x+f.x0,x+f.x1,yy,y+pt.W,f1(w)));
-        const xx=x+pt.L+k*(2.4+i*2.6);if(f.y0>0.5)o.push(dV(y,y+f.y0,xx,x+pt.L,f1(f.y0)));o.push(dV(y+f.y0,y+f.y1,xx,x+pt.L,f1(h)))});
-      let ty=y+pt.W+k*(2.4+ops.length*2.6)+k*1.6;ops.forEach((f,i)=>{o.push(Tx(x,ty,k*.85,`${i+1}. ${f.thr?'Сквозной вырез':f.depth>0?'Выборка глубиной '+f1(f.depth)+' мм':'Накладка '+f1(-f.depth)+' мм — приклеить'} · ${f1(f.x1-f.x0)}×${f1(f.y1-f.y0)} · X ${f1(f.x0)}, Y ${f1(f.y0)} · ${f.s>0?'лицевая сторона':'обратная сторона'}`,'s'));ty+=k*1.4});
-      if(pt.edgeF){o.push(Tx(x,ty,k*.85,`Обработка торцов: ${pt.edgeF} — размеры в 3D-модели и DXF`,'s'));ty+=k*1.4}
-      cx+=Math.max(bw,k*46)+k*3;rowH=Math.max(rowH,ty-oy+k*2)});
-    oy+=rowH+G*.4}
+  const mill=parts.filter(pt=>(pt.fe||[]).some(f=>Math.abs(f.depth)>0.001)||pt.edgeF);
+  if(mill.length){oy+=k*3;o.push(`<line class="sep" x1="0" y1="${f1(oy-k*2.2)}" x2="${f1(maxW)}" y2="${f1(oy-k*2.2)}"/>`,Tx(0,oy,k*1.6,'Фрезерная обработка','h'),Tx(0,oy+k*1.9,k*.85,'Отдельная операция после раскроя · фреза Ø6 мм · внутренние углы R3 · все размеры в мм от краёв детали','s'));oy+=k*6;
+    const opN=f=>f.thr?'Сквозной вырез':f.depth>0?'Выборка глубиной '+f1(f.depth)+' мм':'Накладка (выступ) '+f1(-f.depth)+' мм — приклеить';
+    const sect=(x,y,L,T,f,ve)=>{const d=Math.min(Math.abs(f.depth)*ve,T),a=x+f.x0,b=x+f.x1,top=f.s>0;let P;
+      if(f.thr)return R(x,y,f.x0,T,'pc')+R(b,y,L-f.x1,T,'pc');
+      if(f.depth>0)P=top?`M${f1(x)} ${f1(y)}H${f1(a)}V${f1(y+d)}H${f1(b)}V${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(x)}Z`:`M${f1(x)} ${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(b)}V${f1(y+T-d)}H${f1(a)}V${f1(y+T)}H${f1(x)}Z`;
+      else P=top?`M${f1(x)} ${f1(y)}H${f1(a)}V${f1(y-d)}H${f1(b)}V${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(x)}Z`:`M${f1(x)} ${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(b)}V${f1(y+T+d)}H${f1(a)}V${f1(y+T)}H${f1(x)}Z`;
+      ex=Math.max(ex,x+L);return `<path class="pc" d="${P}"/>`};
+    const chainH=(x,L,x0,x1,yy,ref)=>{const r=[];if(x0>0.05)r.push(dH(x,x+x0,yy,ref,f1(x0)));r.push(dH(x+x0,x+x1,yy,ref,f1(x1-x0)));if(L-x1>0.05)r.push(dH(x+x1,x+L,yy,ref,f1(L-x1)));return r.join('')};
+    const chainV=(y,W,y0,y1,xx,ref)=>{const r=[];if(y0>0.05)r.push(dV(y,y+y0,xx,ref,f1(y0)));r.push(dV(y+y0,y+y1,xx,ref,f1(y1-y0)));if(W-y1>0.05)r.push(dV(y+y1,y+W,xx,ref,f1(W-y1)));return r.join('')};
+    mill.forEach(pt=>{const ops=(pt.fe||[]).filter(f=>Math.abs(f.depth)>0.001),x=fx,L=pt.L,W=pt.W,T=pt.T,ve=Math.max(1,Math.min(10,Math.round(W*0.3/T))),TV=T*ve;let y=oy;
+      o.push(Tx(x,y,k*1.15,`Д${pt.no} · ${pt.names.join(', ')} · ${f1(L)} × ${f1(W)} × ${f1(T)} мм · ${pt.qty} шт.`,'mh'));y+=k*3;
+      let n=0;
+      ops.forEach(f=>{n++;const top=y+k*3.4;
+        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · ${f.s>0?'лицевая пласть':'обратная пласть'}`,'mh'));
+        o.push(R(x,top,L,W),`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}"/>`);
+        o.push(dH(x,x+L,top-k*1.4,top,f1(L)),dV(top,top+W,x-k*2.2,x,f1(W)));
+        o.push(chainH(x,L,f.x0,f.x1,top+W+k*2.4,top+W),chainV(top,W,f.y0,f.y1,x+L+k*2.4,x+L));
+        const sx=x+L+k*9,dr=Math.min(Math.abs(f.depth),T),dv=dr*ve,sy=top+(f.depth<0&&f.s>0?dv:0)+k*1.5;
+        o.push(Tx(sx,top-k*.2,k*.85,'Разрез'+(ve>1?' · толщина показана ×'+ve:''),'s'),sect(sx,sy,L,TV,f,ve));
+        const a=sx+f.x1;
+        o.push(chainH(sx,L,f.x0,f.x1,sy+TV+(f.s<0&&f.depth<0?dv:0)+k*2.4,sy+TV),dV(sy,sy+TV,sx+L+k*2.4,sx+L,f1(T)));
+        if(!f.thr){const y1=f.s>0?(f.depth>0?sy:sy-dv):(f.depth>0?sy+TV-dv:sy+TV);o.push(dV(y1,y1+dv,a+k*2.2,a,f1(dr)));if(f.depth>0)o.push(Tx(sx,sy+TV+k*5.2,k*.85,`глубина ${f1(dr)} мм · остаток толщины ${f1(T-dr)} мм`,'s'))}
+        let zy=sy+TV+k*7;const pw=f.x1-f.x0,ph=f.y1-f.y0;if(Math.min(pw,ph)<Math.max(L,W)*0.04){const z=Math.max(2,Math.min(50,Math.round(k*10/Math.max(pw,ph)))),cx=x+(f.x0+f.x1)/2,cy=top+(f.y0+f.y1)/2,rr=Math.max(pw,ph)/2+k*1.2;
+          o.push(`<circle class="callout" cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(rr)}"/>`,Tx(cx+rr+k*.3,cy-rr,k*.9,'А'+n,'mh'));
+          const zx=sx,zt=zy+k*1.2;o.push(Tx(zx,zy,k*.85,`Узел А${n} · увеличено ×${z}`,'s'),R(zx,zt,pw*z,ph*z,'pk'),dH(zx,zx+pw*z,zt+ph*z+k*2.2,zt+ph*z,f1(pw)),dV(zt,zt+ph*z,zx+pw*z+k*2.2,zx+pw*z,f1(ph)),Tx(zx,zt+ph*z+k*4.6,k*.85,`от левого края ${f1(f.x0)} · от верхнего края ${f1(f.y0)} мм`,'s'));zy=zt+ph*z+k*6.5}
+        y=Math.max(top+W+k*5.5,zy)});
+      (pt.ed||[]).forEach(f=>{n++;const top=y+k*1.6,EL=f.len;
+        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · торец ${f.long?'длинный':'короткий'} (${f.s>0?'сторона A':'сторона Б'})`,'mh'));
+        o.push(R(x,top,EL,TV),`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0*ve)}" width="${f1(f.x1-f.x0)}" height="${f1((f.y1-f.y0)*ve)}"/>`);
+        o.push(chainH(x,EL,f.x0,f.x1,top+TV+k*2.4,top+TV),[[0,f.y0],[f.y0,f.y1],[f.y1,T]].filter(q=>q[1]-q[0]>0.05).map(q=>dV(top+q[0]*ve,top+q[1]*ve,x+EL+k*2.4,x+EL,f1(q[1]-q[0]))).join(''));
+        o.push(Tx(x,top+TV+k*5,k*.85,`вид на торец${ve>1?' (толщина ×'+ve+')':''} · глубина ${f1(Math.abs(f.depth))} мм внутрь детали · от пласти ${f1(f.y0)} мм`,'s'));
+        y=top+TV+k*7.5});
+      oy=y+k*2});
+    oy+=G*.3}
   o.push(Tx(0,oy,k*1.6,'Карта раскроя','h'));oy+=k*4;cx=fx;rowH=0;
   nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
     const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW}×${g.SH} · ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
@@ -1298,7 +1322,7 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
   o.push(Tx(tx+k,oy+k*2,k*1.3,'artem terekhov','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Деталей: ${P.length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Размеры в мм','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
   oy+=th;ex=Math.max(ex,tx+tw);
   const box=[-k*2,-k*3,ex+k*6,oy+k*5];
-  const css=forFile?`<style>.pn,.pc{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}.sh{fill:#efece6;stroke:#222;vector-effect:non-scaling-stroke}.dm line{stroke:#777;stroke-width:.6;vector-effect:non-scaling-stroke}.dm line.tk{stroke:#222;stroke-width:1.1}.gr{stroke:#9a6a3a;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.tb{fill:none;stroke:#222;vector-effect:non-scaling-stroke}text{fill:#222;font-family:IBM Plex Mono,monospace;text-anchor:middle}text.h{font-family:Jost,sans-serif;letter-spacing:.2em;text-anchor:start}text.s{fill:#666;text-anchor:start}.np{stroke:#5d6270;vector-effect:non-scaling-stroke}.ws{fill:url(#hatch);stroke:#ccc;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}text.nl,text.wt{text-anchor:start}text.wt{fill:#999}text.nn{font-weight:700;fill:#111}</style><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#fff"/>`:'';
+  const css=forFile?`<style>.callout{fill:none;stroke:#d2342c;vector-effect:non-scaling-stroke}.sep{stroke:#ddd;vector-effect:non-scaling-stroke}text.mh{fill:#111;text-anchor:start;font-weight:600}.pn,.pc{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}.sh{fill:#efece6;stroke:#222;vector-effect:non-scaling-stroke}.dm line{stroke:#777;stroke-width:.6;vector-effect:non-scaling-stroke}.dm line.tk{stroke:#222;stroke-width:1.1}.gr{stroke:#9a6a3a;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.tb{fill:none;stroke:#222;vector-effect:non-scaling-stroke}text{fill:#222;font-family:IBM Plex Mono,monospace;text-anchor:middle}text.h{font-family:Jost,sans-serif;letter-spacing:.2em;text-anchor:start}text.s{fill:#666;text-anchor:start}.np{stroke:#5d6270;vector-effect:non-scaling-stroke}.ws{fill:url(#hatch);stroke:#ccc;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}text.nl,text.wt{text-anchor:start}text.wt{fill:#999}text.nn{font-weight:700;fill:#111}</style><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#fff"/>`:'';
   const defs=`<defs><pattern id="hatch" width="${f1(k*.8)}" height="${f1(k*.8)}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="${f1(k*.8)}" height="${f1(k*.8)}" fill="#f6f6f8"/><line x1="0" y1="0" x2="0" y2="${f1(k*.8)}" stroke="#dcdce2" stroke-width="${f1(k*.14)}"/></pattern></defs>`;
   return{svg:`<svg class="dw" xmlns="http://www.w3.org/2000/svg" viewBox="${box.map(f1).join(' ')}" preserveAspectRatio="xMidYMid meet">${defs}${css}${o.join('')}</svg>`,vb:box}}
 function renderDrawing(){sheetEl.querySelector(':scope>svg.dw')?.remove();const d=buildDrawing(false);sheetEl.insertAdjacentHTML('beforeend',d.svg);svg=sheetEl.querySelector(':scope>svg.dw');vb0=d.vb.slice();vb=d.vb.slice();drawDirty=false}
@@ -1322,7 +1346,7 @@ function renderSpec(){const parts=partsList(),groups=nestAll();
   <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th>Д×Ш</th><th>Т</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
   <label class="fld" style="grid-template-columns:1fr 140px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x','×')}</option>`).join('')}<option value="custom" ${state.sheet==='custom'?'selected':''}>Свой размер</option></select></label>
   ${state.sheet==='custom'?`<div class="fld"><span>Длина листа</span><input id="shW" inputmode="decimal" value="${state.sheetW||2500}"><i>мм</i></div><div class="fld"><span>Ширина листа</span><input id="shH" inputmode="decimal" value="${state.sheetH||1250}"><i>мм</i></div>`:''}
-  ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b><span>Фрезерных операций</span><b>${S.parts.reduce((a,pt)=>a+((pt.fe||[]).filter(f=>Math.abs(f.depth)>0.01).length+(pt.edgeF||0))*pt.qty,0)}</b></div></div>
+  ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b></div></div>
   <div class="grp"><span class="lbl">Листы по толщинам</span><div class="kv">${S.groups.map(g=>`<span>${g.T} мм · ${MATS[g.mat].short}</span><b>${g.sheets.length} л.${g.over.length?' · есть крупнее листа':''}</b>`).join('')}</div></div>
   <div class="grp"><span class="lbl">Таблица отходов</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Размер</th><th>Т</th><th>шт</th></tr></thead><tbody>${S.waste.map((w,i)=>`<tr><td class="n">${i+1}</td><td class="n" style="text-align:left">${w.sz} мм</td><td class="n">${w.T}</td><td class="n">${w.n}</td></tr>`).join('')||'<tr><td colspan="4">Нет отходов</td></tr>'}</tbody></table></div></div>`})()}
   <button class="btn pri" id="pdfBtn">Скачать паспорт PDF</button>
