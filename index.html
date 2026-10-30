@@ -34,7 +34,7 @@ header{display:flex;align-items:center;gap:24px;padding-block:12px;padding-left:
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .brand svg{flex:none;color:var(--fg)}
 .brand .mark{width:54px;height:31px}
-.wm{font:400 19px/1 Questrial,var(--f-display);letter-spacing:.04em;white-space:nowrap}
+.wm{font:700 23px/1 var(--f-display);letter-spacing:-.045em;white-space:nowrap}
 .wm sup{font:400 9px var(--f-body);letter-spacing:0;margin-left:5px;vertical-align:-2px}
 nav{display:flex;gap:2px;margin-left:auto;margin-right:auto;flex-wrap:wrap}
 nav a{font:400 13px var(--f-body);color:var(--mute);text-decoration:none;padding:7px 14px;border-radius:980px}
@@ -105,7 +105,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 .dw text.h{font-family:var(--f-display);font-weight:600;text-anchor:start}
 .dw text.s{fill:var(--mute);text-anchor:start}
 .dw .gr{stroke:var(--hi);stroke-width:.8;vector-effect:non-scaling-stroke;stroke-dasharray:6 4}
-.dw .pk{fill:rgba(31,95,224,.06);stroke:#1f5fe0;stroke-width:1;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}.dw .pk.thr{fill:rgba(0,0,0,.08);stroke-dasharray:none}
+.dw .pk{fill:rgba(31,95,224,.06);stroke:#1f5fe0;stroke-width:1;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}.dw .pk.boss{fill:rgba(140,106,69,.12);stroke:#8c6a45}.dw .pk.thr{fill:rgba(0,0,0,.08);stroke-dasharray:none}
 .dw .np{stroke:#5d6270;stroke-width:.8;vector-effect:non-scaling-stroke;cursor:pointer}.dw .np:hover{stroke:#1f5fe0;stroke-width:2}.dw .ws{fill:url(#hatch);stroke:#c9c9ce;stroke-width:.6;stroke-dasharray:4 3;vector-effect:non-scaling-stroke;cursor:help}
 .dw text.nl{fill:#2a2c33;text-anchor:start;pointer-events:none}.dw text.nd{fill:#2a2c33;pointer-events:none}.dw text.nn{fill:#1d1f26;font-family:var(--f-display);font-weight:700;pointer-events:none}.dw text.wt{fill:#9a9aa0;text-anchor:start;pointer-events:none}
 .ntip{position:absolute;z-index:6;background:#1d1f26;color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.25);min-width:200px}.ntip b{display:block;color:#f3c76b;margin-bottom:6px;font-weight:600}.ntip div{display:flex;justify-content:space-between;gap:14px;color:#c9cad1}.ntip div span:last-child{color:#fff;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
@@ -166,6 +166,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 .insp .grip{flex:none;width:60px;align-self:center;margin:-10px 0 -6px}
 .rail{align-content:start;overflow:visible}
 .rail.h{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:36px}
+.rail.c2{grid-template-columns:repeat(2,36px)}.rail.h.c2{grid-template-columns:none;grid-template-rows:repeat(2,36px)}.rail.c2 .grip{grid-column:1/-1}.rail.h.c2 .grip,.rail.h.c2 hr{grid-row:1/-1}
 .rail.h hr{grid-column:auto;grid-row:1/-1;border-top:0;border-left:1px solid var(--line);margin:2px 4px}
 .rail.h .grip{grid-column:auto;grid-row:1/-1;width:12px;height:auto;margin:0 2px 0 -2px}
 .rail.h .ib[data-tip]:hover::after{left:50%;top:calc(100% + 8px);transform:translateX(-50%)}
@@ -180,6 +181,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 #stage[data-dockhint=top]::after{left:8px;right:8px;top:8px;height:90px}#stage[data-dockhint=bottom]::after{left:8px;right:8px;bottom:8px;height:90px}
 .tplpop{position:absolute;z-index:7;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.14);padding:14px;display:flex;flex-direction:column;gap:10px;width:260px}
 .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vgrid .btn{display:flex;justify-content:space-between;align-items:center;padding:8px 12px}.vgrid i{font:500 11px var(--f-mono);font-style:normal;color:var(--mute)}.viewpop{width:300px}.vgrid .btn{gap:10px;white-space:nowrap}
+.insp{scrollbar-width:none}.insp::-webkit-scrollbar{display:none}
 .multi.sub{background:#eaf0fd;color:#1a3f8f}
 @media (max-width:760px){
   .grip{display:none}
@@ -203,7 +205,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 <header>
   <div class="brand" aria-label="artem terekhov">
     <svg class="mark" viewBox="10 10 200 115" aria-hidden="true"><defs><filter id="lgGoo" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3.2"/><feComponentTransfer><feFuncA type="table" tableValues="0 0 0 0 0 1 1 1 1 1"/></feComponentTransfer></filter></defs><g filter="url(#lgGoo)"><path d="M20 112 C36 112 42 98 47 84 L70 20 L96 98 C99 108 108 109 114 100 L138 64 H198 M170 30 L151 106 C148 116 157 119 164 113" fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
-    <span class="wm">artem terekhov<sup>©</sup></span>
+    <span class="wm">artem terekhov</span>
   </div>
   <nav aria-label="Разделы">
     <a href="#build" data-v="build">Конструктор</a>
@@ -222,10 +224,11 @@ td.n{font-family:var(--f-mono);text-align:right}
     <div class="rail" id="rail" data-dock="left"><div class="grip" data-drag="rail" title="Перетащите панель к любому краю"></div>
       <button class="ib" data-tool="select" data-tip="Выбор" data-key="Пробел" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M5 2.5l10.5 7.3-4.6 1.1L8.4 16z"/></svg></button>
       <button class="ib" data-tool="move" data-tip="Перемещение · Ctrl — копия" data-key="M" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M10 2v16M2 10h16M10 2L7.6 4.4M10 2l2.4 2.4M10 18l-2.4-2.4M10 18l2.4-2.4M2 10l2.4-2.4M2 10l2.4 2.4M18 10l-2.4-2.4M18 10l-2.4 2.4"/></svg></button>
-      <button class="ib" data-tool="push" data-tip="Тянуть / толкать грань" data-key="P" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 13l7-3.4 7 3.4-7 3.4z"/><path d="M10 9.6V2M7.6 4.4L10 2l2.4 2.4"/></svg></button>
+      <button class="ib" data-tool="push" data-tip="Выдавить / втянуть" data-key="P" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 13l7-3.4 7 3.4-7 3.4z"/><path d="M10 9.6V2M7.6 4.4L10 2l2.4 2.4"/></svg></button>
       <button class="ib" data-tool="board" data-tip="Доска — прямоугольник" data-key="R" aria-pressed="false"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10"/><path d="M3 5l2-2h14v10l-2 2"/></svg></button>
       <button class="ib" data-tool="magnet" data-tip="Магнит — грань к грани" data-key="G" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M5 3v7a5 5 0 0 0 10 0V3h-3.4v7a1.6 1.6 0 0 1-3.2 0V3z"/><path d="M5 6h3.4M11.6 6H15"/></svg></button>
       <button class="ib" data-tool="offset" data-tip="Смещение — рамка внутри грани" data-key="F" aria-pressed="false"><svg viewBox="0 0 20 20"><rect x="2.5" y="3.5" width="15" height="13"/><rect x="6" y="7" width="8" height="6" stroke-dasharray="2 1.6"/></svg></button>
+      <button class="ib" data-tool="rotate" data-tip="Поворот — транспортир" data-key="Q" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 15a7 7 0 0 1 14 0z"/><path d="M10 15V9M6.5 11.2l1 1M13.5 11.2l-1 1"/></svg></button>
       <button class="ib" data-tool="tape" data-tip="Рулетка" data-key="T" aria-pressed="false"><svg viewBox="0 0 20 20"><rect x="2" y="7" width="16" height="7"/><path d="M5 7v3M8 7v2M11 7v3M14 7v2"/></svg></button>
       <button class="ib" data-tool="erase" data-tip="Ластик" data-key="E" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M11 3l6 6-8 8H5l-2-2z"/><path d="M7 7l6 6M9 17h8"/></svg></button>
       <hr>
@@ -235,18 +238,19 @@ td.n{font-family:var(--f-mono);text-align:right}
       <button class="ib" data-act="fit" data-tip="Показать всё" data-key="Shift+Z"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
       <hr>
       <button class="ib" data-act="dup" data-tip="Дублировать" data-key="Ctrl+D"><svg viewBox="0 0 20 20"><rect x="6" y="6" width="10" height="10"/><path d="M4 13V4h9"/></svg></button>
-      <button class="ib" data-act="rot" data-tip="Повернуть на 90°" data-key="Q"><svg viewBox="0 0 20 20"><path d="M15 6a6 6 0 1 0 1.5 5"/><path d="M15 2v4h-4"/></svg></button>
+      <button class="ib" data-act="rot" data-tip="Повернуть на 90°" data-key="Shift+Q"><svg viewBox="0 0 20 20"><path d="M15 6a6 6 0 1 0 1.5 5"/><path d="M15 2v4h-4"/></svg></button>
       <button class="ib" data-act="del" data-tip="Удалить" data-key="Del"><svg viewBox="0 0 20 20"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg></button>
       <button class="ib" data-act="snap" data-tip="Шаг 10 мм (по умолчанию выключен)" data-key="S" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14"/></svg></button>
       <button class="ib" data-act="undo" data-tip="Отменить" data-key="Ctrl+Z"><svg viewBox="0 0 20 20"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10H9"/></svg></button>
       <button class="ib" data-act="redo" data-tip="Повторить" data-key="Ctrl+Y"><svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4"/><path d="M17 9H8a5 5 0 0 0 0 10h3"/></svg></button>
       <button class="ib" data-act="tplpop" data-tip="Шаблоны и новый проект" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
+      <button class="ib" data-act="cols" data-tip="Один или два ряда кнопок" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="5.5" height="14" rx="1"/><rect x="11.5" y="3" width="5.5" height="14" rx="1"/></svg></button>
       <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button>
     </div>
     <div class="keys" id="keys" hidden>
       <div class="kh"><b>Управление</b><span class="note">как в SketchUp</span><button class="btn" data-act="help">Закрыть</button></div>
       <div class="kg">
-        <div><span class="lbl">Инструменты</span><dl><dt>Пробел</dt><dd>Выбор, Shift+клик — несколько</dd><dt>M</dt><dd>Перемещение: точка → точка</dd><dt>Ctrl</dt><dd>в Перемещении — копия</dd><dt>P</dt><dd>Тянуть / толкать грань или область, Shift — к любой точке</dd><dt>R</dt><dd>Доска: два клика — прямоугольник</dd><dt>F</dt><dd>Смещение: рамка внутри грани</dd><dt>2×клик</dt><dd>Выбрать грань или ребро детали</dd><dt>G</dt><dd>Магнит: грань к грани</dd><dt>T</dt><dd>Рулетка: от ребра — направляющая</dd><dt>E</dt><dd>Ластик: деталь, область, направляющая</dd><dt>Q</dt><dd>Повернуть на 90°</dd></dl></div>
+        <div><span class="lbl">Инструменты</span><dl><dt>Пробел</dt><dd>Выбор, Shift+клик — несколько</dd><dt>M</dt><dd>Перемещение: точка → точка</dd><dt>Ctrl</dt><dd>в Перемещении — копия</dd><dt>P</dt><dd>Выдавить / втянуть грань или область; Shift+клик по ребру — подтянуть к нему</dd><dt>R</dt><dd>Доска: два клика — прямоугольник</dd><dt>F</dt><dd>Смещение: рамка внутри грани</dd><dt>Клик</dt><dd>Грань или ребро; Shift — добавить ещё</dd><dt>2×клик</dt><dd>Ребро вместе с соседними гранями</dd><dt>3×клик</dt><dd>Вся деталь</dd><dt>G</dt><dd>Магнит: грань к грани</dd><dt>T</dt><dd>Рулетка: от ребра — направляющая</dd><dt>E</dt><dd>Ластик: деталь, область, направляющая</dd><dt>Q</dt><dd>Поворот: центр → начало → угол, шаг 15°, цифры — точный угол</dd></dl></div>
         <div><span class="lbl">Точность</span><dl><dt>Цифры + Enter</dt><dd>Точное значение во время действия</dd><dt>600;300</dt><dd>Размер доски</dd><dt>3x · /3</dt><dd>После копии — массив или деление</dd><dt>→</dt><dd>Фиксировать ось X (красная)</dd><dt>←</dt><dd>Ось Z, вглубь (зелёная)</dd><dt>↑</dt><dd>Ось Y, вверх (синяя)</dd><dt>↓</dt><dd>Снять фиксацию</dd><dt>Esc</dt><dd>Отменить действие</dd></dl></div>
         <div><span class="lbl">Вид и правка</span><dl><dt>O · H</dt><dd>Орбита · панорама</dd><dt>Shift+Z</dt><dd>Показать всё</dd><dt>1 2 3 4 5 6 0</dt><dd>Спереди, сверху, справа, слева, сзади, снизу, изо</dd><dt>Мышь</dt><dd>Вращение во все стороны, в том числе снизу</dd><dt>Ctrl+Z / Y</dt><dd>Отменить / повторить</dd><dt>Ctrl+C / V</dt><dd>Копировать / вставить</dd><dt>Ctrl+D</dt><dd>Дублировать</dd><dt>Ctrl+A</dt><dd>Выделить всё</dd><dt>Del</dt><dd>Удалить</dd><dt>S</dt><dd>Шаг сетки 10 мм</dd></dl></div>
       </div>
@@ -274,7 +278,7 @@ td.n{font-family:var(--f-mono);text-align:right}
       <div class="card" style="margin-left:auto">
         <span class="lbl" id="rstat">Рендер</span>
         <div class="prog"><i id="rprog"></i></div>
-        <button class="btn" id="camBtn">Красивый ракурс</button><button class="btn pri" id="savePng">Сохранить снимок PNG</button>
+        <button class="btn" id="camBtn">Красивый ракурс</button><button class="btn" id="camFront">Вид спереди</button><button class="btn pri" id="savePng">Сохранить снимок PNG</button>
       </div>
     </div>
   </section>
@@ -296,13 +300,19 @@ td.n{font-family:var(--f-mono);text-align:right}
         <span class="lbl">Экспорт</span>
         <h1>Файлы для SketchUp и производства</h1>
       </div>
-      <p>SketchUp открывает модель через «Файл → Импорт → COLLADA (.dae)». Формат .skp закрытый, поэтому модель передаётся в .dae и .obj без потерь размеров. Для ЧПУ и раскроя — DXF в миллиметрах.</p>
+      <p>Для SketchUp — скрипт, который строит модель прямо в программе, после чего её можно сохранить в .skp. Для других программ — .dae и .obj, для ЧПУ, раскроя и фрезеровки — DXF в миллиметрах.</p>
       <div class="exg">
         <div class="ex">
-          <span class="fmt">ZIP · DAE · OBJ · DXF · CSV</span>
+          <span class="fmt">ZIP · RB · DAE · OBJ · DXF · CSV</span>
           <h4>Полный пакет</h4>
-          <ul><li>model.dae — для SketchUp</li><li>model.obj + .mtl — для 3ds Max, Blender, Rhino</li><li>details.dxf — контуры деталей</li><li>nesting.dxf — карта раскроя листов</li><li>cutlist.csv — спецификация</li><li>project.json — проект</li></ul>
+          <ul><li>model.rb — построить модель в SketchUp (.skp)</li><li>model.dae — импорт в SketchUp</li><li>model.obj + .mtl — для 3ds Max, Blender, Rhino</li><li>details.dxf — контуры деталей</li><li>nesting.dxf — карта раскроя листов</li><li>cutlist.csv — спецификация</li><li>project.json — проект</li></ul>
           <button class="btn pri" data-ex="zip">Скачать пакет</button>
+        </div>
+        <div class="ex">
+          <span class="fmt">SKP · через скрипт SketchUp</span>
+          <h4>Модель для SketchUp</h4>
+          <p>Формат .skp закрыт: напрямую из браузера его не записать. Поэтому сайт создаёт скрипт model.rb — SketchUp строит по нему настоящую модель с группами, материалами и выборками, а вы сохраняете её как .skp.</p>
+          <button class="btn pri" data-ex="skp">Скачать для SketchUp</button>
         </div>
         <div class="ex">
           <span class="fmt">PDF · A4</span>
@@ -347,9 +357,10 @@ const MM=0.001, SZ={x:'w',y:'h',z:'d'}, AX=['x','y','z'], MAG=12;
 const MATS={birch:{name:'Берёза ФК, шлиф.',short:'Берёза',sw:'#e2cda4',col:[0.86,0.76,0.58]},oiled:{name:'Берёза ФК, масло',short:'Масло',sw:'#d6ae7a',col:[0.80,0.62,0.40]},black:{name:'ФЛ, чёрная плёнка',short:'Чёрная',sw:'#2a2826',col:[0.10,0.09,0.09]}};
 const THK=[6,9,12,15,18,21,24];
 const PLIES={6:5,9:7,12:9,15:11,18:13,21:15,24:17};
-const SHEETS={'1525x1525':[1525,1525],'2500x1250':[2500,1250],'3000x1500':[3000,1500]};
+const SHEETS={'1525x1525':[1525,1525],'2440x1220':[2440,1220],'2500x1250':[2500,1250],'1830x1220':[1830,1220],'3000x1500':[3000,1500]};
+const getSheet=()=>state.sheet==='custom'?[state.sheetW||2500,state.sheetH||1250]:SHEETS[state.sheet]||[1525,1525];
 const LIGHTS={morning:{az:-55,el:20,col:0xffdcb6,I:1.7,exp:1.0},day:{az:-28,el:46,col:0xfff3e6,I:1.75,exp:0.95},evening:{az:58,el:11,col:0xffb47a,I:1.5,exp:1.05}};
-const state={name:'Тумба TR-01',panels:[],sel:null,tool:'select',snap:false,env:'wall',light:'day',q:1,sheet:'1525x1525',multi:null,lock:null,sub:null,guides:[],nb:{w:600,h:18,d:300,t:'y',mat:'birch'}};
+const state={name:'Тумба TR-01',panels:[],sel:null,tool:'select',snap:false,env:'wall',light:'day',q:1,sheet:'1525x1525',multi:null,lock:null,sub:null,subs:[],guides:[],nb:{w:600,h:18,d:300,t:'y',mat:'birch'}};
 let nextId=1;const undoS=[],redoS=[];
 const thick=p=>p[SZ[p.t]];
 const mk=(name,w,h,d,x,y,z,t,mat='birch')=>({id:nextId++,name,w,h,d,x,y,z,t,mat});
@@ -368,8 +379,8 @@ const r4=v=>Math.round(v*10000)/10000;
 const snapV=v=>state.snap?Math.round(v/10)*10:r4(v);
 function rnd(seed){let s=seed%2147483647||1;return()=>(s=s*16807%2147483647)/2147483647}
 const selP=()=>state.panels.find(p=>p.id===state.sel)||null;
-function save(){try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
-function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
+function save(){try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
+function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
 function pushUndo(){undoS.push(JSON.stringify(state.panels));if(undoS.length>120)undoS.shift();redoS.length=0}
 function undo(){if(!undoS.length)return;redoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(undoS.pop());if(!selP())state.sel=null;rebuildAll();save();renderInsp()}
 function redo(){if(!redoS.length)return;undoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(redoS.pop());if(!selP())state.sel=null;rebuildAll();save();renderInsp()}
@@ -506,7 +517,7 @@ function remapCut(geo,p){const g=geo.index?geo.toNonIndexed():geo,pos=g.attribut
 function meshParts(p){const base=makeGeo(p),mats=matsFor(p),fs=(p.feat||[]).filter(f=>Math.abs(f.depth)>0.01);if(!fs.length||!CSG)return{geo:base,mat:mats};
   try{let r=new CSG.Brush(base,mats);r.updateMatrixWorld();for(const f of fs.filter(f=>f.depth<0)){const b=new CSG.Brush(bossGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.ADDITION)}for(const f of fs.filter(f=>f.depth>0)){const b=new CSG.Brush(pocketGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}return{geo:remapCut(r.geometry,p),mat:[mats[0],mats[1],innerMat()]}}catch(e){console.warn(e);return{geo:base,mat:mats}}}
 const regionMat=new THREE.LineBasicMaterial({color:0x2a2a2a,transparent:true,opacity:.8});
-function panelLines(p){const pts=[],C=corners(p);EDGES.forEach(([i,j])=>pts.push(C[i].clone(),C[j].clone()));
+function panelLines(p){const pts=[],C=cornersLocal(p);EDGES.forEach(([i,j])=>pts.push(C[i].clone(),C[j].clone()));
   (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{const T=p[SZ[f.a]],dep=Math.min(f.depth,T),off=AXV[f.a].clone().multiplyScalar(-f.s*dep*MM);const top=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));top.forEach(([A,B])=>{pts.push(A.clone(),B.clone(),A.clone().add(off),B.clone().add(off))});[top[0][0],top[0][1],top[1][0],top[1][1]].forEach(v=>pts.push(v.clone(),v.clone().add(off)))});
   const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c)))}
 function regionLines(p){const pts=[];(p.feat||[]).filter(f=>Math.abs(f.depth)<=0.01).forEach(f=>{['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
@@ -515,7 +526,7 @@ function buildMesh(p){const old=meshes[p.id];if(old){scene.remove(old);old.geome
   const e=new THREE.LineSegments(panelLines(p),edgeMat(p.id));e.renderOrder=isSel(p.id)?5:1;e.visible=view==='build';m.add(e);
   const rl=regionLines(p);if(rl){rl.visible=view==='build';rl.renderOrder=2;m.add(rl)}
   placeMesh(p,m);scene.add(m);meshes[p.id]=m}
-function placeMesh(p,m=meshes[p.id]){if(m)m.position.set((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM)}
+function placeMesh(p,m=meshes[p.id]){if(!m)return;m.position.set((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);if(p.rot)m.quaternion.copy(rotQ(p));else m.quaternion.identity()}
 function refreshEdges(){Object.entries(meshes).forEach(([id,m])=>{id=+id;const e=m.children[0];if(e){e.material=edgeMat(id);e.renderOrder=isSel(id)?5:1}})}
 function rebuildAll(){Object.keys(meshes).forEach(id=>{if(!state.panels.find(p=>p.id==id)){const m=meshes[id];scene.remove(m);m.geometry.dispose();delete meshes[id]}});state.panels.forEach(buildMesh);placeHandles();fitShadows()}
 
@@ -542,6 +553,15 @@ const faceHL2=faceHL.clone();faceHL2.material=faceHL.material.clone();faceHL2.ma
 function showFace(m,p,a,sign){if(!p){m.visible=false;return}const k=SZ[a],c=[p.x+p.w/2,p.y+p.h/2,p.z+p.d/2],ai=AX.indexOf(a);c[ai]=sign>0?p[a]+p[k]:p[a];m.position.set(c[0]*MM,c[1]*MM,c[2]*MM);
   const [u,v]=AX.filter(q=>q!==a);m.rotation.set(0,0,0);if(a==='x')m.rotation.y=Math.PI/2;else if(a==='y')m.rotation.x=-Math.PI/2;
   m.scale.set((a==='x'?p.d:p.w)*MM,(a==='y'?p.d:p.h)*MM,1);m.visible=view==='build'}
+const dotMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3,side:THREE.DoubleSide,vertexShader:'void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'void main(){vec2 c=mod(gl_FragCoord.xy,4.);float d=1.-step(.95,length(c-vec2(2.)));gl_FragColor=vec4(.10,.27,.86,.10+d*.78);}'});
+const subFaces=[],subEdges=[];
+function poolFace(i){if(!subFaces[i]){const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),dotMat);m.renderOrder=4;scene.add(m);subFaces[i]=m}return subFaces[i]}
+const edgeBlk=new THREE.MeshBasicMaterial({color:0x111111,depthTest:false,transparent:true});
+function poolEdge(i){if(!subEdges[i]){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,8),edgeBlk);m.renderOrder=13;scene.add(m);subEdges[i]=m}return subEdges[i]}
+function edgeMesh(m,A,B){const d=B.clone().sub(A),L=d.length(),mid=A.clone().add(B).multiplyScalar(.5),r=camera.position.distanceTo(mid)*0.0021;m.scale.set(r,L,r);m.position.copy(mid);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());m.visible=view==='build'}
+const subKey=S=>JSON.stringify(S);
+function subClear(){state.sub=null;state.subs=[]}
+function subSet(list,primary){state.subs=list;state.sub=primary||list[list.length-1]||null}
 const subHL=faceHL.clone();subHL.material=faceHL.material.clone();subHL.material.color.set(0xff6a00);subHL.material.opacity=.28;scene.add(subHL);
 const subLine=new THREE.Mesh(new THREE.CylinderGeometry(1,1,1,10),new THREE.MeshBasicMaterial({color:0xff6a00,depthTest:false,transparent:true}));subLine.renderOrder=13;subLine.visible=false;scene.add(subLine);
 const subEnds=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),subLine.material);m.renderOrder=13;m.visible=false;scene.add(m);return m});
@@ -549,26 +569,46 @@ function thickLine(A,B){const d=B.clone().sub(A),L=d.length(),mid=A.clone().add(
 const offLine=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x1f5fe0,depthTest:false,transparent:true}));offLine.renderOrder=13;offLine.visible=false;scene.add(offLine);
 const guideG=new THREE.Group();scene.add(guideG);const guideMat=new THREE.LineDashedMaterial({color:0x3c3c42,dashSize:.025,gapSize:.015});
 const guidePrev=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),guideMat.clone());guidePrev.material.color.set(0x1f5fe0);guidePrev.visible=false;scene.add(guidePrev);
-function buildGuides(){guideG.children.slice().forEach(c=>{guideG.remove(c);c.geometry.dispose()});state.guides.forEach(g=>{const P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d);const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P.clone().addScaledVector(D,-6),P.clone().addScaledVector(D,6)]),guideMat);l.computeLineDistances();guideG.add(l)})}
+const guideSelMat=new THREE.LineDashedMaterial({color:0x1f5fe0,dashSize:.025,gapSize:.01,depthTest:false});let selGuide=-1;
+function buildGuides(){guideG.children.slice().forEach(c=>{guideG.remove(c);c.geometry.dispose()});state.guides.forEach((g,gi)=>{const P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d);const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P.clone().addScaledVector(D,-6),P.clone().addScaledVector(D,6)]),gi===selGuide?guideSelMat:guideMat);l.computeLineDistances();guideG.add(l)})}
+function guideAt(mx,my){for(let gi=0;gi<state.guides.length;gi++){const g=state.guides[gi],P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d);if(lineDistPx(mx,my,P,P.clone().add(D))<7)return gi}return -1}
 function rectPts(p,a,s,r,dep){const [u,v]=AX.filter(q=>q!==a),k=SZ[a],F=(s>0?p[a]+p[k]:p[a])-s*(dep||0)+s*0.3;const P=(uu,vv)=>{const o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[a]=F;return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)};return[P(r.u0,r.v0),P(r.u1,r.v0),P(r.u1,r.v1),P(r.u0,r.v1)]}
 function showRegion(m,p,a,s,r,dep){const [u,v]=AX.filter(q=>q!==a),k=SZ[a],c={};c[u]=p[u]+(r.u0+r.u1)/2;c[v]=p[v]+(r.v0+r.v1)/2;c[a]=(s>0?p[a]+p[k]:p[a])-s*(dep||0)+s*0.3;m.position.set(c.x*MM,c.y*MM,c.z*MM);
   m.rotation.set(0,0,0);if(a==='x')m.rotation.y=Math.PI/2;else if(a==='y')m.rotation.x=-Math.PI/2;const ex={};ex[u]=r.u1-r.u0;ex[v]=r.v1-r.v0;m.scale.set((a==='x'?ex.z:ex.x)*MM,(a==='y'?ex.z:ex.y)*MM,1);m.visible=view==='build'}
-function showSub(){const S=state.sub;subHL.visible=subLine.visible=subEnds[0].visible=subEnds[1].visible=false;if(!S||view!=='build')return;const p=panelById(S.id);if(!p){state.sub=null;return}
-  if(S.kind==='face'){const {Su,Sv}=faceRect(p,S.a);showRegion(subHL,p,S.a,S.s,{u0:0,u1:Su,v0:0,v1:Sv},0)}
-  else if(S.kind==='region'){const f=featById(p,S.fid);if(!f){state.sub=null;return}showRegion(subHL,p,f.a,f.s,f,Math.min(f.depth,p[SZ[f.a]]-0.6))}
-  else if(S.kind==='edge'){const C=corners(p);thickLine(C[S.i],C[S.j])}
-  else if(S.kind==='redge'){const f=featById(p,S.fid);if(!f){state.sub=null;return}const [A,B]=redgePts(p,f,S.side,true);thickLine(A,B)}}
-function setSub(S){state.sub=S;if(S&&!isSel(S.id))setSel(S.id);refreshEdges();placeHandles();showSub();renderHint();renderInsp()}
+function showSub(){subHL.visible=subLine.visible=subEnds[0].visible=subEnds[1].visible=false;subFaces.forEach(m=>m.visible=false);subEdges.forEach(m=>m.visible=false);if(view!=='build')return;
+  if(state.sub&&!state.subs.length)state.subs=[state.sub];let fi=0,ei=0;state.subs=state.subs.filter(S=>{const p=panelById(S.id);if(!p)return false;if((S.kind==='region'||S.kind==='redge')&&!featById(p,S.fid))return false;return true});if(state.sub&&!state.subs.includes(state.sub))state.sub=state.subs[state.subs.length-1]||null;
+  for(const S of state.subs){const p=panelById(S.id);
+    if(S.kind==='face'){const {Su,Sv}=faceRect(p,S.a);showRegion(poolFace(fi++),p,S.a,S.s,{u0:0,u1:Su,v0:0,v1:Sv},0)}
+    else if(S.kind==='region'){const f=featById(p,S.fid);showRegion(poolFace(fi++),p,f.a,f.s,f,Math.min(f.depth,p[SZ[f.a]]-0.6))}
+    else if(S.kind==='edge'){const C=corners(p);edgeMesh(poolEdge(ei++),C[S.i],C[S.j])}
+    else if(S.kind==='redge'){const f=featById(p,S.fid);const [A,B]=redgePts(p,f,S.side,true);edgeMesh(poolEdge(ei++),A,B)}}}
+function edgeFaces(S){return [0,1,2].filter(b=>((S.i^S.j)>>b&1)===0).map(b=>({kind:'face',id:S.id,a:AX[b],s:(S.i>>b&1)?1:-1}))}
+function setSub(S,add){if(!S){subClear()}else if(add){const k=subKey(S),i=state.subs.findIndex(q=>subKey(q)===k);if(i>=0)state.subs.splice(i,1);else state.subs.push(S);state.sub=state.subs[state.subs.length-1]||null}else subSet([S],S);
+  if(state.sub&&!isSel(state.sub.id))setSel(state.sub.id);refreshEdges();placeHandles();showSub();renderHint();renderInsp()}
 const rubber=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x111111,depthTest:false,transparent:true}));rubber.renderOrder=11;rubber.visible=false;scene.add(rubber);
 const axisGuide=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineDashedMaterial({color:0xd2342c,dashSize:.02,gapSize:.012,depthTest:false,transparent:true}));axisGuide.renderOrder=11;axisGuide.visible=false;scene.add(axisGuide);
 const rectPrev=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0x1f5fe0,transparent:true,opacity:.18,depthWrite:false}));rectPrev.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1,1,1)),edgeMatSel));rectPrev.visible=false;scene.add(rectPrev);
 const tapeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineDashedMaterial({color:0x8c6a45,dashSize:0.015,gapSize:0.01,depthTest:false}));tapeLine.renderOrder=12;tapeLine.visible=false;scene.add(tapeLine);
 function setLine(l,a,b){l.geometry.setFromPoints([a,b]);if(l.computeLineDistances)l.computeLineDistances();l.visible=true}
 
+/* ---------- protractor for the rotate tool ---------- */
+const prot=new THREE.Group();prot.visible=false;scene.add(prot);
+const protMat=new THREE.LineBasicMaterial({color:0xd2342c,depthTest:false,transparent:true});
+(()=>{const pts=[];for(let i=0;i<=72;i++){const a=i/72*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a),0,Math.sin(a)))}const ring=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),protMat);
+  const tk=[];for(let i=0;i<24;i++){const a=i/24*Math.PI*2,r0=i%6===0?.72:.86;tk.push(new THREE.Vector3(Math.cos(a)*r0,0,Math.sin(a)*r0),new THREE.Vector3(Math.cos(a),0,Math.sin(a)))}
+  const ticks=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tk),protMat);const cross=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.12,0,0),new THREE.Vector3(.12,0,0),new THREE.Vector3(0,0,-.12),new THREE.Vector3(0,0,.12)]),protMat);
+  [ring,ticks,cross].forEach(o=>{o.renderOrder=14;prot.add(o)})})();
+const rotLine1=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineDashedMaterial({color:0x444444,dashSize:.012,gapSize:.008,depthTest:false,transparent:true}));rotLine1.renderOrder=14;rotLine1.visible=false;scene.add(rotLine1);
+const rotLine2=rotLine1.clone();rotLine2.material=new THREE.LineBasicMaterial({color:0x111111,depthTest:false,transparent:true});scene.add(rotLine2);
+function showProt(pt,ax){prot.visible=view==='build';prot.position.copy(pt);prot.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),AXV[ax]);const sc=camera.position.distanceTo(pt)*0.09;prot.scale.setScalar(sc);protMat.color.setHex(AXC[ax])}
+
 /* ---------- inference engine (SketchUp-style snapping) ---------- */
 const SNAP_PX=14,tv=new THREE.Vector3();let cvRect=cv.getBoundingClientRect();
 function scr(v){tv.copy(v).project(camera);return{x:(tv.x+1)/2*cvRect.width,y:(1-tv.y)/2*cvRect.height,z:tv.z}}
-function corners(p){const a=[];for(let i=0;i<8;i++)a.push(new THREE.Vector3((p.x+(i&1?p.w:0))*MM,(p.y+(i&2?p.h:0))*MM,(p.z+(i&4?p.d:0))*MM));return a}
+function cornersLocal(p){const a=[];for(let i=0;i<8;i++)a.push(new THREE.Vector3((p.x+(i&1?p.w:0))*MM,(p.y+(i&2?p.h:0))*MM,(p.z+(i&4?p.d:0))*MM));return a}
+const pCenter=p=>new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);
+const rotQ=p=>new THREE.Quaternion().setFromAxisAngle(AXV[p.rot.ax],p.rot.deg*Math.PI/180);
+function corners(p){const a=cornersLocal(p);if(!p.rot)return a;const c=pCenter(p),q=rotQ(p);return a.map(v=>v.sub(c).applyQuaternion(q).add(c))}
 const EDGES=[];for(let i=0;i<8;i++)for(let b=0;b<3;b++)if(!(i&(1<<b)))EDGES.push([i,i|(1<<b)]);
 function rayLine(o,d,clamp){const r=o.clone().sub(ray.ray.origin),d2=ray.ray.direction,A=d.dot(d),B=d.dot(d2),C=d.dot(r),E=d2.dot(d2),F=d2.dot(r),den=A*E-B*B;let s=den>1e-12?(B*F-C*E)/den:0;if(clamp)s=Math.max(0,Math.min(1,s));return o.clone().addScaledVector(d,s)}
 function segDistPx(mx,my,a,b){const A=scr(a),B=scr(b);if(A.z>1||B.z>1)return 1e9;const dx=B.x-A.x,dy=B.y-A.y,L=dx*dx+dy*dy;let t=L?((mx-A.x)*dx+(my-A.y)*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(A.x+dx*t-mx,A.y+dy*t-my)}
@@ -635,22 +675,24 @@ function opCancel(){if(!op)return;if(op.type==='move'){if(op.copy){state.panels=
   else if(op.type==='rpush'){op.f.depth=op.start;buildMesh(op.p);undoS.pop()}
   else if(op.type==='rmove'||op.type==='redge'){Object.assign(op.f,op.start);buildMesh(op.p);undoS.pop()}
   else if(op.type==='offset'){offLine.visible=false}
+  else if(op.type==='rot'){op.ids.forEach(id=>{const p=panelById(id);Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,op.start[id]);placeMesh(p);buildMesh(p)});undoS.pop();prot.visible=rotLine1.visible=rotLine2.visible=false}
   else if(op.type==='tape')tapeClear();opEnd()}
 let downTool=false;
 function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#viewpop').hidden=true;const [mx,my]=setRay(e);if(e.button!==0)return;downXY=[e.clientX,e.clientY];downTool=false;const t=state.tool;
   if(t==='orbit'||t==='pan')return;
   const grab=()=>{controls.enabled=false;downTool=true};
-  if(e.shiftKey&&!op&&state.sub){const s=infer(mx,my,{exclude:new Set([state.sub.id])});if(s){pullSubTo(s.pt);grab();drag={type:'none'}}return}
+  if(e.shiftKey&&!op&&state.sub&&(t==='push'||t==='move')){const s=infer(mx,my,{exclude:new Set([state.sub.id])});if(s){pullSubTo(s.pt);grab();drag={type:'none'}}return}
   if(t==='move'&&!op&&state.sub&&isSel(state.sub.id)){const s=infer(mx,my,{exclude:new Set([state.sub.id])})||infer(mx,my);if(!s)return;startSubMove(s.pt);grab();return}
   if(t==='move'&&op&&['push','emove','rmove','redge','rpush'].includes(op.type)){finishSub();grab();return}
   if(t==='move'){if(!op){const s=infer(mx,my);if(!s)return;if(s.id!=null&&!isSel(s.id))setSel(s.id,e.shiftKey);if(!selIds().length){toast('Выберите деталь или наведите на неё');return}
       pushUndo();let ids=selIds();if(copyMode){const cl=selPanels().map(p=>({...p,id:nextId++}));state.panels.push(...cl);cl.forEach(buildMesh);ids=cl.map(p=>p.id);state.sel=ids[ids.length-1];state.multi=ids.length>1?new Set(ids):null;refreshEdges()}
       op={type:'move',from:s.pt.clone(),ids,copy:copyMode,start:Object.fromEntries(ids.map(id=>{const p=panelById(id);return[id,{x:p.x,y:p.y,z:p.z}]})),d:new THREE.Vector3()};placeHandles();renderHint();grab()}
     else{finishMove();grab()}return}
-  if(t==='push'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;const pf=pickFace(h);if(!isSel(pf.p.id))setSel(pf.p.id);pushUndo();
+  if(t==='push'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot){toast('Повёрнутую деталь нельзя выдавливать — сначала верните поворот кратным 90°');return}const pf=pickFace(h);if(!isSel(pf.p.id))setSel(pf.p.id);pushUndo();
       op=pf.f?{type:'rpush',p:pf.p,f:pf.f,a:pf.a,sign:pf.s,from:h.point.clone(),start:pf.f.depth}:{type:'push',p:pf.p,a:pf.a,sign:pf.s,from:h.point.clone(),start:{...pf.p}};placeHandles();renderHint();grab()}
     else{finishSub();grab()}return}
-  if(t==='offset'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;const pf=pickFace(h);if(pf.f){toast('Смещение строится на целой грани детали');return}startOffset(pf.p,pf.a,pf.s)}else finishOffset();grab();return}
+  if(t==='offset'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot){toast('На повёрнутой детали смещение недоступно');return}const pf=pickFace(h);if(pf.f){toast('Смещение строится на целой грани детали');return}startOffset(pf.p,pf.a,pf.s)}else finishOffset();grab();return}
+  if(t==='rotate'){rotClick(mx,my,e);grab();return}
   if(t==='board'){const s=infer(mx,my,op?{from:op.from,lock:state.lock}:{});if(!s)return;
     if(!op){let a='y',sign=1;if(s.type==='face'){a=s.a;sign=s.sign}else if(s.id!=null){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&h.object.userData.id===s.id){a=domAxis(h.face.normal);sign=Math.sign(h.face.normal.getComponent(AX.indexOf(a)))}}
       op={type:'rect',from:s.pt.clone(),a,sign,cur:s.pt.clone()};renderHint();grab()}
@@ -658,20 +700,24 @@ function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#viewpop
   if(t==='tape'){if(!op){const s=infer(mx,my);if(!s)return;tapeClear();if((s.type==='edge'||s.type==='mid')&&s.seg){const D=s.seg[1].clone().sub(s.seg[0]).normalize();op={type:'tape',from:s.pt.clone(),line:{P:s.pt.clone(),D}}}else if(s.type==='guide'){op={type:'tape',from:s.pt.clone(),line:{P:s.pt.clone(),D:new THREE.Vector3(...s.guide.d)}}}else op={type:'tape',from:s.pt.clone()};renderHint()}
     else{if(op.line){if(op.w&&op.w.lengthSq()>1e-10){state.guides.push({p:op.line.P.clone().add(op.w).toArray().map(v=>+v.toFixed(5)),d:op.line.D.toArray()});buildGuides();save()}opEnd();tapeClear();guidePrev.visible=false}else{const s=infer(mx,my,{from:op.from,lock:state.lock});const f=op.from;opEnd();if(s)tapeShow(f,s.pt)}}grab();return}
   if(t==='erase'){for(let gi=0;gi<state.guides.length;gi++){const g=state.guides[gi],P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d);if(lineDistPx(mx,my,P,P.clone().add(D))<7){state.guides.splice(gi,1);buildGuides();save();grab();return}}
-    {const h0=ray.intersectObjects(panelMeshes(),false)[0];if(h0){const pf=pickFace(h0);if(pf.f){pushUndo();pf.p.feat=pf.p.feat.filter(f=>f!==pf.f);buildMesh(pf.p);if(state.sub&&state.sub.fid===pf.f.id)state.sub=null;showSub();save();grab();return}}}
+    {const h0=ray.intersectObjects(panelMeshes(),false)[0];if(h0){const pf=pickFace(h0);if(pf.f){pushUndo();pf.p.feat=pf.p.feat.filter(f=>f!==pf.f);buildMesh(pf.p);if(state.sub&&state.sub.fid===pf.f.id)subClear();showSub();save();grab();return}}}
     const h=ray.intersectObjects(panelMeshes(),false)[0];if(h){const id=h.object.userData.id;pushUndo();state.panels=state.panels.filter(q=>q.id!==id);if(isSel(id))setSel(null);rebuildAll();save();renderInsp()}grab();return}
   if(t==='magnet'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;const p=panelById(h.object.userData.id),a=domAxis(h.face.normal),sign=Math.sign(h.face.normal.getComponent(AX.indexOf(a)));
     if(!op){op={type:'mag',p,a,sign};setSel(p.id);showFace(faceHL2,p,a,sign);renderHint()}else{if(p.id===op.p.id){toast('Выберите грань другой детали');return}doMagnet(op.p,op.a,op.sign,p,a,sign);opEnd()}grab();return}
   /* select */
   const hh=ray.intersectObjects(handles.filter(x=>x.visible),false)[0];
   if(hh){startResize(selP(),hh.object.userData.axis,hh.object.userData.dir,hh.object.position);return}
-  const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;const id=h.object.userData.id;
-  if(e.shiftKey){setSel(id,true);grab();drag={type:'none'};return}
-  if(state.sub){state.sub=null;refreshEdges();showSub();renderHint()}
-  if(!isSel(id)){setSel(id);return}
-  startMove(panelById(id),h.point,e.altKey)}
+  const gi=guideAt(mx,my);const h=ray.intersectObjects(panelMeshes(),false)[0];
+  if(gi>=0&&(!h||lineDistPx(mx,my,new THREE.Vector3(...state.guides[gi].p),new THREE.Vector3(...state.guides[gi].p).add(new THREE.Vector3(...state.guides[gi].d)))<5)){selGuide=gi;buildGuides();renderHint();toast('Направляющая выбрана — Del удалит её');grab();drag={type:'none'};return}
+  if(selGuide>=0){selGuide=-1;buildGuides()}
+  if(!h)return;const id=h.object.userData.id,pp=panelById(id);
+  if(pp.rot){if(e.shiftKey){setSel(id,true);grab();drag={type:'none'};return}subClear();if(!isSel(id)){setSel(id);return}startMove(pp,h.point,e.altKey);return}
+  const pe=pickEdge(mx,my,pp),pf=pickFace(h),S=pe||(pf.f?{kind:'region',id,fid:pf.f.id}:{kind:'face',id,a:pf.a,s:pf.s});
+  if(e.shiftKey){if(!state.subs.length&&!state.sub&&selIds().length){setSel(id,true)}else setSub(S,true);grab();drag={type:'none'};return}
+  const wasSel=isSel(id);setSub(S);if(wasSel)startMove(pp,h.point,e.altKey)}
 let op_last_from=null,tapeEnd=null;
-cv.addEventListener('pointermove',e=>{if(view!=='build')return;const [mx,my]=setRay(e);
+let lastPM=null;
+cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [mx,my]=setRay(e);
   if(drag&&drag.type!=='none'){dragMove(e);return}
   const t=state.tool;
   if(op&&op.type==='move'){const s=infer(mx,my,{exclude:new Set(op.ids),from:op.from,lock:state.lock});if(!s)return;showSnap(s);applyMove(s.pt.clone().sub(op.from),s.type);setLine(rubber,op.from,s.pt);return}
@@ -682,13 +728,15 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;const [mx,my]=set
     if(op.type==='push')applyPush(amt);else applyRPush(amt);return}
   if(op&&op.type==='emove'){const s=infer(mx,my,{exclude:new Set([op.p.id]),from:op.from});if(!s)return;showSnap(s);applyEMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
   if(op&&(op.type==='rmove'||op.type==='redge')){const s=infer(mx,my,{from:op.from});if(!s)return;showSnap(s);applyRegionMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
+  if(t==='rotate'){rotMove(mx,my,e);return}
   if(op&&op.type==='offset'){moveOffset();return}
   if(op&&op.type==='rect'){const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);const ai=AX.indexOf(op.a),pl=op.from.getComponent(ai);let pt;
     if(s.type==='face'||s.type==='ground'){pt=new THREE.Vector3();const n=AXV[op.a];if(!ray.ray.intersectPlane(new THREE.Plane(n.clone(),-pl),pt))return}else pt=s.pt.clone();pt.setComponent(ai,pl);op.cur=pt;previewRect();return}
   if(op&&op.type==='tape'){if(op.line){tapeParallel(mx,my);return}const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);tapeShow(op.from,s.pt);return}
   if(op&&op.type==='mag'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&h.object.userData.id!==op.p.id){const n=h.face.normal,a=domAxis(n);showFace(faceHL,panelById(h.object.userData.id),a,Math.sign(n.getComponent(AX.indexOf(a))))}else faceHL.visible=false;return}
   if(t==='board'||t==='tape'||t==='move'){const s=infer(mx,my);showSnap(s);setHover(s&&s.id!=null&&t==='move'?s.id:null);return}
-  if(t==='push'||t==='magnet'||t==='offset'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h){const pf=pickFace(h);if(pf.f&&t!=='magnet')showRegion(faceHL,pf.p,pf.a,pf.s,pf.f,Math.min(pf.f.depth,pf.p[SZ[pf.a]]-0.6));else showFace(faceHL,pf.p,pf.a,pf.s);cv.style.cursor='pointer'}else{faceHL.visible=false;cv.style.cursor='default'}return}
+  if(t==='push'&&state.sub&&e.shiftKey){const s=infer(mx,my,{exclude:new Set([state.sub.id])});showSnap(s&&s.type!=='face'&&s.type!=='ground'?s:null);faceHL.visible=false;cv.style.cursor='crosshair';return}
+  if(t==='push'||t==='magnet'||t==='offset'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&panelById(h.object.userData.id).rot){faceHL.visible=false;return}if(h){const pf=pickFace(h);if(pf.f&&t!=='magnet')showRegion(faceHL,pf.p,pf.a,pf.s,pf.f,Math.min(pf.f.depth,pf.p[SZ[pf.a]]-0.6));else showFace(faceHL,pf.p,pf.a,pf.s);cv.style.cursor='pointer'}else{faceHL.visible=false;cv.style.cursor='default'}return}
   if(t==='orbit'||t==='pan')return;
   snapEl.hidden=true;
   const hv=ray.intersectObjects(handles.filter(h=>h.visible),false)[0];handles.forEach(h=>h.material=h===(hv&&hv.object)?gripHot:gripMat);
@@ -701,7 +749,8 @@ window.addEventListener('pointerup',e=>{if(view!=='build')return;
   controls.enabled=true;
   if(downXY&&e.target===cv&&state.tool==='select'&&!dragged&&!e.shiftKey){setRay(e);if(!ray.intersectObjects(panelMeshes(),false).length&&!ray.intersectObjects(handles.filter(x=>x.visible),false).length)setSel(null)}downXY=null});
 cv.addEventListener('dblclick',e=>{if(view!=='build'||!['select','move','push','offset','magnet'].includes(state.tool))return;if(op)opCancel();const [mx,my]=setRay(e);const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h){setSub(null);return}const p=panelById(h.object.userData.id);if(!isSel(p.id))setSel(p.id);
-  const pe=pickEdge(mx,my,p);if(pe){setSub(pe);return}const pf=pickFace(h);setSub(pf.f?{kind:'region',id:p.id,fid:pf.f.id}:{kind:'face',id:p.id,a:pf.a,s:pf.s})});
+  if(p.rot){toast('У повёрнутой детали грани не выделяются — только деталь целиком');return}const pe=pickEdge(mx,my,p);if(pe){if(pe.kind==='edge'){subSet([...edgeFaces(pe),pe],pe);refreshEdges();placeHandles();showSub();renderInsp();renderHint()}else setSub(pe);return}const pf=pickFace(h);setSub(pf.f?{kind:'region',id:p.id,fid:pf.f.id}:{kind:'face',id:p.id,a:pf.a,s:pf.s})});
+cv.addEventListener('click',e=>{if(view!=='build'||state.tool!=='select'||e.detail!==3)return;setRay(e);const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;subClear();setSel(h.object.userData.id);toast('Выделена вся деталь')});
 cv.addEventListener('pointerleave',()=>{snapEl.hidden=true;faceHL.visible=false;setHover(null)});
 
 /* move (point to point) */
@@ -737,6 +786,27 @@ function pullSubTo(pt){const S=state.sub,p=panelById(S.id);if(!p)return;const P=
   else{const f=featById(p,S.fid);if(!f)return;if(S.kind==='region'){const T=p[SZ[f.a]],face=f.s>0?p[f.a]+T:p[f.a];let d=r4((face-P[f.a])*f.s);f.depth=Math.max(-3000,Math.min(T,d));msg=f.depth<0?'Выступ '+fmtMM(-f.depth):'Глубина '+fmtMM(f.depth)}
     else{const [u,v]=AX.filter(q=>q!==f.a),ax=S.side[0]==='u'?u:v,val=r4(P[ax]-p[ax]),S2=p[SZ[ax]];if(S.side[1]==='0')f[S.side]=Math.max(0,Math.min(val,f[S.side[0]+'1']-0.001));else f[S.side]=Math.min(S2,Math.max(val,f[S.side[0]+'0']+0.001));msg='Ребро области подтянуто'}}
   buildMesh(p);showSub();save();fitShadows();renderInsp();toast(msg)}
+/* rotate: click centre (axis = face normal, arrows lock), click start direction, move, click to finish */
+function rotAxisAt(mx,my){if(state.lock)return state.lock;const h=ray.intersectObjects(panelMeshes(),false)[0];if(h){const n=h.face.normal.clone().transformDirection(h.object.matrixWorld);return domAxis(n)}return 'y'}
+function planePt(c,ax){const pt=new THREE.Vector3();return ray.ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(AXV[ax],c),pt)?pt:null}
+function rotMove(mx,my,e){if(!op){const s=infer(mx,my);if(!s){prot.visible=false;return}showSnap(s);showProt(s.pt,rotAxisAt(mx,my));return}
+  if(op.type!=='rot')return;const s=infer(mx,my,{exclude:new Set(op.ids)});let q=s&&s.type!=='face'&&s.type!=='ground'?s.pt.clone():planePt(op.c,op.ax);if(!q)return;showSnap(s&&s.type!=='face'&&s.type!=='ground'?s:null);
+  q.sub(op.c);q.addScaledVector(AXV[op.ax],-q.dot(AXV[op.ax]));if(q.lengthSq()<1e-10)return;
+  if(op.stage===1){setLine(rotLine1,op.c,op.c.clone().add(q.clone().normalize().multiplyScalar(prot.scale.x)));setVCB('Угол','0°',false);op.v0=q.clone().normalize();return}
+  const v0=op.v0,v1=q.clone().normalize();let ang=Math.atan2(v0.clone().cross(v1).dot(AXV[op.ax]),v0.dot(v1))*180/Math.PI;if(!e.ctrlKey)ang=Math.round(ang/15)*15;else ang=r4(ang);applyRot(ang);
+  setLine(rotLine2,op.c,op.c.clone().add(v0.clone().applyAxisAngle(AXV[op.ax],ang*Math.PI/180).multiplyScalar(prot.scale.x)))}
+function rotClick(mx,my,e){if(!op){const s=infer(mx,my);if(!s)return;const ax=rotAxisAt(mx,my);let ids=selIds();if(s.id!=null&&!isSel(s.id)){setSel(s.id);ids=[s.id]}if(!ids.length){toast('Выберите деталь или кликните на неё');return}
+    if(ids.some(id=>{const p=panelById(id);return p.rot&&p.rot.ax!==ax&&p.rot.deg%90!==0})){toast('Деталь уже повёрнута вокруг другой оси');return}
+    pushUndo();op={type:'rot',stage:1,c:s.pt.clone(),ax,ids,start:Object.fromEntries(ids.map(id=>[id,JSON.parse(JSON.stringify(panelById(id)))])),ang:0};showProt(op.c,ax);subClear();renderHint();return}
+  if(op.stage===1){if(!op.v0){return}op.stage=2;renderHint();return}
+  finishRot()}
+function applyRot(ang){op.ang=ang;const q=new THREE.Quaternion().setFromAxisAngle(AXV[op.ax],ang*Math.PI/180);
+  op.ids.forEach(id=>{const p=panelById(id),s0=op.start[id];Object.assign(p,JSON.parse(JSON.stringify(s0)));const c0=pCenter(s0).sub(op.c).applyQuaternion(q).add(op.c);const deg=((s0.rot?s0.rot.deg:0)+ang);
+    p.rot=Math.abs(deg%360)<1e-6?undefined:{ax:op.ax,deg:r4(deg)};if(!p.rot)delete p.rot;p.x=r4(c0.x*1000-p.w/2);p.y=r4(c0.y*1000-p.h/2);p.z=r4(c0.z*1000-p.d/2);placeMesh(p)});setVCB('Угол',String(r4(ang)).replace('.',',')+'°',false)}
+function bakeRot(p){if(!p.rot)return;let k=Math.round(p.rot.deg/90);if(Math.abs(p.rot.deg-k*90)>1e-4)return;k=((k%4)+4)%4;const ax=p.rot.ax,c=pCenter(p);delete p.rot;if(p.feat&&p.feat.length){p.feat=[];toast('Области на повёрнутой детали сброшены')}
+  for(let i=0;i<k;i++){if(ax==='y'){[p.w,p.d]=[p.d,p.w];p.t=p.t==='x'?'z':p.t==='z'?'x':p.t}else if(ax==='x'){[p.h,p.d]=[p.d,p.h];p.t=p.t==='y'?'z':p.t==='z'?'y':p.t}else{[p.w,p.h]=[p.h,p.w];p.t=p.t==='x'?'y':p.t==='y'?'x':p.t}}
+  p.x=r4(c.x*1000-p.w/2);p.y=r4(c.y*1000-p.h/2);p.z=r4(c.z*1000-p.d/2)}
+function finishRot(){const ids=op.ids;ids.forEach(id=>{const p=panelById(id);bakeRot(p);if(p.y<0)p.y=0;buildMesh(p)});prot.visible=rotLine1.visible=rotLine2.visible=false;opEnd();save();fitShadows();renderInsp();toast('Повёрнуто')}
 /* offset: inset rectangle on a face */
 function startOffset(p,a,s){if(!isSel(p.id))setSel(p.id);const {Su,Sv}=faceRect(p,a);if(Math.min(Su,Sv)<4){toast('Грань слишком узкая для смещения');return}op={type:'offset',p,a,s,d:Math.round(Math.min(Su,Sv)/6)};renderHint();previewOffset()}
 function moveOffset(){const p=op.p,a=op.a,{u,v,Su,Sv}=faceRect(p,a),k=SZ[a],pl=(op.s>0?p[a]+p[k]:p[a])*MM,pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(AXV[a].clone(),-pl),pt))return;const L=loc(p,pt);
@@ -803,12 +873,13 @@ function applyVCB(txt){txt=txt.trim().replace(/мм|mm/gi,'').trim().replace(/,/
   if(op.type==='rmove'){const dir=op.dir&&op.dir.length()>0?op.dir.clone().normalize():null;if(!dir)return toast('Сначала покажите направление мышью');const [u,vv]=AX.filter(q=>q!==op.f.a),d={x:0,y:0,z:0};d[u]=dir.x*v;d[vv]=dir.y*v;applyRegionMove(d,'end');finishSub();return}
   if(op.type==='redge'){const [u,vv]=AX.filter(q=>q!==op.f.a),d={x:0,y:0,z:0};d[op.side[0]==='u'?u:vv]=v*((op.dir||1)<0?-1:1);applyRegionMove(d,'end');finishSub();return}
   if(op.type==='offset'){finishOffset(v);return}
+  if(op.type==='rot'){if(op.stage<2){op.stage=2;op.v0=op.v0||new THREE.Vector3(1,0,0)}applyRot(v);finishRot();return}
   if(op.type==='tape'&&op.line&&op.w&&op.w.lengthSq()>1e-10){const w=op.w.clone().normalize().multiplyScalar(v*MM);state.guides.push({p:op.line.P.clone().add(w).toArray(),d:op.line.D.toArray()});buildGuides();save();opEnd();tapeClear();toast('Направляющая на '+fmtMM(v));return}
   if(op.type==='tape')return}
 vcbEl.addEventListener('keydown',e=>{if(e.key==='Enter'){applyVCB(vcbEl.value);vcbEl.value='';vcbEl.blur();e.preventDefault()}else if(e.key==='Escape'){vcbEl.value='';vcbEl.blur()}e.stopPropagation()});
 
-function setTool(t){if(op)opCancel();state.tool=t;state.sub=null;refreshEdges();showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
-  controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
+function setTool(t){if(op)opCancel();prot.visible=false;state.lock=null;state.tool=t;subClear();refreshEdges();showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
+  controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair',rotate:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
 let clip=null;
 function copyP(){const ps=selPanels();if(!ps.length)return;clip=ps.map(p=>({...p}));toast('Скопировано — Ctrl+V')}
 function pasteP(){if(!clip)return toast('Буфер пуст');pushUndo();const b=bbox(clip),dx=b.x1-b.x0+50;const n=clip.map(p=>({...p,id:nextId++,x:p.x+dx}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();save();setTool('move');renderInsp();toast('Вставлено справа — переместите (M)')}
@@ -818,11 +889,13 @@ function toggleHelp(on){const k=$('#keys');k.hidden=on===undefined?!k.hidden:!on
 function act(a){
   if(a==='undo')return undo();if(a==='redo')return redo();
   if(a==='fit')return fitView();if(a==='help')return toggleHelp();
+  if(a==='cols'){DOCK.rail.cols=DOCK.rail.cols===2?1:2;saveDock();layoutPanels();return}
   if(a==='viewpop'){const pp=$('#viewpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;placePop(pp,$('[data-act=viewpop]'));return}
   if(a==='tplpop'){$('#viewpop').hidden=true;const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.keys(TPL).map(n=>`<button class="btn" data-act="tpl" data-n="${n}">${n}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
     const rr=$('#rail').getBoundingClientRect(),br=$('[data-act=tplpop]').getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?rr.top-sr.top-pp.offsetHeight-8:rr.bottom-sr.top+8)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?rr.left-sr.left-pp.offsetWidth-8:rr.right-sr.left+8)+'px'}return}
   if(a==='snap'){state.snap=!state.snap;$('[data-act="snap"]').setAttribute('aria-pressed',state.snap);return toast(state.snap?'Шаг 10 мм включён':'Шаг выключен — точность 0,0001 мм')}
-  if(a==='del'&&state.sub){const S=state.sub,p=panelById(S.id);if(S.kind==='region'||S.kind==='redge'){pushUndo();p.feat=p.feat.filter(f=>f.id!==S.fid);state.sub=null;buildMesh(p);showSub();save();renderInsp();toast('Область удалена');return}
+  if(a==='del'&&selGuide>=0){state.guides.splice(selGuide,1);selGuide=-1;buildGuides();save();toast('Направляющая удалена');return}
+  if(a==='del'&&state.sub){const S=state.sub,p=panelById(S.id);if(S.kind==='region'||S.kind==='redge'){pushUndo();p.feat=p.feat.filter(f=>f.id!==S.fid);subClear();buildMesh(p);showSub();save();renderInsp();toast('Область удалена');return}
     toast(S.kind==='edge'?'Ребро детали удалить нельзя — это край доски. Удалите деталь целиком или сдвиньте ребро (M)':'Грань детали удалить нельзя — сдвиньте её (M или P)');return}
   const ps=selPanels();if(!ps.length)return toast('Сначала выберите деталь');
   pushUndo();if(a==='rot')ps.forEach(p=>{if(p.feat&&p.feat.length){p.feat=[];toast('Области на повёрнутых деталях сброшены')}});
@@ -832,19 +905,24 @@ function act(a){
   save();renderInsp()}
 function orient(o,t){if(o.t===t)return;const A=o.t,cA=o[A]+o[SZ[A]]/2,cB=o[t]+o[SZ[t]]/2;[o[SZ[A]],o[SZ[t]]]=[o[SZ[t]],o[SZ[A]]];o.t=t;if('x' in o&&o.x!==undefined){o[A]=Math.round(cA-o[SZ[A]]/2);o[t]=Math.round(cB-o[SZ[t]]/2);if(o.y<0)o.y=0}}
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tool)setTool(b.dataset.tool);else if(b.dataset.act)act(b.dataset.act)});
+let holdAx=null;
+window.addEventListener('keyup',e=>{if(holdAx&&e.code==='Key'+holdAx.toUpperCase()){holdAx=null;if(op){state.lock=null;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}}});
 const VCBKEY=/^[0-9.,;/*xх\-+ ]$/i;
 window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;const k=e.key.toLowerCase(),c=e.ctrlKey||e.metaKey,code=e.code;
+  if(op&&op.from&&!c&&!vcbEl.value&&['KeyX','KeyY','KeyZ'].includes(code)){e.preventDefault();if(!e.repeat){holdAx=code[3].toLowerCase();state.lock=holdAx;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}return}
   if((op||lastCopy)&&!c&&e.key.length===1&&VCBKEY.test(e.key)&&!(e.key===' '&&!vcbEl.value)){vcbEl.focus();if(!vcbBox.classList.contains('on'))vcbEl.value='';vcbEl.value+=e.key;vcbBox.classList.add('on');e.preventDefault();return}
   if(e.key==='Control'&&!e.repeat&&state.tool==='move'&&!op){copyMode=!copyMode;renderHint();toast(copyMode?'Режим копии: Перемещение создаст копию':'Режим копии выключен');return}
   if(c){if(code==='KeyZ'){e.preventDefault();if(op)opCancel();e.shiftKey?redo():undo()}else if(code==='KeyY'){e.preventDefault();redo()}else if(code==='KeyD'){e.preventDefault();act('dup')}else if(code==='KeyC')copyP();else if(code==='KeyV'){e.preventDefault();pasteP()}else if(code==='KeyA'){e.preventDefault();state.multi=new Set(state.panels.map(p=>p.id));state.sel=state.panels.length?state.panels[state.panels.length-1].id:null;if(state.multi.size<2)state.multi=null;refreshEdges();placeHandles();renderInsp()}return}
+  if(state.tool==='rotate'&&!op&&['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();state.lock={ArrowRight:'x',ArrowLeft:'z',ArrowUp:'y',ArrowDown:null}[e.key];toast(state.lock?'Ось вращения '+state.lock.toUpperCase():'Ось по грани под курсором');return}
   if(op&&['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)&&op.from){e.preventDefault();state.lock={ArrowRight:'x',ArrowLeft:'z',ArrowUp:'y',ArrowDown:null}[e.key];if(state.lock===op.lockPrev)state.lock=null;op.lockPrev=state.lock;toast(state.lock?'Ось '+state.lock.toUpperCase()+' зафиксирована':'Фиксация снята');return}
   if(k==='delete'||k==='backspace'){e.preventDefault();act('del');return}
-  if(k==='escape'){if(op){opCancel();return}if(state.sub){setSub(null);return}toggleHelp(false);tapeClear();lastCopy=null;copyMode=false;if(state.tool!=='select')setTool('select');else setSel(null);return}
+  if(k==='escape'){if(op){opCancel();return}if(selGuide>=0){selGuide=-1;buildGuides();return}if(state.sub){setSub(null);return}toggleHelp(false);tapeClear();lastCopy=null;copyMode=false;if(state.tool!=='select')setTool('select');else setSel(null);return}
   if(code==='Space'){e.preventDefault();setTool('select');return}
+  if(code==='KeyQ'&&e.shiftKey){act('rot');return}
   if(code==='Slash'||k==='?'){toggleHelp();return}
   if(code==='KeyZ'){fitView();return}
-  const tools={KeyM:'move',KeyP:'push',KeyR:'board',KeyB:'board',KeyG:'magnet',KeyE:'erase',KeyT:'tape',KeyO:'orbit',KeyH:'pan',KeyF:'offset'};if(tools[code]){const keep=state.sub;setTool(tools[code]);if(keep){state.sub=keep;showSub();if(code==='KeyF'&&keep.kind==='face'){startOffset(panelById(keep.id),keep.a,keep.s)}}return}
-  if(code==='KeyQ'){act('rot');return}if(code==='KeyS'){act('snap');return}
+  const tools={KeyQ:'rotate',KeyM:'move',KeyP:'push',KeyR:'board',KeyB:'board',KeyG:'magnet',KeyE:'erase',KeyT:'tape',KeyO:'orbit',KeyH:'pan',KeyF:'offset'};if(tools[code]){const keep=state.sub,keepAll=state.subs.slice();setTool(tools[code]);if(keep){subSet(keepAll,keep);showSub();if(code==='KeyF'&&keep.kind==='face'){startOffset(panelById(keep.id),keep.a,keep.s)}}return}
+if(code==='KeyS'){act('snap');return}
   const cv2={Digit1:'front',Digit2:'top',Digit3:'right',Digit4:'left',Digit5:'back',Digit6:'bottom',Digit0:'iso',Numpad1:'front',Numpad2:'top',Numpad3:'right',Numpad0:'iso'};if(cv2[code]){setCamView(cv2[code]);return}
   const ps=selPanels();if(!ps.length)return;const st=e.shiftKey?1:10,mv={arrowleft:['x',-st],arrowright:['x',st],arrowup:['z',-st],arrowdown:['z',st],pageup:['y',st],pagedown:['y',-st]}[k];
   if(mv){e.preventDefault();pushUndo();ps.forEach(p=>{p[mv[0]]+=mv[1];if(p.y<0)p.y=0;placeMesh(p)});placeHandles();save();updateInspVals()}});
@@ -864,12 +942,12 @@ function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');i
   if(I.side==='right'){S(ins,{r:g,t:g,b:g,w:IW});free.r=W-g-IW-12}else if(I.side==='left'){S(ins,{l:g,t:g,b:g,w:IW});free.l=g+IW+12}
   else if(I.side==='top'){S(ins,{l:g,r:g,t:g,h:IH});free.t=g+IH+12}else if(I.side==='bottom'){S(ins,{l:g,r:g,b:g,h:IH});free.b=H-g-IH-12}
   else{const x=Math.max(0,Math.min(W-IW,I.x||W-IW-g)),y=Math.max(0,Math.min(H-120,I.y||g));S(ins,{l:x,t:y,w:IW,h:Math.min(H-y-g,620)})}
-  const horiz=Rl.side==='top'||Rl.side==='bottom';railEl.classList.toggle('h',horiz);railEl.dataset.dock=Rl.side;
+  const horiz=Rl.side==='top'||Rl.side==='bottom';railEl.classList.toggle('h',horiz);railEl.classList.toggle('c2',Rl.cols===2);railEl.dataset.dock=Rl.side;
   const stH=48;let stB=H-free.b;
   if(Rl.side==='left')S(railEl,{l:free.l,t:free.t,b:H-free.b});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t,b:H-free.b});
   else if(Rl.side==='top')S(railEl,{l:free.l,r:W-free.r,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,r:W-free.r,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
   else{const x=Math.max(0,Math.min(W-railEl.offsetWidth,Rl.x||g)),y=Math.max(0,Math.min(H-railEl.offsetHeight,Rl.y||g));S(railEl,{l:x,t:y})}
-  const sl=Rl.side==='left'?free.l+railEl.offsetWidth+12:free.l;st.style.left=sl+'px';st.style.right=(W-free.r)+'px';st.style.bottom=stB+'px'}
+  const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px'}
 function saveDock(){try{localStorage.setItem('bat_dock2',JSON.stringify(DOCK))}catch(e){}}
 let dockDrag=null;
 stageEl.addEventListener('pointerdown',e=>{const gp=e.target.closest('.grip');if(!gp)return;e.preventDefault();const key=gp.dataset.drag,el=key==='rail'?$('#rail'):$('#insp'),r=el.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();
@@ -898,7 +976,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Материал</span>${matHTML(nb,'nb')}</div>
     <div class="grp"><span class="lbl">Размер по умолчанию</span><div class="fld"><span>Длина</span><input id="nb-w" data-k="w" data-scope="nb" value="${nb.w}"><i>мм</i></div><div class="fld"><span>Ширина</span><input id="nb-d" data-k="d" data-scope="nb" value="${nb.d}"><i>мм</i></div></div>`;return}
   if(p){const T=thick(p),n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
-    ${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
+    ${p.rot?`<div class="grp"><span class="lbl">Поворот</span><div class="fld"><span>Вокруг ${p.rot.ax.toUpperCase()}</span><input id="sel-rot" data-k="rot" data-scope="sel" value="${p.rot.deg}"><i>°</i></div><button class="btn" data-act="unrot">Сбросить поворот</button></div>`:''}${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
@@ -916,6 +994,7 @@ insp.addEventListener('change',e=>{const el=e.target,k=el.dataset.k;if(!k)return
   if(k==='olname'){const p=panelById(+el.dataset.id);if(!p)return;pushUndo();p.name=el.value.trim()||'Деталь';el.readOnly=true;save();renderInsp();return}
   const o=el.dataset.scope==='nb'?state.nb:selP();if(!o)return;
   if(k==='name'){pushUndo();o.name=el.value.trim()||'Деталь';save();renderInsp();return}
+  if(k==='rot'){const v=num(el.value);if(!isFinite(v))return;pushUndo();o.rot.deg=r4(v);bakeRot(o);buildMesh(o);save();renderInsp();return}
   let v=num(el.value);if(!isFinite(v)||v<=0){toast('Введите число в миллиметрах');renderInsp();return}v=r4(v);
   if(o!==state.nb)pushUndo();
   if(k==='T')o[SZ[o.t]]=Math.max(1,Math.min(100,v));else if('whd'.includes(k))o[k]=Math.min(3000,Math.max(10,v));else o[k]=k==='y'?Math.max(0,v):v;
@@ -927,18 +1006,20 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
   if(a==='orient'||a==='mat'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels();tgt.forEach(q=>{if(a==='orient')orient(q,b.dataset.t);else q.mat=b.dataset.m;if(q!==state.nb)buildMesh(q)});if(o!==state.nb){placeHandles();save();fitShadows()}renderInsp();return}
   if(a==='cancelTool')return setTool('select');
+  if(a==='unrot'){const o=selP();if(!o||!o.rot)return;pushUndo();const c=pCenter(o);delete o.rot;o.x=r4(c.x*1000-o.w/2);o.y=r4(c.y*1000-o.h/2);o.z=r4(c.z*1000-o.d/2);buildMesh(o);save();renderInsp();return}
   if(a)act(a)});
 function renderHint(){const t=state.tool,o=op&&op.type;
   $('#hint').textContent=
-    o==='move'?'Кликните точку назначения — привязка к углам, серединам и рёбрам · цифры + Enter — точное расстояние · стрелки фиксируют ось · Esc — отмена':
+    o==='move'?(holdAx?'Только по оси '+holdAx.toUpperCase()+' — отпустите клавишу, чтобы снять':'')+(holdAx?'':'Кликните точку назначения — привязка к углам, серединам и рёбрам · цифры + Enter — точное расстояние · удерживайте X / Y / Z — движение только по оси · Esc — отмена'):
     o==='push'?'Ведите мышь · наведите на ребро или угол другой детали — грань подтянется · Shift — к любой точке под курсором · цифры + Enter · Esc — отмена':
     o==='rect'?'Кликните второй угол · наберите 600;300 и Enter для точного размера · Esc — отмена':
     o==='tape'?(op.line?'Ведите от ребра — расстояние по перпендикуляру, ось переключается сама · клик — направляющая · цифры + Enter':'Кликните вторую точку · стрелки фиксируют ось · Esc — сброс'):
+    o==='rot'?(op.stage===1?'Кликните, откуда отсчитывать угол':'Ведите — поворот с шагом 15° (Ctrl — без шага) · цифры + Enter — точный угол · клик — готово'):
     o==='offset'?'Ведите мышь внутрь грани — рамка смещения · цифры + Enter — точный отступ · клик — создать':
     o==='rpush'?'Ведите мышь внутрь — выборка, наружу — выступ · Shift — к любой грани под курсором · цифры + Enter — глубина':
     (o==='emove'||o==='rmove'||o==='redge')?'Кликните точку назначения · цифры + Enter — точное расстояние · Esc — отмена':
     o==='mag'?'Кликните грань другой детали — первая встанет к ней вплотную или в одну плоскость':
-    ({move:`Кликните точку на детали (угол, середину ребра) — затем точку назначения${copyMode?' · режим КОПИИ':' · Ctrl — копия'}`,push:'Кликните любую грань или область и ведите — пласть меняет толщину, торец — длину',offset:'Кликните грань детали — затем ведите внутрь и кликните',board:'Кликните первый угол доски на полу или на грани',magnet:'Кликните грань детали, которую двигаем',erase:'Клик по детали — удалить',tape:'Кликните ребро — получите расстояние до параллельной линии; или точку — расстояние между точками',orbit:'Зажмите и ведите — вращение вида',pan:'Зажмите и ведите — сдвиг вида'}[t]||(state.sub?'Выбрано: Shift+клик по ребру или углу — подтянуть к нему · M — сдвинуть · P — тянуть · F — смещение · Del — удалить · Esc — снять':'Зажмите и ведите — вращение · клик — деталь, двойной клик — грань или ребро · M перемещение · P тянуть · F смещение · R доска · G магнит · ? все клавиши'))}
+    ({move:`Кликните точку на детали (угол, середину ребра) — затем точку назначения${copyMode?' · режим КОПИИ':' · Ctrl — копия'}`,push:'Кликните грань и ведите: наружу — выдавить, внутрь — втянуть · с выделенной гранью: Shift+клик по ребру — подтянуть',offset:'Кликните грань детали — затем ведите внутрь и кликните',board:'Кликните первый угол доски на полу или на грани',magnet:'Кликните грань детали, которую двигаем',erase:'Клик по детали — удалить',rotate:'Наведите — транспортир ляжет на грань (стрелки фиксируют ось) · клик — центр поворота',tape:'Кликните ребро — получите расстояние до параллельной линии; или точку — расстояние между точками',orbit:'Зажмите и ведите — вращение вида',pan:'Зажмите и ведите — сдвиг вида'}[t]||(state.sub?`Выбрано: ${state.subs.length>1?state.subs.length+' объекта':state.sub.kind==='edge'||state.sub.kind==='redge'?'ребро':'грань'} · Shift+клик — добавить · P, затем Shift+клик по ребру — подтянуть · M — сдвинуть · F — смещение · Del — удалить`:'Клик — грань или ребро · три клика — вся деталь · Shift — добавить · тяните выбранную — двигать · M перемещение · P выдавить · Q поворот · ? все клавиши'))}
 
 /* ---------- labels ---------- */
 const dls={x:$('#dlx'),y:$('#dly'),z:$('#dlz')};
@@ -1008,6 +1089,8 @@ function addInterior(b,cx,zb){
   room.add(boxM(W,0.08,0.014,whiteM,(xL+xR)/2,0.04,zb+0.007));room.add(boxM(0.014,0.08,zF-zb,whiteM,xL+0.007,0.04,(zb+zF)/2));
   scene.background=new THREE.Color(0xf1ede6)}
 function oakMat(){return rmats.legOak||(rmats.legOak=roomMat('oakLeg',oakCanvas,0.3,{roughness:.5},3))}
+function frontCam(){const b=bbox(),x0=b.x0*MM,x1=b.x1*MM,top=b.y1*MM,tv=Math.tan(camera.fov*Math.PI/360),th=tv*camera.aspect,W=(x1-x0)+0.9,H=top+0.5;const d=Math.max((W/2)/th,(H/2)/tv)*1.12;
+  const c=new THREE.Vector3((x0+x1)/2,Math.max(top/2,0.45),(b.z0+b.z1)/2*MM);controls.target.copy(c);camera.position.set(c.x,c.y+0.08,c.z+d);controls.update();camDirty=true;lastMove=performance.now()}
 /* eye-level product framing for the interior */
 function renderCam(){const b=bbox(),x0=b.x0*MM,x1=b.x1*MM,top=b.y1*MM,H=Math.max(1.95,top+0.35),tv=Math.tan(camera.fov*Math.PI/360),th=tv*camera.aspect,W=(x1-x0)+1.75;
   const d=Math.max((W/2)/th,(H/2)/tv)*1.08,c=new THREE.Vector3((x0-0.3+x1+1.45)/2,H/2-0.05,(b.z0+b.z1)/2*MM);controls.target.copy(c);camera.position.set(c.x-d*0.22,c.y+0.05,c.z+d);controls.update();camDirty=true;lastMove=performance.now()}
@@ -1067,7 +1150,7 @@ function syncPhysCam(){physCam.copy(camera);physCam.fStop=6.3;physCam.apertureBl
 /* separate scene for the path tracer: one material per mesh (its merge step maps one material per mesh) */
 const ptScene=new THREE.Scene();
 function buildPTScene(){ptScene.clear();
-  state.panels.forEach(p=>{const m=meshes[p.id];if(!m)return;const g=m.geometry;g.groups.forEach(gr=>{const sg=new THREE.BufferGeometry();for(const k in g.attributes)sg.setAttribute(k,g.attributes[k]);if(g.index)sg.setIndex(Array.from(g.index.array.slice(gr.start,gr.start+gr.count)));else sg.setIndex(Array.from({length:gr.count},(_,i)=>gr.start+i));const mm=new THREE.Mesh(sg,m.material[gr.materialIndex]);mm.position.copy(m.position);ptScene.add(mm)})});
+  state.panels.forEach(p=>{const m=meshes[p.id];if(!m)return;const g=m.geometry;g.groups.forEach(gr=>{const sg=new THREE.BufferGeometry();for(const k in g.attributes)sg.setAttribute(k,g.attributes[k]);if(g.index)sg.setIndex(Array.from(g.index.array.slice(gr.start,gr.start+gr.count)));else sg.setIndex(Array.from({length:gr.count},(_,i)=>gr.start+i));const mm=new THREE.Mesh(sg,m.material[gr.materialIndex]);mm.position.copy(m.position);mm.quaternion.copy(m.quaternion);ptScene.add(mm)})});
   const rc=room.clone();rc.visible=true;ptScene.add(rc);ptScene.environment=skyEnv();ptScene.background=scene.background;ptScene.updateMatrixWorld(true)}
 function ptFrame(){if(ptState!=='ready'){vizFrame();return}
   if(ptSceneDirty){buildPTScene();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.7;syncPhysCam();pt.setScene(ptScene,physCam);ptSceneDirty=false;camDirty=false}
@@ -1091,17 +1174,17 @@ function setView(v){if(!['build','render','drawings','export'].includes(v))v='bu
   placeHandles();if(v==='drawings'&&drawDirty)renderDrawing();if(v==='drawings')renderSpec();
   if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v)}
 function resetShadowMaps(){[sun,fill].forEach(l=>{if(l.shadow.map){l.shadow.map.dispose();l.shadow.map=null}})}
-window.addEventListener('hashchange',()=>setView(location.hash.slice(1)));
+let viewPending=0;window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});const n=++viewPending;requestAnimationFrame(()=>setTimeout(()=>{if(n===viewPending)setView(v)},0))});
 function syncSeg(){document.querySelectorAll('#envSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.env===state.env));document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.light===state.light));document.querySelectorAll('#qSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.q===state.q))}
 $('#vizbar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.env){state.env=b.dataset.env;buildRoom();if(state.env==='wall')renderCam()}else if(b.dataset.light){state.light=b.dataset.light;fitShadows()}else if(b.dataset.q){state.q=+b.dataset.q;renderer.setPixelRatio(baseDPR*state.q);resize()}else if(b.id==='camBtn'){renderCam();return}else if(b.id==='savePng'){cv.toBlob(bl=>bl&&saveFile(fname('render.png'),bl),'image/png');return}
+  if(b.dataset.env){state.env=b.dataset.env;buildRoom();if(state.env==='wall')renderCam()}else if(b.dataset.light){state.light=b.dataset.light;fitShadows()}else if(b.dataset.q){state.q=+b.dataset.q;renderer.setPixelRatio(baseDPR*state.q);resize()}else if(b.id==='camBtn'){renderCam();return}else if(b.id==='camFront'){frontCam();return}else if(b.id==='savePng'){cv.toBlob(bl=>bl&&saveFile(fname('render.png'),bl),'image/png');return}
   syncSeg();lastMove=performance.now();prevOK=false;ptSceneDirty=true});
 
 function resize(){const r=stageEl.getBoundingClientRect();if(!r.width||!r.height)return;cvRect=cv.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();lastMove=performance.now();prevOK=false;camDirty=true}
 new ResizeObserver(resize).observe(stageEl);
 
 let capturing=false;
-function loop(){requestAnimationFrame(loop);if(capturing)return;if(view==='build'){controls.update();renderer.setRenderTarget(null);{const below=camera.position.y<0;gridMinor.visible=gridMajor.visible=axesG.visible=!below}showSub();renderer.render(scene,camera);updateLabels();tapeLabel();if(!snapEl.hidden&&!op&&!['move','board','tape'].includes(state.tool))snapEl.hidden=true}else if(view==='render'){controls.update();ptFrame()}}
+function loop(){requestAnimationFrame(loop);if(capturing)return;if(view==='build'){controls.update();renderer.setRenderTarget(null);{if(prot.visible)prot.scale.setScalar(camera.position.distanceTo(prot.position)*0.09);const below=camera.position.y<0;gridMinor.visible=gridMajor.visible=axesG.visible=!below}showSub();renderer.render(scene,camera);updateLabels();tapeLabel();if(!snapEl.hidden&&!op&&!['move','board','tape'].includes(state.tool))snapEl.hidden=true}else if(view==='render'){controls.update();ptFrame()}}
 
 /* ---------- parts & nesting ---------- */
 function partsList(){const g=new Map();state.panels.forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
@@ -1125,7 +1208,7 @@ function nestSummary(){const groups=nestAll(),parts=partsList();let sheets=0,she
     sh.parts.forEach(q=>{partA+=q.w*q.h;per+=2*(q.w+q.h);cnt++})}));
   return{groups,parts,sheets,sheetA:sheetA/1e6,partA:partA/1e6,wasteA:(sheetA-partA)/1e6,cut:cut/1000,per:per/1000,cnt,util:sheetA?partA/sheetA:0,waste:[...waste.entries()].map(([k,n])=>{const [sz,T]=k.split('|');return{sz,T:+T,n,a:sz.split('×').reduce((x,y)=>x*y,1)}}).sort((a,b)=>b.a-a.a)}}
 const NPAL=['#cdd8f4','#f4d0c9','#d2ecd8','#f3e2bb','#ddd3f3','#cbe6ee','#f2d4e4','#e3e3cd','#d9e8c6','#f0d9c4'];
-function nestAll(){const [SW,SH]=SHEETS[state.sheet],parts=partsList(),groups=new Map();parts.forEach(p=>{const k=p.T+'|'+p.mat;if(!groups.has(k))groups.set(k,{T:p.T,mat:p.mat,items:[]});for(let i=0;i<p.qty;i++)groups.get(k).items.push({L:p.L,W:p.W,no:p.no})});
+function nestAll(){const [SW,SH]=getSheet(),parts=partsList(),groups=new Map();parts.forEach(p=>{const k=p.T+'|'+p.mat;if(!groups.has(k))groups.set(k,{T:p.T,mat:p.mat,items:[]});for(let i=0;i<p.qty;i++)groups.get(k).items.push({L:p.L,W:p.W,no:p.no})});
   return[...groups.values()].map(g=>({...g,...pack(g.items,SW,SH),SW,SH}))}
 
 /* ---------- drawings ---------- */
@@ -1157,6 +1240,17 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
     o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ×${pt.qty}`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
     cx+=Math.max(bw,k*22)+k*3;rowH=Math.max(rowH,bh+k*3)});
   oy+=rowH+G*0.6;
+  const mill=parts.filter(pt=>(pt.fe||[]).some(f=>Math.abs(f.depth)>0.01)||pt.edgeF);
+  if(mill.length){oy+=k*2;o.push(Tx(0,oy,k*1.6,'Фрезерная обработка','h'),Tx(k*14,oy,k*.85,'после раскроя · фреза Ø6 мм · внутренние углы R3 · размеры от левого верхнего угла детали','s'));oy+=k*4;cx=fx;rowH=0;
+    mill.forEach(pt=>{const ops=(pt.fe||[]).filter(f=>Math.abs(f.depth)>0.01),bw=pt.L+k*(6+ops.length*2.6);if(cx+bw>maxW&&cx>fx){cx=fx;oy+=rowH;rowH=0}
+      const x=cx,y=oy+k*3.4;o.push(R(x,y,pt.L,pt.W),Tx(x,y-k*2.2,k*1.05,`Д${pt.no} · ${pt.names[0]} · ${pt.L}×${pt.W}×${pt.T} · ${pt.qty} шт.`,'s'));
+      ops.forEach((f,i)=>{const w=f.x1-f.x0,h=f.y1-f.y0;o.push(`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(w)}" height="${f1(h)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*.5,Math.min(k*1.6,h*.6),String(i+1)));
+        const yy=y+pt.W+k*(2.4+i*2.6);if(f.x0>0.5)o.push(dH(x,x+f.x0,yy,y+pt.W,f1(f.x0)));o.push(dH(x+f.x0,x+f.x1,yy,y+pt.W,f1(w)));
+        const xx=x+pt.L+k*(2.4+i*2.6);if(f.y0>0.5)o.push(dV(y,y+f.y0,xx,x+pt.L,f1(f.y0)));o.push(dV(y+f.y0,y+f.y1,xx,x+pt.L,f1(h)))});
+      let ty=y+pt.W+k*(2.4+ops.length*2.6)+k*1.6;ops.forEach((f,i)=>{o.push(Tx(x,ty,k*.85,`${i+1}. ${f.thr?'Сквозной вырез':f.depth>0?'Выборка глубиной '+f1(f.depth)+' мм':'Накладка '+f1(-f.depth)+' мм — приклеить'} · ${f1(f.x1-f.x0)}×${f1(f.y1-f.y0)} · X ${f1(f.x0)}, Y ${f1(f.y0)} · ${f.s>0?'лицевая сторона':'обратная сторона'}`,'s'));ty+=k*1.4});
+      if(pt.edgeF){o.push(Tx(x,ty,k*.85,`Обработка торцов: ${pt.edgeF} — размеры в 3D-модели и DXF`,'s'));ty+=k*1.4}
+      cx+=Math.max(bw,k*46)+k*3;rowH=Math.max(rowH,ty-oy+k*2)});
+    oy+=rowH+G*.4}
   o.push(Tx(0,oy,k*1.6,'Карта раскроя','h'));oy+=k*4;cx=fx;rowH=0;
   nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
     const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW}×${g.SH} · ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
@@ -1170,7 +1264,7 @@ function buildDrawing(forFile){const P=state.panels;if(!P.length)return{svg:`<sv
   oy+=rowH+G*.4;
   const tw=k*26,th=k*8.4,tx=Math.max(ex-tw,fx),dt=new Date().toLocaleDateString('ru-RU');
   o.push(`<rect class="tb" x="${f1(tx)}" y="${f1(oy)}" width="${f1(tw)}" height="${f1(th)}"/><line class="tb" x1="${f1(tx)}" y1="${f1(oy+k*3)}" x2="${f1(tx+tw)}" y2="${f1(oy+k*3)}"/><line class="tb" x1="${f1(tx+tw*.55)}" y1="${f1(oy+k*3)}" x2="${f1(tx+tw*.55)}" y2="${f1(oy+th)}"/>`);
-  o.push(Tx(tx+k,oy+k*2,k*1.3,'artem terekhov ©','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Деталей: ${P.length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Размеры в мм','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
+  o.push(Tx(tx+k,oy+k*2,k*1.3,'artem terekhov','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Деталей: ${P.length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Размеры в мм','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
   oy+=th;ex=Math.max(ex,tx+tw);
   const box=[-k*2,-k*3,ex+k*6,oy+k*5];
   const css=forFile?`<style>.pn,.pc{fill:#fff;stroke:#222;stroke-width:1;vector-effect:non-scaling-stroke}.sh{fill:#efece6;stroke:#222;vector-effect:non-scaling-stroke}.dm line{stroke:#777;stroke-width:.6;vector-effect:non-scaling-stroke}.dm line.tk{stroke:#222;stroke-width:1.1}.gr{stroke:#9a6a3a;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.tb{fill:none;stroke:#222;vector-effect:non-scaling-stroke}text{fill:#222;font-family:IBM Plex Mono,monospace;text-anchor:middle}text.h{font-family:Jost,sans-serif;letter-spacing:.2em;text-anchor:start}text.s{fill:#666;text-anchor:start}.np{stroke:#5d6270;vector-effect:non-scaling-stroke}.ws{fill:url(#hatch);stroke:#ccc;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}text.nl,text.wt{text-anchor:start}text.wt{fill:#999}text.nn{font-weight:700;fill:#111}</style><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#fff"/>`:'';
@@ -1195,13 +1289,15 @@ $('#zin').onclick=()=>zc(1/1.4);$('#zout').onclick=()=>zc(1.4);$('#zfit').onclic
 function renderSpec(){const parts=partsList(),groups=nestAll();
   $('#spec').innerHTML=`<div class="grp"><h2 style="font:500 12px var(--f-body);color:var(--mute);margin:0">Спецификация · Product sheet</h2><h3 style="font:600 26px/1.1 var(--f-display);letter-spacing:-.02em;margin:6px 0 0">${esc(state.name)}</h3></div>
   <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th>Д×Ш</th><th>Т</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
-  <label class="fld" style="grid-template-columns:1fr 140px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x','×')}</option>`).join('')}</select></label>
-  ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b></div></div>
+  <label class="fld" style="grid-template-columns:1fr 140px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x','×')}</option>`).join('')}<option value="custom" ${state.sheet==='custom'?'selected':''}>Свой размер</option></select></label>
+  ${state.sheet==='custom'?`<div class="fld"><span>Длина листа</span><input id="shW" inputmode="decimal" value="${state.sheetW||2500}"><i>мм</i></div><div class="fld"><span>Ширина листа</span><input id="shH" inputmode="decimal" value="${state.sheetH||1250}"><i>мм</i></div>`:''}
+  ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b><span>Фрезерных операций</span><b>${S.parts.reduce((a,pt)=>a+((pt.fe||[]).filter(f=>Math.abs(f.depth)>0.01).length+(pt.edgeF||0))*pt.qty,0)}</b></div></div>
   <div class="grp"><span class="lbl">Листы по толщинам</span><div class="kv">${S.groups.map(g=>`<span>${g.T} мм · ${MATS[g.mat].short}</span><b>${g.sheets.length} л.${g.over.length?' · есть крупнее листа':''}</b>`).join('')}</div></div>
   <div class="grp"><span class="lbl">Таблица отходов</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Размер</th><th>Т</th><th>шт</th></tr></thead><tbody>${S.waste.map((w,i)=>`<tr><td class="n">${i+1}</td><td class="n" style="text-align:left">${w.sz} мм</td><td class="n">${w.T}</td><td class="n">${w.n}</td></tr>`).join('')||'<tr><td colspan="4">Нет отходов</td></tr>'}</tbody></table></div></div>`})()}
   <button class="btn pri" id="pdfBtn">Скачать паспорт PDF</button>
   <p class="note">Пропил 4 мм, обрезка кромки листа 10 мм. Наведите курсор на деталь или отход на карте — появится подробная карточка. Колесо мыши — масштаб, перетаскивание — сдвиг.</p>`;
-  $('#pdfBtn').onclick=makePDF;$('#sheetSel').onchange=e=>{state.sheet=e.target.value;renderDrawing();renderSpec()}}
+  $('#pdfBtn').onclick=makePDF;const shIn=(id,k)=>{const el=$(id);if(el)el.onchange=()=>{const v=num(el.value);if(isFinite(v)&&v>=200&&v<=6000){state[k]=r4(v);save();renderDrawing();renderSpec()}else toast('Размер листа от 200 до 6000 мм')}};shIn('#shW','sheetW');shIn('#shH','sheetH');
+  $('#sheetSel').onchange=e=>{state.sheet=e.target.value;save();renderDrawing();renderSpec()}}
 
 /* ---------- export ---------- */
 let dl=null;
@@ -1209,7 +1305,7 @@ let dl=null;
 async function saveFile(name,data){if(!dl){const u=URL.createObjectURL(data instanceof Blob?data:new Blob([data]));const a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('Файл сохранён');return}try{await dl.save({filename:name,data});toast('Файл передан на сохранение')}catch(e){if(e&&e.code==='declined')return;toast(e&&e.code==='rate_limited'?'Подождите и повторите':'Не удалось сохранить файл')}}
 const fname=ext=>(state.name||'project').replace(/[^\wа-яё\- ]+/gi,'').trim().replace(/\s+/g,'_')+'_'+ext;
 const FACES=[[0,4,6,2],[1,3,7,5],[0,1,5,4],[2,6,7,3],[0,2,3,1],[4,5,7,6]],NRM=[[-1,0,0],[1,0,0],[0,-1,0],[0,1,0],[0,0,-1],[0,0,1]];
-const cornersMM=p=>[...Array(8)].map((_,i)=>[p.x+(i&1?p.w:0),p.y+(i&2?p.h:0),p.z+(i&4?p.d:0)]);
+const cornersMM=p=>corners(p).map(v=>[r4(v.x*1000),r4(v.y*1000),r4(v.z*1000)]);
 function toDAE(){const mats=Object.entries(MATS);let geo='',nodes='';
   state.panels.forEach((p,i)=>{const c=cornersMM(p).flat().join(' '),tri=FACES.flatMap((f,n)=>[f[0],n,f[1],n,f[2],n,f[0],n,f[2],n,f[3],n]).join(' ');
     geo+=`<geometry id="g${i}" name="${esc(p.name)}"><mesh><source id="g${i}-p"><float_array id="g${i}-pa" count="24">${c}</float_array><technique_common><accessor source="#g${i}-pa" count="8" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source><source id="g${i}-n"><float_array id="g${i}-na" count="18">${NRM.flat().join(' ')}</float_array><technique_common><accessor source="#g${i}-na" count="6" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source><vertices id="g${i}-v"><input semantic="POSITION" source="#g${i}-p"/></vertices><triangles material="m_${p.mat}" count="12"><input semantic="VERTEX" source="#g${i}-v" offset="0"/><input semantic="NORMAL" source="#g${i}-n" offset="1"/><p>${tri}</p></triangles></mesh></geometry>`;
@@ -1228,6 +1324,17 @@ const tr={birch:'BIRCH',oiled:'BIRCH-OIL',black:'FILM-BLACK'};
 function detailsDXF(){const L=[],T=[];let x=0;partsList().forEach(p=>{L.push(...rectL(x,0,p.L,p.W,'CUT'));(p.fe||[]).forEach(f=>{L.push(...rectL(x+f.x0,p.W-f.y1,f.x1-f.x0,f.y1-f.y0,f.thr?'CUT':'POCKET'));if(!f.thr)T.push([x+f.x0+5,p.W-f.y1+5,15,`DEPTH ${f.depth}`,'POCKET'])});T.push([x,-40,25,`D${p.no} ${p.L}x${p.W}x${p.T} x${p.qty} ${tr[p.mat]}`,'TEXT']);x+=p.L+100});return dxf(L,T)}
 function nestDXF(){const L=[],T=[];let y=0;nestAll().forEach(g=>g.sheets.forEach((s,i)=>{L.push(...rectL(0,y,g.SW,g.SH,'SHEET'));T.push([0,y+g.SH+30,30,`${g.T}mm ${tr[g.mat]} sheet ${i+1}/${g.sheets.length}`,'TEXT']);
   s.parts.forEach(p=>{const py=y+g.SH-p.y-p.h;L.push(...rectL(p.x,py,p.w,p.h,'CUT'));T.push([p.x+10,py+10,Math.min(30,p.h/3),`D${p.no}`,'TEXT'])});y+=g.SH+200}));return dxf(L,T)}
+function toRuby(){const C=(x,y,z)=>`Geom::Point3d.new(${r4(x)}.mm,${r4(-z)}.mm,${r4(y)}.mm)`;const col={birch:[226,205,164],oiled:[214,174,122],black:[42,40,38]};
+  let rb=`# artem terekhov — модель для SketchUp: ${state.name}\n# SketchUp → Окно → Консоль Ruby → load 'путь/к/model.rb', затем Файл → Сохранить как .skp\nmodel=Sketchup.active_model\nmodel.start_operation('artem terekhov',true)\nents=model.active_entities\nmats={}\n`;
+  Object.entries(MATS).forEach(([k,m])=>{rb+=`mats['${k}']=(model.materials['AT ${m.short}']||model.materials.add('AT ${m.short}'))\nmats['${k}'].color=Sketchup::Color.new(${col[k].join(',')})\n`});
+  rb+=`def at_face(ents,pts,out)\n  f=ents.add_face(pts)\n  f.reverse! if f.normal.dot(out)<0\n  f\nend\n`;
+  const OUT={x:'Geom::Vector3d.new(1,0,0)',y:'Geom::Vector3d.new(0,0,1)',z:'Geom::Vector3d.new(0,-1,0)'};
+  state.panels.forEach(p=>{const n=p.name.replace(/'/g,"\\'");rb+=`g=ents.add_group\ng.name='${n} ${thick(p)}мм'\ne=g.entities\n`;
+    rb+=`f=at_face(e,[${C(p.x,p.y,p.z)},${C(p.x+p.w,p.y,p.z)},${C(p.x+p.w,p.y,p.z+p.d)},${C(p.x,p.y,p.z+p.d)}],Geom::Vector3d.new(0,0,-1))\nf.pushpull(-${r4(p.h)}.mm)\n`;
+    (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{const [u,v]=AX.filter(q=>q!==f.a),T=p[SZ[f.a]],F=f.s>0?p[f.a]+T:p[f.a];const P=(uu,vv)=>{const o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[f.a]=F;return C(o.x,o.y,o.z)};
+      const out=f.s>0?OUT[f.a]:OUT[f.a]+'.reverse';rb+=`f=at_face(e,[${P(f.u0,f.v0)},${P(f.u1,f.v0)},${P(f.u1,f.v1)},${P(f.u0,f.v1)}],${out})\nf.pushpull(${f.depth>0?'-':''}${r4(Math.min(Math.abs(f.depth),T))}.mm)\n`});
+    rb+=`g.material=mats['${p.mat}']\n`;if(p.rot){const c=pCenter(p);rb+=`g.transform!(Geom::Transformation.rotation(${C(c.x*1000,c.y*1000,c.z*1000)},${OUT[p.rot.ax]},${p.rot.deg}.degrees))\n`}});
+  rb+=`model.commit_operation\nUI.messagebox('Готово: ${state.panels.length} деталей. Сохраните модель как .skp')\n`;return rb}
 function toCSV(){const rows=[['№','Наименование','Длина, мм','Ширина, мм','Толщина, мм','Кол-во','Материал','Площадь, м²']];partsList().forEach(p=>rows.push(['Д'+p.no,p.names.join(', '),p.L,p.W,p.T,p.qty,MATS[p.mat].name,(p.L*p.W*p.qty/1e6).toFixed(3).replace('.',',')]));return'﻿'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n')}
 const projJSON=()=>JSON.stringify({app:'bureau-tereKhov',version:2,name:state.name,panels:state.panels,guides:state.guides},null,1);
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
@@ -1239,7 +1346,8 @@ function zip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
   const cs=cen.reduce((s,a)=>s+a.length,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cs,true);end.setUint32(16,off,true);
   return new Blob([...parts,...cen,new Uint8Array(end.buffer)])}
 $('#exp').addEventListener('click',e=>{const b=e.target.closest('[data-ex]');if(!b)return;if(!state.panels.length&&b.dataset.ex!=='json')return toast('В проекте нет деталей');const x=b.dataset.ex;
-  if(x==='zip'){const o=toOBJ();saveFile(fname('package.zip'),zip([{name:'model.dae',data:toDAE()},{name:'model.obj',data:o.obj},{name:'model.mtl',data:o.mtl},{name:'details.dxf',data:detailsDXF()},{name:'nesting.dxf',data:nestDXF()},{name:'cutlist.csv',data:toCSV()},{name:'project.json',data:projJSON()}]))}
+  if(x==='skp'){saveFile(fname('sketchup.zip'),zip([{name:'model.rb',data:toRuby()},{name:'model.dae',data:toDAE()},{name:'README.txt',data:'SketchUp: Окно → Консоль Ruby → введите  load "C:/путь/к/model.rb"  и нажмите Enter.\r\nМодель построится группами с материалами и выборками. Затем Файл → Сохранить как → .skp.\r\nЗапасной вариант: Файл → Импорт → model.dae.'}]))}
+  else if(x==='zip'){const o=toOBJ();saveFile(fname('package.zip'),zip([{name:'model.rb',data:toRuby()},{name:'model.dae',data:toDAE()},{name:'model.obj',data:o.obj},{name:'model.mtl',data:o.mtl},{name:'details.dxf',data:detailsDXF()},{name:'nesting.dxf',data:nestDXF()},{name:'cutlist.csv',data:toCSV()},{name:'project.json',data:projJSON()}]))}
   else if(x==='pdf')makePDF();else if(x==='csv')saveFile(fname('cutlist.csv'),toCSV());else if(x==='svg')saveFile(fname('drawings.svg'),buildDrawing(true).svg);else if(x==='json')saveFile(fname('project.json'),projJSON())});
 $('#openFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!Array.isArray(j.panels))throw 0;pushUndo();state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];buildGuides();state.name=j.name||'Проект';nextId=Math.max(0,...j.panels.map(p=>p.id))+1;state.sel=null;rebuildAll();save();renderInsp();toast('Проект открыт');setView('build');fitView()}catch(err){toast('Файл не похож на проект')}};rd.readAsText(f);e.target.value=''});
 
@@ -1248,7 +1356,7 @@ $('#openFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)ret
 const MARK=new Path2D('M20 112 C36 112 42 98 47 84 L70 20 L96 98 C99 108 108 109 114 100 L138 64 H198 M170 30 L151 106 C148 116 157 119 164 113');
 const PF=(w,sz)=>`${w} ${sz}px Onest, "Helvetica Neue", Arial, sans-serif`;
 function drawLogo(g,x,y,h){g.save();g.translate(x,y-h*1.05);g.scale(h/95,h/95);g.translate(-12,-16);g.lineWidth=13;g.lineCap='round';g.lineJoin='round';g.strokeStyle='#111';g.stroke(MARK);g.restore();
-  g.save();g.fillStyle='#111';g.font=`400 ${h*0.62}px Questrial, Onest, Arial, sans-serif`;if('letterSpacing' in g)g.letterSpacing=(h*0.03)+'px';g.fillText('artem terekhov',x+h*2.35,y-h*0.12);g.restore()}
+  g.save();g.fillStyle='#111';g.font=PF(700,h*0.82);if('letterSpacing' in g)g.letterSpacing=(-h*0.04)+'px';g.fillText('artem terekhov',x+h*2.35,y-h*0.12);g.restore()}
 function wrap(g,t,x,y,w,lh,font){g.font=font;let line='';for(const word of t.split(' ')){const test=line?line+' '+word:word;if(g.measureText(test).width>w&&line){g.fillText(line,x,y);y+=lh;line=word}else line=test}if(line)g.fillText(line,x,y);return y+lh}
 function drawViews(g,x0,y0,wA,hA){const b=bbox(),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-b.z0,gap=34,k=Math.min((wA-2*gap)/(2*W+D),(hA-26)/Math.max(H,D));
   const box=(x,y,w,h)=>{g.fillStyle='#fff';g.fillRect(x,y,w,h);g.strokeRect(x,y,w,h)};g.strokeStyle='#111';g.lineWidth=0.55;
