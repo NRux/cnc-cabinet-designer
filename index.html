@@ -435,11 +435,14 @@ const edgeMatHov=new THREE.LineBasicMaterial({color:0x1f5fe0,transparent:true,op
 const hashOff=id=>((id*9301+49297)%233280)/233280*0.9;
 function makeGeo(p){const s=[p.w*MM,p.h*MM,p.d*MM],g=new THREE.BoxGeometry(s[0],s[1],s[2]),ti=AX.indexOf(p.t),pos=g.attributes.position,uv=g.attributes.uv,off=hashOff(p.id);
   g.clearGroups();
-  for(let f=0;f<6;f++){const n=f>>1,isFace=n===ti;g.addGroup(f*6,6,isFace?0:1);
+  for(let f=0;f<6;f++){const n=f>>1,isFace=n===ti;
     for(let k=0;k<4;k++){const i=f*4+k,v=[pos.getX(i),pos.getY(i),pos.getZ(i)];
       if(isFace){const ax=[0,1,2].filter(a=>a!==ti),[a1,a2]=s[ax[0]]>=s[ax[1]]?ax:[ax[1],ax[0]];uv.setXY(i,(v[a1]+off)/0.9,(v[a2]+off*0.7)/0.9)}
       else{const o=[0,1,2].find(a=>a!==ti&&a!==n);uv.setXY(i,(v[o]+off)/0.35,v[ti]/s[ti]+0.5)}}}
-  uv.needsUpdate=true;return g}
+  uv.needsUpdate=true;
+  /* two contiguous groups (face, edge) — required by the path tracer's material mapping */
+  const idx=g.index.array,fA=[],eA=[];for(let f=0;f<6;f++){const dst=(f>>1)===ti?fA:eA;for(let k=0;k<6;k++)dst.push(idx[f*6+k])}
+  g.setIndex([...fA,...eA]);g.addGroup(0,fA.length,0);g.addGroup(fA.length,eA.length,1);return g}
 const isSel=id=>selIds().includes(id);
 function edgeMat(id){return isSel(id)?edgeMatSel:id===hoverId?edgeMatHov:edgeMatAll}
 function buildMesh(p){const old=meshes[p.id];if(old){scene.remove(old);old.geometry.dispose();old.children.forEach(c=>c.geometry.dispose())}
@@ -814,7 +817,6 @@ function skyEnv(){const L=LIGHTS[state.light],key=state.light;if(skyTex&&skyKey=
     const cd=dx*sd.x+dy*sd.y+dz*sd.z;if(cd>cosR){r=sc.r*sunL;g=sc.g*sunL;b=sc.b*sunL}else if(cd>0){const gl=Math.pow(cd,48)*3;r+=sc.r*gl;g+=sc.g*gl;b+=sc.b*gl}
     data[i]=r;data[i+1]=g;data[i+2]=b;data[i+3]=1}}
   skyTex=new THREE.DataTexture(data,W,H,THREE.RGBAFormat,THREE.FloatType);skyTex.mapping=THREE.EquirectangularReflectionMapping;skyTex.magFilter=skyTex.minFilter=THREE.LinearFilter;skyTex.needsUpdate=true;skyKey=key;return skyTex}
-window.__bureau={get pt(){return pt},get ptState(){return ptState},get renderer(){return renderer}};
 function syncPhysCam(){physCam.copy(camera);physCam.fStop=6.3;physCam.apertureBlades=7;physCam.focusDistance=camera.position.distanceTo(controls.target);physCam.updateMatrixWorld()}
 function ptFrame(){if(ptState!=='ready'){vizFrame();return}
   if(ptSceneDirty){sun.visible=fill.visible=false;hemi.visible=false;scene.environment=skyEnv();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.82;syncPhysCam();pt.setScene(scene,physCam);ptSceneDirty=false;camDirty=false}
@@ -844,7 +846,7 @@ $('#vizbar').addEventListener('click',e=>{const b=e.target.closest('button');if(
   if(b.dataset.env){state.env=b.dataset.env;buildRoom()}else if(b.dataset.light){state.light=b.dataset.light;fitShadows()}else if(b.dataset.q){state.q=+b.dataset.q;renderer.setPixelRatio(baseDPR*state.q);resize()}else if(b.id==='savePng'){cv.toBlob(bl=>bl&&saveFile(fname('render.png'),bl),'image/png');return}
   syncSeg();lastMove=performance.now();prevOK=false;ptSceneDirty=true});
 
-function resize(){const r=stageEl.getBoundingClientRect();if(!r.width)return;cvRect=cv.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();lastMove=performance.now();prevOK=false;camDirty=true}
+function resize(){const r=stageEl.getBoundingClientRect();if(!r.width||!r.height)return;cvRect=cv.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();lastMove=performance.now();prevOK=false;camDirty=true}
 new ResizeObserver(resize).observe(stageEl);
 
 let capturing=false;
