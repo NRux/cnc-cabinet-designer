@@ -819,11 +819,16 @@ function skyEnv(){const L=LIGHTS[state.light],key=state.light;if(skyTex&&skyKey=
   skyTex=new THREE.DataTexture(data,W,H,THREE.RGBAFormat,THREE.FloatType);skyTex.mapping=THREE.EquirectangularReflectionMapping;skyTex.magFilter=skyTex.minFilter=THREE.LinearFilter;skyTex.needsUpdate=true;skyKey=key;return skyTex}
 window.__bureau={get pt(){return pt},get ptState(){return ptState},renderer,camera,scene};
 function syncPhysCam(){physCam.copy(camera);physCam.fStop=6.3;physCam.apertureBlades=7;physCam.focusDistance=camera.position.distanceTo(controls.target);physCam.updateMatrixWorld()}
+/* separate scene for the path tracer: one material per mesh (its merge step maps one material per mesh) */
+const ptScene=new THREE.Scene();
+function buildPTScene(){ptScene.clear();
+  state.panels.forEach(p=>{const m=meshes[p.id];if(!m)return;const g=m.geometry;g.groups.forEach(gr=>{const sg=new THREE.BufferGeometry();for(const k in g.attributes)sg.setAttribute(k,g.attributes[k]);sg.setIndex(Array.from(g.index.array.slice(gr.start,gr.start+gr.count)));const mm=new THREE.Mesh(sg,m.material[gr.materialIndex]);mm.position.copy(m.position);ptScene.add(mm)})});
+  const rc=room.clone();rc.visible=true;ptScene.add(rc);ptScene.environment=skyEnv();ptScene.background=scene.background;ptScene.updateMatrixWorld(true)}
 function ptFrame(){if(ptState!=='ready'){vizFrame();return}
-  if(ptSceneDirty){sun.visible=fill.visible=false;hemi.visible=false;scene.environment=skyEnv();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.82;syncPhysCam();pt.setScene(scene,physCam);ptSceneDirty=false;camDirty=false}
+  if(ptSceneDirty){buildPTScene();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=LIGHTS[state.light].exp*0.82;syncPhysCam();pt.setScene(ptScene,physCam);ptSceneDirty=false;camDirty=false}
   if(camDirty){syncPhysCam();pt.updateCamera();camDirty=false}
   if(pt.samples<maxPT)pt.renderSample();progress()}
-function ptExit(){sun.visible=true;hemi.visible=true;scene.environment=studioEnv;renderer.toneMappingExposure=0.95}
+function ptExit(){renderer.toneMappingExposure=0.95}
 function progress(){const pr=$('#rprog'),st=$('#rstat');
   if(ptState==='ready'){const n=Math.floor(pt.samples);pr.style.width=Math.min(100,n/maxPT*100)+'%';st.textContent=n>=maxPT?`Готово · ${maxPT} проходов трассировки`:`Трассировка лучей на видеокарте · ${n}/${maxPT}`;return}
   if(ptState==='loading'){st.textContent='Загружаю трассировщик лучей…';return}
