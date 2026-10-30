@@ -161,7 +161,8 @@ td.n{font-family:var(--f-mono);text-align:right}
 .grip{grid-column:1/-1;height:12px;margin:-2px 0 2px;border-radius:6px;cursor:grab;background:radial-gradient(circle,#b9b9be 1.2px,transparent 1.6px) 0 0/6px 6px;opacity:.9}
 .grip:hover{background-color:var(--soft)}
 .insp .grip{flex:none;width:60px;align-self:center;margin:-10px 0 -6px}
-.rail.h{grid-template-columns:none;grid-auto-flow:column;grid-template-rows:repeat(2,40px)}
+.rail{align-content:start;overflow:visible}
+.rail.h{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:repeat(2,40px)}
 .rail.h hr{grid-column:auto;grid-row:1/-1;border-top:0;border-left:1px solid var(--line);margin:2px 4px}
 .rail.h .grip{grid-column:auto;grid-row:1/-1;width:12px;height:auto;margin:0 2px 0 -2px}
 .rail.h .ib[data-tip]:hover::after{left:50%;top:calc(100% + 8px);transform:translateX(-50%)}
@@ -800,9 +801,9 @@ window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/
   if(mv){e.preventDefault();pushUndo();ps.forEach(p=>{p[mv[0]]+=mv[1];if(p.y<0)p.y=0;placeMesh(p)});placeHandles();save();updateInspVals()}});
 
 /* ---------- dockable toolbar & inspector ---------- */
-const DOCK={rail:{side:'left'},insp:{side:'right'}};try{Object.assign(DOCK,JSON.parse(localStorage.getItem('bat_dock')||'{}'))}catch(e){}
+const DOCK={rail:{side:'left'},insp:{side:'right'}};try{Object.assign(DOCK,JSON.parse(localStorage.getItem('bat_dock2')||'{}'))}catch(e){}
 function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');if(innerWidth<=760){[railEl,ins,st].forEach(el=>el.removeAttribute('style'));railEl.classList.remove('h');return}
-  const W=stageEl.clientWidth,H=stageEl.clientHeight,g=16,IW=300,IH=Math.min(300,H*.42);const free={l:g,t:g,r:W-g,b:H-g};const I=DOCK.insp,Rl=DOCK.rail;
+  const W=stageEl.clientWidth,H=stageEl.clientHeight,g=16,IW=300,IH=Math.min(300,H*.42);const free={l:g,t:g,r:W-g,b:H-g};const I=DOCK.insp,Rl=DOCK.rail;if(I.side==='top'||I.side==='bottom')I.side='right';
   const S=(el,o)=>{el.style.left=o.l!=null?o.l+'px':'auto';el.style.top=o.t!=null?o.t+'px':'auto';el.style.right=o.r!=null?o.r+'px':'auto';el.style.bottom=o.b!=null?o.b+'px':'auto';el.style.width=o.w!=null?o.w+'px':'';el.style.height=o.h!=null?o.h+'px':''};
   ins.dataset.dock=I.side;
   if(I.side==='right'){S(ins,{r:g,t:g,b:g,w:IW});free.r=W-g-IW-12}else if(I.side==='left'){S(ins,{l:g,t:g,b:g,w:IW});free.l=g+IW+12}
@@ -810,18 +811,18 @@ function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');i
   else{const x=Math.max(0,Math.min(W-IW,I.x||W-IW-g)),y=Math.max(0,Math.min(H-120,I.y||g));S(ins,{l:x,t:y,w:IW,h:Math.min(H-y-g,620)})}
   const horiz=Rl.side==='top'||Rl.side==='bottom';railEl.classList.toggle('h',horiz);railEl.dataset.dock=Rl.side;
   const stH=48;let stB=H-free.b;
-  if(Rl.side==='left')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t});
-  else if(Rl.side==='top')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
+  if(Rl.side==='left')S(railEl,{l:free.l,t:free.t,b:H-free.b});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t,b:H-free.b});
+  else if(Rl.side==='top')S(railEl,{l:free.l,r:W-free.r,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,r:W-free.r,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
   else{const x=Math.max(0,Math.min(W-railEl.offsetWidth,Rl.x||g)),y=Math.max(0,Math.min(H-railEl.offsetHeight,Rl.y||g));S(railEl,{l:x,t:y})}
   const sl=Rl.side==='left'?free.l+railEl.offsetWidth+12:free.l;st.style.left=sl+'px';st.style.right=(W-free.r)+'px';st.style.bottom=stB+'px'}
-function saveDock(){try{localStorage.setItem('bat_dock',JSON.stringify(DOCK))}catch(e){}}
+function saveDock(){try{localStorage.setItem('bat_dock2',JSON.stringify(DOCK))}catch(e){}}
 let dockDrag=null;
 stageEl.addEventListener('pointerdown',e=>{const gp=e.target.closest('.grip');if(!gp)return;e.preventDefault();const key=gp.dataset.drag,el=key==='rail'?$('#rail'):$('#insp'),r=el.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();
   dockDrag={key,el,dx:e.clientX-r.left,dy:e.clientY-r.top,sr};el.classList.add('dragging');gp.setPointerCapture(e.pointerId)});
 stageEl.addEventListener('pointermove',e=>{if(!dockDrag)return;const {el,dx,dy,sr}=dockDrag;el.style.right=el.style.bottom='auto';el.style.left=(e.clientX-sr.left-dx)+'px';el.style.top=(e.clientY-sr.top-dy)+'px';
   const x=e.clientX-sr.left,y=e.clientY-sr.top,W=sr.width,H=sr.height,m=Math.min(x,y,W-x,H-y);let side=null;if(m<70)side=m===x?'left':m===y?'top':m===W-x?'right':'bottom';stageEl.dataset.dockhint=side||''});
 stageEl.addEventListener('pointerup',e=>{if(!dockDrag)return;const {key,el,sr}=dockDrag,side=stageEl.dataset.dockhint;el.classList.remove('dragging');stageEl.dataset.dockhint='';
-  DOCK[key]=side?{side}:{side:'float',x:parseFloat(el.style.left),y:parseFloat(el.style.top)};
+  DOCK[key]=side?{side:key==='insp'&&(side==='top'||side==='bottom')?'right':side}:{side:'float',x:parseFloat(el.style.left),y:parseFloat(el.style.top)};
   if(side&&DOCK.rail.side===side&&DOCK.insp.side===side&&key==='rail'&&(side==='top'||side==='bottom')){}
   dockDrag=null;saveDock();layoutPanels()});
 new ResizeObserver(()=>layoutPanels()).observe(stageEl);
