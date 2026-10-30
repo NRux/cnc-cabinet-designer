@@ -532,9 +532,9 @@ function rebuildAll(){Object.keys(meshes).forEach(id=>{if(!state.panels.find(p=>
 
 /* ---------- selection ---------- */
 let hoverId=null;
-function selIds(){return state.multi&&state.multi.size?[...state.multi]:state.sel!=null?[state.sel]:[]}
+function selIds(){const a=state.multi&&state.multi.size?[...state.multi]:state.sel!=null?[state.sel]:[];return isoId!=null?a.filter(id=>id===isoId):a}
 const selPanels=()=>selIds().map(id=>state.panels.find(p=>p.id===id)).filter(Boolean);
-function setSel(id,add){if(add&&id!=null){state.multi=new Set(selIds());if(state.multi.has(id)){state.multi.delete(id);state.sel=state.multi.size?[...state.multi].pop():null}else{state.multi.add(id);state.sel=id}if(state.multi.size<2)state.multi=null}
+function setSel(id,add){if(isoId!=null&&id!=null&&id!==isoId){toast('Деталь заблокирована · клик в пустое место — выйти из режима');return}if(add&&id!=null){state.multi=new Set(selIds());if(state.multi.has(id)){state.multi.delete(id);state.sel=state.multi.size?[...state.multi].pop():null}else{state.multi.add(id);state.sel=id}if(state.multi.size<2)state.multi=null}
   else{state.sel=id;state.multi=null}refreshEdges();placeHandles();renderInsp()}
 function setHover(id){if(id===hoverId)return;hoverId=id;refreshEdges()}
 
@@ -610,6 +610,13 @@ const pCenter=p=>new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM)
 const rotQ=p=>p.rot.q?new THREE.Quaternion(...p.rot.q).normalize():new THREE.Quaternion().setFromAxisAngle(AXV[p.rot.ax],p.rot.deg*Math.PI/180);
 function quatToRot(q){q=q.clone().normalize();if(q.w<0)q.set(-q.x,-q.y,-q.z,-q.w);const ang=2*Math.acos(Math.min(1,q.w));if(ang<1e-7)return undefined;const sn=Math.sin(ang/2),v=new THREE.Vector3(q.x/sn,q.y/sn,q.z/sn);
   for(const a of AX){const c=v.getComponent(AX.indexOf(a));if(Math.abs(Math.abs(c)-1)<1e-6)return{ax:a,deg:r4(Math.sign(c)*ang*180/Math.PI)}}return{q:q.toArray().map(x=>+x.toFixed(9))}}
+const rTot=p=>p.rtot?new THREE.Quaternion(...p.rtot).normalize():p.rot?rotQ(p):new THREE.Quaternion();
+function setRTot(p,q){const r=quatToRot(q);if(r)p.rtot=q.clone().normalize().toArray().map(x=>+x.toFixed(9));else delete p.rtot}
+const rotEuler=p=>{const e=new THREE.Euler().setFromQuaternion(rTot(p),'XYZ');return AX.map((a,i)=>{let v=Math.round(e.toArray()[i]*180/Math.PI*100)/100;return Object.is(v,-0)?0:v})};
+function setRotation(p,T){const cur=p.rot?rotQ(p):new THREE.Quaternion(),B=cur.clone().invert().multiply(rTot(p)),e=new THREE.Matrix4().makeRotationFromQuaternion(B).elements,s0={x:p.w,y:p.h,z:p.d},nb={};let bt=p.t;
+  for(let i=0;i<3;i++){let jj=0,bv=0;for(let j=0;j<3;j++){const v=Math.abs(e[i*4+j]);if(v>bv){bv=v;jj=j}}nb[AX[i]]=s0[AX[jj]];if(AX[jj]===p.t)bt=AX[i]}
+  const c=pCenter(p);if(bt!==p.t&&p.feat&&p.feat.length)p.feat=[];p.w=nb.x;p.h=nb.y;p.d=nb.z;p.t=bt;delete p.rot;const r=quatToRot(T);if(r)p.rot=r;setRTot(p,T);
+  p.x=r4(c.x*1000-p.w/2);p.y=r4(c.y*1000-p.h/2);p.z=r4(c.z*1000-p.d/2);bakeRot(p);if(p.y<0)p.y=0}
 /* Blender-like gizmo: three rings */
 const gizmo=new THREE.Group();gizmo.visible=false;scene.add(gizmo);const gzRings={},gzPick=[];
 AX.forEach(a=>{const m=new THREE.Mesh(new THREE.TorusGeometry(1,0.022,8,96),new THREE.MeshBasicMaterial({color:AXC[a],depthTest:false,transparent:true,opacity:0.95}));m.renderOrder=15;
@@ -815,13 +822,13 @@ function rotMove(mx,my,e){if(!op){gzHover=gzHit();if(gzHover){prot.visible=false
   setLine(rotLine2,op.c,op.c.clone().add(v0.clone().applyAxisAngle(AXV[op.ax],ang*Math.PI/180).multiplyScalar(prot.scale.x)))}
 function rotClick(mx,my,e){if(!op){const ga=gzHit();if(ga){const ids=selIds(),c=gizmo.position.clone();let v=planePt(c,ga);v=v?v.sub(c):new THREE.Vector3();v.addScaledVector(AXV[ga],-v.dot(AXV[ga]));if(v.lengthSq()<1e-10)v=AXV[ga==='y'?'x':'y'].clone();
       pushUndo();op={type:'rot',stage:2,gz:true,c,ax:ga,ids,start:Object.fromEntries(ids.map(id=>[id,JSON.parse(JSON.stringify(panelById(id)))])),ang:0,v0:v.normalize()};showProt(c,ga);prot.scale.setScalar(gizmo.scale.x);subClear();renderHint();return}
-    const s=infer(mx,my);if(!s)return;const ax=rotAxisAt(mx,my);let ids=selIds();if(s.id!=null&&!isSel(s.id)){setSel(s.id);ids=[s.id]}if(!ids.length){toast('Выберите деталь или кликните на неё');return}
+    const s=infer(mx,my);if(!s)return;const ax=rotAxisAt(mx,my);if(s.id!=null&&!isSel(s.id))setSel(s.id);const ids=selIds();if(!ids.length){toast('Выберите деталь или кликните на неё');return}
     pushUndo();op={type:'rot',stage:1,c:s.pt.clone(),ax,ids,start:Object.fromEntries(ids.map(id=>[id,JSON.parse(JSON.stringify(panelById(id)))])),ang:0};showProt(op.c,ax);subClear();renderHint();return}
   if(op.stage===1){if(!op.v0){return}op.stage=2;renderHint();return}
   finishRot()}
 function applyRot(ang){op.ang=ang;const q=new THREE.Quaternion().setFromAxisAngle(AXV[op.ax],ang*Math.PI/180);
   op.ids.forEach(id=>{const p=panelById(id),s0=op.start[id];Object.assign(p,JSON.parse(JSON.stringify(s0)));const c0=pCenter(s0).sub(op.c).applyQuaternion(q).add(op.c);const qs=s0.rot?rotQ(s0):new THREE.Quaternion();
-    p.rot=quatToRot(q.clone().multiply(qs));if(!p.rot)delete p.rot;p.x=r4(c0.x*1000-p.w/2);p.y=r4(c0.y*1000-p.h/2);p.z=r4(c0.z*1000-p.d/2);placeMesh(p)});setVCB('Угол',String(r4(ang)).replace('.',',')+'°',false)}
+    p.rot=quatToRot(q.clone().multiply(qs));if(!p.rot)delete p.rot;setRTot(p,q.clone().multiply(rTot(s0)));p.x=r4(c0.x*1000-p.w/2);p.y=r4(c0.y*1000-p.h/2);p.z=r4(c0.z*1000-p.d/2);placeMesh(p)});setVCB('Угол',String(r4(ang)).replace('.',',')+'°',false)}
 function bakeRot(p){if(!p.rot)return;const e=new THREE.Matrix4().makeRotationFromQuaternion(rotQ(p)).elements,map={};
   for(let i=0;i<3;i++){let jj=-1;for(let j=0;j<3;j++){const v=Math.abs(e[i*4+j]);if(v>1-1e-5)jj=j;else if(v>1e-5)return}if(jj<0)return;map[AX[i]]=AX[jj]}
   const c=pCenter(p),s0={x:p.w,y:p.h,z:p.d},ns={};AX.forEach(a=>ns[map[a]]=s0[a]);delete p.rot;if(p.feat&&p.feat.length&&AX.some(a=>map[a]!==a)){p.feat=[];toast('Области на повёрнутой детали сброшены')}
@@ -902,7 +909,7 @@ function setTool(t){if(op)opCancel();prot.visible=false;state.lock=null;state.to
   controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair',rotate:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
 let clip=null;
 function copyP(){const ps=selPanels();if(!ps.length)return;clip=ps.map(p=>({...p}));toast('Скопировано — Ctrl+V')}
-function pasteP(){if(!clip)return toast('Буфер пуст');pushUndo();const b=bbox(clip),dx=b.x1-b.x0+50;const n=clip.map(p=>({...p,id:nextId++,x:p.x+dx}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();save();setTool('move');renderInsp();toast('Вставлено справа — переместите (M)')}
+function pasteP(){if(!clip)return toast('Буфер пуст');if(isoId!=null)setIso(null);pushUndo();const b=bbox(clip),dx=b.x1-b.x0+50;const n=clip.map(p=>({...p,id:nextId++,x:p.x+dx}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();save();setTool('move');renderInsp();toast('Вставлено справа — переместите (M)')}
 const CAMV={front:[0,0,1],back:[0,0,-1],right:[1,0,0],left:[-1,0,0],top:[0,1,0.0001],bottom:[0,-1,0.0001],iso:[0.62,0.42,0.78]};
 function setCamView(v){const c=center(),R=radius(),d=R/Math.sin(camera.fov*Math.PI/360)*1.15;controls.target.copy(c);camera.position.copy(c).addScaledVector(new THREE.Vector3(...CAMV[v]).normalize(),d);controls.update();lastMove=performance.now()}
 function toggleHelp(on){const k=$('#keys');k.hidden=on===undefined?!k.hidden:!on}
@@ -920,8 +927,8 @@ function act(a){
   const ps=selPanels();if(!ps.length)return toast('Сначала выберите деталь');
   pushUndo();if(a==='rot')ps.forEach(p=>{if(p.feat&&p.feat.length){p.feat=[];toast('Области на повёрнутых деталях сброшены')}});
   if(a==='del'){const ids=new Set(ps.map(p=>p.id));state.panels=state.panels.filter(q=>!ids.has(q.id));state.sel=null;state.multi=null;rebuildAll()}
-  else if(a==='dup'){const b=bbox(ps),n=ps.map(p=>({...p,id:nextId++,x:p.x+(b.x1-b.x0)+50}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();placeHandles()}
-  else if(a==='rot'){ps.forEach(p=>{const cx=p.x+p.w/2,cz=p.z+p.d/2;[p.w,p.d]=[p.d,p.w];if(p.t==='x')p.t='z';else if(p.t==='z')p.t='x';p.x=Math.round(cx-p.w/2);p.z=Math.round(cz-p.d/2);buildMesh(p)});placeHandles()}
+  else if(a==='dup'){if(isoId!=null)setIso(null);const b=bbox(ps),n=ps.map(p=>({...p,id:nextId++,x:p.x+(b.x1-b.x0)+50}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();placeHandles()}
+  else if(a==='rot'){ps.forEach(p=>{setRTot(p,new THREE.Quaternion().setFromAxisAngle(AXV.y,Math.PI/2).multiply(rTot(p)));const cx=p.x+p.w/2,cz=p.z+p.d/2;[p.w,p.d]=[p.d,p.w];if(p.t==='x')p.t='z';else if(p.t==='z')p.t='x';p.x=Math.round(cx-p.w/2);p.z=Math.round(cz-p.d/2);buildMesh(p)});placeHandles()}
   save();renderInsp()}
 function orient(o,t){if(o.t===t)return;const A=o.t,cA=o[A]+o[SZ[A]]/2,cB=o[t]+o[SZ[t]]/2;[o[SZ[A]],o[SZ[t]]]=[o[SZ[t]],o[SZ[A]]];o.t=t;if('x' in o&&o.x!==undefined){o[A]=Math.round(cA-o[SZ[A]]/2);o[t]=Math.round(cB-o[SZ[t]]/2);if(o.y<0)o.y=0}}
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tool)setTool(b.dataset.tool);else if(b.dataset.act)act(b.dataset.act)});
@@ -950,7 +957,7 @@ if(code==='KeyS'){act('snap');return}
 function placePop(pp,btn){const br=btn.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?br.top-sr.top-pp.offsetHeight-12:br.bottom-sr.top+12)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?br.left-sr.left-pp.offsetWidth-12:br.right-sr.left+12)+'px'}}
 $('#viewpop').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b)return;setCamView(b.dataset.view);$('#viewpop').hidden=true});
 $('#tplpop').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
-  if(a==='tpl'){pushUndo();state.panels=TPL[b.dataset.n]();state.name=b.dataset.n+' TR-01';state.sel=null;state.multi=null;rebuildAll();save();renderInsp();fitView();$('#tplpop').hidden=true;return}
+  if(a==='tpl'){if(isoId!=null)setIso(null);pushUndo();state.panels=TPL[b.dataset.n]();state.name=b.dataset.n+' TR-01';state.sel=null;state.multi=null;rebuildAll();save();renderInsp();fitView();$('#tplpop').hidden=true;return}
   if(a==='clear'){if(b.dataset.armed){pushUndo();state.panels=[];state.sel=null;state.multi=null;rebuildAll();save();renderInsp()}else{b.dataset.armed=1;b.textContent='Точно очистить? Нажмите ещё раз'}return}});
 $('#keys').addEventListener('click',e=>{if(e.target.closest('[data-act="help"]'))toggleHelp(false)});
 /* ---------- dockable toolbar & inspector ---------- */
@@ -996,7 +1003,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Материал</span>${matHTML(nb,'nb')}</div>
     <div class="grp"><span class="lbl">Размер по умолчанию</span><div class="fld"><span>Длина</span><input id="nb-w" data-k="w" data-scope="nb" value="${nb.w}"><i>мм</i></div><div class="fld"><span>Ширина</span><input id="nb-d" data-k="d" data-scope="nb" value="${nb.d}"><i>мм</i></div></div>`;return}
   if(p){const T=thick(p),n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
-    ${p.rot?`<div class="grp"><span class="lbl">Поворот</span><div class="fld">${p.rot.ax?`<span>Вокруг ${p.rot.ax.toUpperCase()}</span><input id="sel-rot" data-k="rot" data-scope="sel" value="${p.rot.deg}"><i>°</i>`:'<span>По нескольким осям</span>'}</div><button class="btn" data-act="unrot">Сбросить поворот</button></div>`:''}${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
+    ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
@@ -1014,7 +1021,7 @@ insp.addEventListener('change',e=>{const el=e.target,k=el.dataset.k;if(!k)return
   if(k==='olname'){const p=panelById(+el.dataset.id);if(!p)return;pushUndo();p.name=el.value.trim()||'Деталь';el.readOnly=true;save();renderInsp();return}
   const o=el.dataset.scope==='nb'?state.nb:selP();if(!o)return;
   if(k==='name'){pushUndo();o.name=el.value.trim()||'Деталь';save();renderInsp();return}
-  if(k==='rot'){const v=num(el.value);if(!isFinite(v)||!o.rot||!o.rot.ax)return;pushUndo();o.rot.deg=r4(v);bakeRot(o);buildMesh(o);save();renderInsp();return}
+  if(k==='rot'){const v=num(el.value);if(!isFinite(v))return;const eu=rotEuler(o);eu[+el.dataset.i]=v;pushUndo();setRotation(o,new THREE.Quaternion().setFromEuler(new THREE.Euler(...eu.map(d=>d*Math.PI/180),'XYZ')));buildMesh(o);placeHandles();save();fitShadows();renderInsp();return}
   let v=num(el.value);if(!isFinite(v)||v<=0){toast('Введите число в миллиметрах');renderInsp();return}v=r4(v);
   if(o!==state.nb)pushUndo();
   if(k==='T')o[SZ[o.t]]=Math.max(1,Math.min(100,v));else if('whd'.includes(k))o[k]=Math.min(3000,Math.max(10,v));else o[k]=k==='y'?Math.max(0,v):v;
@@ -1026,7 +1033,7 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
   if(a==='orient'||a==='mat'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels();tgt.forEach(q=>{if(a==='orient')orient(q,b.dataset.t);else q.mat=b.dataset.m;if(q!==state.nb)buildMesh(q)});if(o!==state.nb){placeHandles();save();fitShadows()}renderInsp();return}
   if(a==='cancelTool')return setTool('select');
-  if(a==='unrot'){const o=selP();if(!o||!o.rot)return;pushUndo();const c=pCenter(o);delete o.rot;o.x=r4(c.x*1000-o.w/2);o.y=r4(c.y*1000-o.h/2);o.z=r4(c.z*1000-o.d/2);buildMesh(o);save();renderInsp();return}
+  if(a==='unrot'){const o=selP();if(!o)return;pushUndo();setRotation(o,new THREE.Quaternion());buildMesh(o);placeHandles();save();fitShadows();renderInsp();return}
   if(a)act(a)});
 function renderHint(){const t=state.tool,o=op&&op.type;
   $('#hint').textContent=
