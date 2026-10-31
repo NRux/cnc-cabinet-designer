@@ -129,7 +129,11 @@ td.n{font-family:var(--f-mono);text-align:right}
 .dl.tape{background:var(--hi)}
 .toast{border-radius:980px;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;font-size:13px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
-.rail{display:grid;grid-template-columns:36px;gap:1px;padding:5px}
+.rail{display:flex;flex-direction:column;padding:6px 5px;gap:0}
+.rail-sc{--ft:0px;--fb:0px;display:grid;grid-template-columns:36px;gap:1px;min-height:0;min-width:0;overflow:auto;scrollbar-width:none;overscroll-behavior:contain;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%)}.rail-sc::-webkit-scrollbar{display:none}
+.rail.h .rail-sc{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%)}
+.rail .ib[data-tip]:hover::after{display:none}
+.rtip{position:fixed;z-index:60;background:#111;color:#fff;padding:6px 10px;border-radius:8px;font:500 12px/1.2 var(--f-body);pointer-events:none;white-space:pre;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .rail hr{grid-column:1/-1;border:0;border-top:1px solid var(--line);margin:3px 2px;width:auto}
 .ib{position:relative;width:36px;height:36px;border-radius:9px}
 .ib svg{width:20px;height:20px;stroke-width:1.65;stroke-linejoin:round;stroke-linecap:round}
@@ -161,14 +165,14 @@ td.n{font-family:var(--f-mono);text-align:right}
 .olr span{font:400 11px var(--f-mono);color:var(--mute);white-space:nowrap}
 .olr.on span{color:#aaa}
 .multi{font-size:12px;background:var(--soft);border-radius:10px;padding:8px 10px}
-.grip{grid-column:1/-1;height:12px;margin:-2px 0 2px;border-radius:6px;cursor:grab;background:radial-gradient(circle,#b9b9be 1.2px,transparent 1.6px) 0 0/6px 6px;opacity:.9}
+.grip{flex:none;align-self:center;width:24px;height:10px;margin:0 0 8px;border-radius:6px;cursor:grab;background:radial-gradient(circle,#b9b9be 1.2px,transparent 1.6px) 0 0/6px 5px;opacity:.9}
 .grip:hover{background-color:var(--soft)}
 .insp .grip{flex:none;width:60px;align-self:center;margin:-10px 0 -6px}
-.rail{align-content:start;overflow:visible}
-.rail.h{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:36px}
-.rail.c2{grid-template-columns:repeat(2,36px)}.rail.h.c2{grid-template-columns:none;grid-template-rows:repeat(2,36px)}.rail.c2 .grip{grid-column:1/-1}.rail.h.c2 .grip,.rail.h.c2 hr{grid-row:1/-1}
+.rail-sc{align-content:start}
+.rail.h{flex-direction:row;padding:5px 6px}.rail.h .rail-sc{justify-content:start;grid-template-columns:none;grid-auto-flow:column;grid-template-rows:36px}
+.rail.c2 .rail-sc{grid-template-columns:repeat(2,36px)}.rail.h.c2 .rail-sc{grid-template-columns:none;grid-template-rows:repeat(2,36px)}.rail.h.c2 hr{grid-row:1/-1}
 .rail.h hr{grid-column:auto;grid-row:1/-1;border-top:0;border-left:1px solid var(--line);margin:2px 4px}
-.rail.h .grip{grid-column:auto;grid-row:1/-1;width:12px;height:auto;margin:0 2px 0 -2px}
+.rail.h .grip{width:10px;height:24px;margin:0 8px 0 0;background-size:5px 6px}
 .rail.h .ib[data-tip]:hover::after{left:50%;top:calc(100% + 8px);transform:translateX(-50%)}
 .rail[data-dock=bottom] .ib[data-tip]:hover::after{top:auto;bottom:calc(100% + 8px)}
 .rail[data-dock=right] .ib[data-tip]:hover::after{left:auto;right:calc(100% + 8px)}
@@ -186,13 +190,13 @@ td.n{font-family:var(--f-mono);text-align:right}
 @media (max-width:760px){
   .grip{display:none}
   .status{display:none}
-  .rail{grid-template-columns:repeat(auto-fill,40px);right:max(8px,env(safe-area-inset-right,0px))}
+  .rail{right:max(8px,env(safe-area-inset-right,0px))}.rail-sc{grid-template-columns:repeat(auto-fill,40px)}
   .ib[data-tip]:hover::after{display:none}
   header{gap:10px}
   nav{order:3;width:100%;margin:0}
   nav a{padding:6px 9px;font-size:11px}
   .insp{top:auto;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:8px;width:auto;max-height:44%}
-  .rail{flex-direction:row;top:8px;left:max(8px,env(safe-area-inset-left,0px));flex-wrap:wrap;right:max(8px,env(safe-area-inset-right,0px))}
+  .rail{flex-direction:row;top:8px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px))}.rail-sc{display:flex;flex-wrap:wrap;-webkit-mask-image:none;mask-image:none}
   .rail hr{border-top:0;border-left:1px solid var(--line);margin:2px 4px}
   .hint{display:none}
   #draw{grid-template-columns:1fr;grid-template-rows:1fr 40%}
@@ -221,7 +225,7 @@ td.n{font-family:var(--f-mono);text-align:right}
     <div class="dl" id="dlx" hidden></div><div class="dl" id="dly" hidden></div><div class="dl" id="dlz" hidden></div>
     <div class="dl tape" id="dlt" hidden></div>
     <div class="snapmk" id="snapmk" hidden><i></i><span></span></div>
-    <div class="rail" id="rail" data-dock="left"><div class="grip" data-drag="rail" title="Перетащите панель к любому краю"></div>
+    <div class="rail" id="rail" data-dock="left"><div class="grip" data-drag="rail" title="Перетащите панель к любому краю"></div><div class="rail-sc" id="railSc">
       <button class="ib" data-tool="select" data-tip="Выбор" data-key="Пробел" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M5 2.5l10.5 7.3-4.6 1.1L8.4 16z"/></svg></button><button class="ib" data-tool="edge" data-tip="Выбор рёбер" data-key="L"><svg viewBox="0 0 20 20"><path d="M3 15l14-10" stroke-width="3"/><circle cx="3" cy="15" r="1.6"/><circle cx="17" cy="5" r="1.6"/></svg></button>
       <button class="ib" data-tool="move" data-tip="Перемещение · Ctrl — копия" data-key="M" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M10 2v16M2 10h16M10 2L7.6 4.4M10 2l2.4 2.4M10 18l-2.4-2.4M10 18l2.4-2.4M2 10l2.4-2.4M2 10l2.4 2.4M18 10l-2.4-2.4M18 10l-2.4 2.4"/></svg></button>
       <button class="ib" data-tool="push" data-tip="Выдавить / втянуть" data-key="P" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 13l7-3.4 7 3.4-7 3.4z"/><path d="M10 9.6V2M7.6 4.4L10 2l2.4 2.4"/></svg></button>
@@ -245,7 +249,7 @@ td.n{font-family:var(--f-mono);text-align:right}
       <button class="ib" data-act="redo" data-tip="Повторить" data-key="Ctrl+Y"><svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4"/><path d="M17 9H8a5 5 0 0 0 0 10h3"/></svg></button>
       <button class="ib" data-act="tplpop" data-tip="Шаблоны и новый проект" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
       <button class="ib" data-act="cols" data-tip="Один или два ряда кнопок" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="5.5" height="14" rx="1"/><rect x="11.5" y="3" width="5.5" height="14" rx="1"/></svg></button>
-      <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button>
+      <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button></div>
     </div>
     <div class="keys" id="keys" hidden>
       <div class="kh"><b>Управление</b><span class="note">как в SketchUp</span><button class="btn" data-act="help">Закрыть</button></div>
@@ -974,10 +978,17 @@ function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');i
   else{const x=Math.max(0,Math.min(W-IW,I.x||W-IW-g)),y=Math.max(0,Math.min(H-120,I.y||g));S(ins,{l:x,t:y,w:IW,h:Math.min(H-y-g,620)})}
   const horiz=Rl.side==='top'||Rl.side==='bottom';railEl.classList.toggle('h',horiz);railEl.classList.toggle('c2',Rl.cols===2);railEl.dataset.dock=Rl.side;
   const stH=48;let stB=H-free.b;
-  if(Rl.side==='left')S(railEl,{l:free.l,t:free.t,b:H-free.b});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t,b:H-free.b});
-  else if(Rl.side==='top')S(railEl,{l:free.l,r:W-free.r,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,r:W-free.r,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
+  railEl.style.maxHeight=horiz?'':(free.b-free.t)+'px';railEl.style.maxWidth=horiz?(free.r-free.l)+'px':'';if(Rl.side==='float'){railEl.style.maxHeight=(H-2*g)+'px'}
+  if(Rl.side==='left')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t});
+  else if(Rl.side==='top')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
   else{const x=Math.max(0,Math.min(W-railEl.offsetWidth,Rl.x||g)),y=Math.max(0,Math.min(H-railEl.offsetHeight,Rl.y||g));S(railEl,{l:x,t:y})}
-  const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px'}
+  const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px';railFade()}
+function railFade(){const sc=$('#railSc');if(!sc)return;const h=$('#rail').classList.contains('h'),pos=h?sc.scrollLeft:sc.scrollTop,max=h?sc.scrollWidth-sc.clientWidth:sc.scrollHeight-sc.clientHeight;sc.style.setProperty('--ft',pos>1?'28px':'0px');sc.style.setProperty('--fb',max-pos>1?'28px':'0px')}
+{const sc=$('#railSc'),tip=document.createElement('div');tip.className='rtip';tip.hidden=true;document.body.appendChild(tip);sc.addEventListener('scroll',()=>{railFade();tip.hidden=true},{passive:true});new ResizeObserver(railFade).observe(sc);
+  sc.addEventListener('wheel',e=>{if($('#rail').classList.contains('h')&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){sc.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+  sc.addEventListener('mouseover',e=>{const b=e.target.closest('[data-tip]');if(!b){tip.hidden=true;return}tip.textContent=b.dataset.tip+(b.dataset.key?'   '+b.dataset.key:'');tip.hidden=false;const r=b.getBoundingClientRect(),side=$('#rail').dataset.dock,tw=tip.offsetWidth,th=tip.offsetHeight;let x,y;
+    if(side==='top'){x=r.left+r.width/2-tw/2;y=r.bottom+8}else if(side==='bottom'){x=r.left+r.width/2-tw/2;y=r.top-th-8}else if(side==='right'){x=r.left-tw-8;y=r.top+r.height/2-th/2}else{x=r.right+8;y=r.top+r.height/2-th/2}tip.style.left=Math.max(4,Math.min(innerWidth-tw-4,x))+'px';tip.style.top=Math.max(4,y)+'px'});
+  sc.addEventListener('mouseleave',()=>tip.hidden=true);sc.addEventListener('pointerdown',()=>tip.hidden=true)}
 function saveDock(){try{localStorage.setItem('bat_dock2',JSON.stringify(DOCK))}catch(e){}}
 let dockDrag=null;
 stageEl.addEventListener('pointerdown',e=>{const gp=e.target.closest('.grip');if(!gp)return;e.preventDefault();const key=gp.dataset.drag,el=key==='rail'?$('#rail'):$('#insp'),r=el.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();
