@@ -152,11 +152,11 @@ td.n{font-family:var(--f-mono);text-align:right}
 .vcb input{width:150px;border:0;background:var(--soft);border-radius:8px;padding:7px 9px;font:500 13px var(--f-mono);font-variant-numeric:tabular-nums;outline:none}
 .vcb.on{border-color:#111}
 .vcb.on input{background:#fff;box-shadow:inset 0 0 0 1px #111}
-.snapmk{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;pointer-events:none;z-index:3;--c:#1aa34a}
+.snapmk{position:absolute;left:0;top:0;display:flex;align-items:flex-start;gap:6px;pointer-events:none;z-index:3;--c:#1aa34a}
 .snapmk i{width:12px;height:12px;margin:-6px 0 0 -6px;border:2.5px solid var(--c);background:#fff;border-radius:50%}
 .snapmk.edge i{border-radius:2px}
 .snapmk.face i{border-radius:1px;transform:rotate(45deg)}
-.snapmk span{font:500 11px/1 var(--f-body);background:#fff;border:1px solid var(--c);color:#111;padding:4px 7px;border-radius:7px;white-space:nowrap;margin-top:22px}
+.snapmk span{font:500 11px/1 var(--f-body);background:#fff;border:1px solid var(--c);color:#111;padding:4px 7px;border-radius:7px;white-space:nowrap;margin-top:10px}
 .ol{display:flex;flex-direction:column;gap:1px;max-height:260px;overflow:auto;margin:0 -6px}
 .olr{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:3px 8px;border-radius:8px;cursor:pointer}
 .olr:hover{background:var(--soft)}
@@ -815,6 +815,7 @@ function pickEdge(mx,my,p){let best=null,bd=10;const C=corners(p);
   for(const f of p.feat||[])if(!f.c)for(const side of ['u0','u1','v0','v1']){const [A,B]=redgePts(p,f,side);const d=segDistPx(mx,my,A,B);if(d<bd){bd=d;best={kind:'redge',id:p.id,fid:f.id,side}}}
   if(!best)for(const [i,j] of EDGES){const d=segDistPx(mx,my,C[i],C[j]);if(d<bd){bd=d;best={kind:'edge',id:p.id,i,j}}}return best}
 const featById=(p,fid)=>(p.feat||[]).find(f=>f.id===fid);
+const f1=n=>Math.round(n*10)/10;
 const UNITS={mm:[1,'мм',2],cm:[10,'см',3],m:[1000,'м',5]};const fmtU=v=>{const [k,n,dg]=UNITS[state.units]||UNITS.mm;return String(+(v/k).toFixed(dg)).replace('.',',')+' '+n};
 const fmtMM=v=>{v=Math.round(v*10000)/10000;return String(v).replace('.',',')+' мм'};
 function faceRect(p,a){const [u,v]=AX.filter(q=>q!==a);return{u,v,Su:p[SZ[u]],Sv:p[SZ[v]]}}
@@ -860,7 +861,7 @@ function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#hwpop')
   if(t==='offset'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot||panelById(h.object.userData.id).hw){toast('На повёрнутой детали смещение недоступно');return}const pf=pickFace(h);if(pf.f){toast('Смещение строится на целой грани детали');return}startOffset(pf.p,pf.a,pf.s)}else finishOffset();grab();return}
   if(t==='rotate'){rotClick(mx,my,e);grab();return}
   if(t==='circle'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return toast('Круг рисуется на грани детали');const pp=panelById(h.object.userData.id);if(pp.hw||pp.rot)return toast('Круг можно нарисовать только на доске без поворота');
-      const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a)));const sn=infer(mx,my);let pt=h.point.clone();if(sn&&sn.id===pp.id&&sn.type!=='face')pt=sn.pt.clone();const L=loc(pp,pt),[u,v]=AX.filter(q=>q!==a);
+      const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a)));const sn=infer(mx,my);let pt=h.point.clone();if(sn&&sn.id===pp.id&&sn.type!=='face')pt=sn.pt.clone();const L=loc(pp,pt),[u,v]=AX.filter(q=>q!==a);{const b=behindSnap(pp,a,sg,L[u],L[v]);if(b&&!(sn&&sn.id===pp.id&&sn.type!=='face')){L[u]=b.u;L[v]=b.v}}
       op={type:'circle',p:pp,a,s:sg,cu:r4(Math.max(0,Math.min(pp[SZ[u]],L[u]))),cv:r4(Math.max(0,Math.min(pp[SZ[v]],L[v]))),r:0};if(!isSel(pp.id))setSel(pp.id);renderHint();grab()}else{finishCircle(op.r);grab()}return}
   if(t==='board'){const s=infer(mx,my,op?{from:op.from,lock:state.lock}:{});if(!s)return;
     if(!op){let a='y',sign=1,pid=s.id;const hh=ray.intersectObjects(panelMeshes(),false)[0];if(hh){const nn=hh.face.normal.clone().transformDirection(hh.object.matrixWorld);a=domAxis(nn);sign=Math.sign(nn.getComponent(AX.indexOf(a)));pid=hh.object.userData.id}else if(s.type==='face'){a=s.a;sign=s.sign}
@@ -901,6 +902,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [m
   if(op&&(op.type==='rmove'||op.type==='redge')){const s=infer(mx,my,{from:op.from});if(!s)return;showSnap(s);applyRegionMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
   if(t==='rotate'){rotMove(mx,my,e);return}
   if(op&&op.type==='offset'){moveOffset();return}
+  if(state.tool==='circle'&&!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h){const pp=panelById(h.object.userData.id);if(!pp.hw&&!pp.rot){const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a))),L=loc(pp,h.point),[u,v]=AX.filter(q=>q!==a),b=behindSnap(pp,a,sg,L[u],L[v]);if(b){const P0=faceP(pp,a,sg,u,v,b.u,b.v,0.5),m=scr(P0);snapEl.hidden=false;snapEl.className='snapmk';snapEl.style.transform=`translate(${m.x}px,${m.y}px)`;snapEl.querySelector('span').textContent='Центр детали за доской: «'+b.R.q.name+'»';return}}}else behindG.visible=false}
   if(op&&op.type==='circle'){const p=op.p,a=op.a,[u,v]=AX.filter(q=>q!==a),F=(op.s>0?p[a]+p[SZ[a]]:p[a]),pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(AXV[a].clone(),-F*MM),pt))return;
     const sn=infer(mx,my);if(sn&&sn.type!=='face'&&sn.type!=='ground'){pt.copy(sn.pt);showSnap(sn)}else snapEl.hidden=true;const L=loc(p,pt);let r=Math.hypot(L[u]-op.cu,L[v]-op.cv);if(state.snap)r=Math.round(r);op.r=r4(r);circleShow();return}
   if(op&&op.type==='rect'){const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);const ai=AX.indexOf(op.a),pl=op.from.getComponent(ai);let pt;
@@ -1065,7 +1067,7 @@ function applyVCB(txt){txt=txt.trim().replace(/мм|mm/gi,'').trim().replace(/,/
   if(op.type==='tape')return}
 vcbEl.addEventListener('keydown',e=>{if(e.key==='Enter'){applyVCB(vcbEl.value);vcbEl.value='';vcbEl.blur();e.preventDefault()}else if(e.key==='Escape'){vcbEl.value='';vcbEl.blur()}e.stopPropagation()});
 
-function setTool(t){if(op)opCancel();prot.visible=false;state.lock=null;state.tool=t;subClear();refreshEdges();showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
+function setTool(t){behindG.visible=false;if(op)opCancel();prot.visible=false;state.lock=null;state.tool=t;subClear();refreshEdges();showSub();document.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t));if(t!=='tape')tapeClear();faceHL.visible=faceHL2.visible=false;snapEl.hidden=true;setHover(null);
   controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair',rotate:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
 let clip=null;
 function copyP(){const ps=selPanels();if(!ps.length)return;clip=ps.map(p=>({...p}));toast('Скопировано — Ctrl+V')}
@@ -1164,7 +1166,27 @@ const orientHTML=(o,scope)=>`<div class="seg">${[['y','Полка'],['z','Сте
 const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>`;
 const dimsTxt=p=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${d[0]}×${d[1]}×${thick(p)}`};
 function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>')}
-function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.kind==='face')t=`Грань ${S.a.toUpperCase()}${S.s>0?'+':'−'}: Shift+клик по ребру — подтянуть к нему, M или P — сдвинуть, F — смещение`;else if(S.kind==='edge')t='Ребро: Shift+клик по другому ребру — подтянуть, M — сдвинуть';else{const f=featById(p,S.fid);if(!f)return'';t=S.kind==='region'?`Область ${fmtMM(f.u1-f.u0)} × ${fmtMM(f.v1-f.v0)}, ${f.depth>=p[SZ[f.a]]?'вырез насквозь':f.depth<0?'выступ '+fmtMM(-f.depth):'глубина '+fmtMM(f.depth)}. P — вдавить или выдавить, M — сдвинуть, Del — удалить`:'Ребро области: M — сдвинуть, Del — удалить область'}return `<p class="multi sub">${t}</p>`}
+function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.kind==='face')t=`Грань ${S.a.toUpperCase()}${S.s>0?'+':'−'}: Shift+клик по ребру — подтянуть к нему, M или P — сдвинуть, F — смещение`;else if(S.kind==='edge')t='Ребро: Shift+клик по другому ребру — подтянуть, M — сдвинуть';else{const f=featById(p,S.fid);if(!f)return'';t=S.kind==='region'?`Область ${fmtMM(f.u1-f.u0)} × ${fmtMM(f.v1-f.v0)}, ${f.depth>=p[SZ[f.a]]?'вырез насквозь':f.depth<0?'выступ '+fmtMM(-f.depth):'глубина '+fmtMM(f.depth)}. P — вдавить или выдавить, M — сдвинуть, Del — удалить`:'Ребро области: M — сдвинуть, Del — удалить область'}let extra='';if(S.kind==='region'){const f=featById(p,S.fid);if(f&&f.c){const bh=behindRects(p,f.a,f.s,(f.u0+f.u1)/2,(f.v0+f.v1)/2);
+    extra=bh.length?`<div class="grp"><span class="lbl">Шкант / сквозное сверление</span><p class="note">За этой доской: «${esc(bh[0].q.name)}». Отверстие пройдёт насквозь и продолжится в ней на заданную глубину — под шкант или шип.</p><label class="fld"><span>Глубина во второй детали</span><input id="dowelDepth" inputmode="decimal" value="${state.dowelD||30}"><i>мм</i></label><button class="btn" data-act="dowel">Просверлить в «${esc(bh[0].q.name)}»</button></div>`:`<p class="note">За этим кругом нет другой доски вплотную — сверлить дальше некуда.</p>`}}
+  return `<p class="multi sub">${t}</p>${extra}`}
+function faceP(p,a,s,u,v,uu,vv,lift){const T=p[SZ[a]],o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[a]=(s>0?p[a]+T:p[a])+s*(lift||0);return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)}
+function behindRects(p,a,s,cu,cv){const [u,v]=AX.filter(q=>q!==a),T=p[SZ[a]],back=s>0?p[a]:p[a]+T,out=[];
+  for(const q of BRD()){if(q.id===p.id||q.rot)continue;const qa0=q[a],qa1=q[a]+q[SZ[a]];const touch=s>0?Math.abs(qa1-back)<1.5||(qa0<back-0.01&&qa1>back-1.5&&qa1<=back+1.5):Math.abs(qa0-back)<1.5;if(!touch)continue;
+    const u0=Math.max(p[u],q[u])-p[u],u1=Math.min(p[u]+p[SZ[u]],q[u]+q[SZ[u]])-p[u],v0=Math.max(p[v],q[v])-p[v],v1=Math.min(p[v]+p[SZ[v]],q[v]+q[SZ[v]])-p[v];if(u1-u0<1||v1-v0<1)continue;
+    const r={q,u0,u1,v0,v1};if(cu!=null&&!(cu>=u0-0.5&&cu<=u1+0.5&&cv>=v0-0.5&&cv<=v1+0.5))continue;out.push(r)}
+  return out}
+const behindG=new THREE.LineSegments(new THREE.BufferGeometry(),new THREE.LineDashedMaterial({color:0xd2342c,dashSize:.006,gapSize:.004,depthTest:false,transparent:true}));behindG.renderOrder=13;behindG.visible=false;scene.add(behindG);
+function behindSnap(p,a,s,Lu,Lv){const [u,v]=AX.filter(q=>q!==a);let best=null;for(const R0 of behindRects(p,a,s)){const m=25;if(Lu<R0.u0-m||Lu>R0.u1+m||Lv<R0.v0-m||Lv>R0.v1+m)continue;
+    const du=R0.u1-R0.u0,dv=R0.v1-R0.v0,mu=(R0.u0+R0.u1)/2,mv=(R0.v0+R0.v1)/2;let su=Lu,sv=Lv;if(du<=dv){su=mu;if(Math.abs(Lv-mv)<12)sv=mv}else{sv=mv;if(Math.abs(Lu-mu)<12)su=mu}
+    const d=Math.hypot(su-Lu,sv-Lv);if(!best||d<best.d)best={d,R:R0,u:su,v:sv}}
+  if(!best){behindG.visible=false;return null}
+  const R0=best.R,P=(uu,vv)=>faceP(p,a,s,u,v,uu,vv,0.5),pts=[P(R0.u0,R0.v0),P(R0.u1,R0.v0),P(R0.u1,R0.v0),P(R0.u1,R0.v1),P(R0.u1,R0.v1),P(R0.u0,R0.v1),P(R0.u0,R0.v1),P(R0.u0,R0.v0)];
+  const du=R0.u1-R0.u0,dv=R0.v1-R0.v0;if(du<=dv)pts.push(P((R0.u0+R0.u1)/2,R0.v0),P((R0.u0+R0.u1)/2,R0.v1));else pts.push(P(R0.u0,(R0.v0+R0.v1)/2),P(R0.u1,(R0.v0+R0.v1)/2));
+  behindG.geometry.dispose();behindG.geometry=new THREE.BufferGeometry().setFromPoints(pts);behindG.computeLineDistances();behindG.visible=view==='build';return best}
+function makeDowel(p,f,depth){const cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,r=(f.u1-f.u0)/2,bh=behindRects(p,f.a,f.s,cu,cv);if(!bh.length)return toast('За кругом нет доски');const R0=bh[0],q=R0.q,a=f.a,[u,v]=AX.filter(x=>x!==a);
+  const qu=p[u]+cu-q[u],qv=p[v]+cv-q[v],Su=q[SZ[u]],Sv=q[SZ[v]];if(qu-r<-0.01||qu+r>Su+0.01||qv-r<-0.01||qv+r>Sv+0.01)return toast(`Круг Ø${f1(r*2)} шире торца «${q.name}» — уменьшите диаметр или сдвиньте центр`);
+  pushUndo();f.depth=p[SZ[a]];const qf={id:fidN++,a,s:f.s,u0:r4(qu-r),u1:r4(qu+r),v0:r4(qv-r),v1:r4(qv+r),depth:r4(Math.min(depth,q[SZ[a]])),c:1};q.feat=(q.feat||[]).concat(qf);buildMesh(p);buildMesh(q);save();renderInsp();
+  toast(`Сверление Ø${f1(r*2)}: насквозь через «${p.name}» + ${f1(qf.depth)} мм в «${q.name}»`,4000)}
 
 function doorHTML(d){const hs=doorHinges(d.id);if(!hs.length)return '';const D=d.door||{},S=doorSim[d.id],a=S?S.a:0,mx=D.max||105;
   return `<div class="grp"><span class="lbl">Дверь на петлях · ${hs.length} шт.</span>
@@ -1234,6 +1256,7 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   if(['dside','dsoft','dmax'].includes(a)){const d=panelById(did);if(!d)return;pushUndo();d.door=d.door||{};if(a==='dside')d.door.side=b.dataset.v;else if(a==='dsoft'){d.door.soft=+b.dataset.v;doorHinges(d.id).forEach(h=>h.soft=+b.dataset.v)}else{d.door.max=+b.dataset.v;doorHinges(d.id).forEach(h=>h.ang=+b.dataset.v);const S=doorSim[d.id];if(S&&S.a>d.door.max)S.a=d.door.max}relayHinges(d);placeMesh(d);save();renderInsp();return}
   if(a==='dunhinge'){const d=panelById(did);if(!d)return;pushUndo();delete doorSim[d.id];state.panels=state.panels.filter(q=>!(q.hw==='hinge'&&q.door===d.id));delete d.door;rebuildAll();save();renderInsp();toast('Петли сняты');return}
   if(a==='hov'||a==='hcup'){if(!o||o.hw!=='hinge')return;pushUndo();doorHinges(o.door).forEach(h=>{if(a==='hov')h.ov=b.dataset.v;else h.cup=+b.dataset.v;buildMesh(h)});save();renderInsp();return}}
+  if(a==='dowel'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;const f=featById(o,S.fid);const v=num($('#dowelDepth').value);if(!isFinite(v)||v<=0)return toast('Введите глубину');state.dowelD=v;makeDowel(o,f,v);return}
   if(a==='hwrib'||a==='hwsec'){const o=selP();if(!o||!o.hw)return;pushUndo();selPanels().filter(q=>q.hw===o.hw).forEach(q=>{if(a==='hwrib')q.prib=+b.dataset.v;else q.psec=+b.dataset.v;buildMesh(q)});save();renderInsp();return}
   if(a==='cancelTool')return setTool('select');
   if(a==='unrot'){const o=selP();if(!o)return;pushUndo();setRotation(o,new THREE.Quaternion());buildMesh(o);placeHandles();save();fitShadows();renderInsp();return}
@@ -1414,7 +1437,7 @@ function resize(){const r=stageEl.getBoundingClientRect();if(!r.width||!r.height
 new ResizeObserver(resize).observe(stageEl);
 
 let capturing=false;
-function loop(){requestAnimationFrame(loop);if(capturing)return;{const now=performance.now(),dt=Math.min(0.04,Math.max(0.001,(now-lastPhys)/1000));lastPhys=now;if(animDoors){let rem=Math.min(0.1,(performance.now()-lastPhys0)/1000)||dt;lastPhys0=performance.now();let busy=false;while(rem>1e-4){const h=Math.min(rem,1/120);rem-=h;physSub(h)}doorStep(0);if(slideStep(dt))animDoors=true}else lastPhys0=performance.now()}if(view==='build'){controls.update();renderer.setRenderTarget(null);{gzUpdate();if(prot.visible&&!(op&&op.gz))prot.scale.setScalar(camera.position.distanceTo(prot.position)*0.09);const below=camera.position.y<0;gridMinor.visible=gridMajor.visible=axesG.visible=!below}showSub();renderer.render(scene,camera);updateLabels();tapeLabel();if(!snapEl.hidden&&!op&&!['move','board','tape'].includes(state.tool))snapEl.hidden=true}else if(view==='render'){controls.update();ptFrame()}}
+function loop(){requestAnimationFrame(loop);if(capturing)return;{const now=performance.now(),dt=Math.min(0.04,Math.max(0.001,(now-lastPhys)/1000));lastPhys=now;if(animDoors){let rem=Math.min(0.1,(performance.now()-lastPhys0)/1000)||dt;lastPhys0=performance.now();let busy=false;while(rem>1e-4){const h=Math.min(rem,1/120);rem-=h;physSub(h)}doorStep(0);if(slideStep(dt))animDoors=true}else lastPhys0=performance.now()}if(view==='build'){controls.update();renderer.setRenderTarget(null);{gzUpdate();if(prot.visible&&!(op&&op.gz))prot.scale.setScalar(camera.position.distanceTo(prot.position)*0.09);const below=camera.position.y<0;gridMinor.visible=gridMajor.visible=axesG.visible=!below}showSub();renderer.render(scene,camera);updateLabels();tapeLabel();if(!snapEl.hidden&&!op&&!['move','board','tape','circle'].includes(state.tool))snapEl.hidden=true}else if(view==='render'){controls.update();ptFrame()}}
 
 /* ---------- parts & nesting ---------- */
 function partsList(){const g=new Map();BRD().forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
@@ -1443,7 +1466,7 @@ function nestAll(){const [SW,SH]=getSheet(),parts=partsList(),groups=new Map();p
 
 /* ---------- drawings ---------- */
 const sheetEl=$('#sheet');let svg=null,vb=null,vb0=null;
-const f1=n=>Math.round(n*10)/10;
+
 function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<svg class="dw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><text x="200" y="100" font-size="14">Добавьте детали в конструкторе</text></svg>`,vb:[0,0,400,200]};
   const b=bbox(P),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-b.z0,k=Math.max(12,Math.max(W,H,D)/36),G=k*7,o=[];let ex=0;
   const R=(x,y,w,h,c='pn')=>{ex=Math.max(ex,x+w);return`<rect class="${c}" x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(h)}"/>`};
