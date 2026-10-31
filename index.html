@@ -902,6 +902,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [m
   if(op&&(op.type==='rmove'||op.type==='redge')){const s=infer(mx,my,{from:op.from});if(!s)return;showSnap(s);applyRegionMove(s.pt.clone().sub(op.from).multiplyScalar(1000),s.type);setLine(rubber,op.from,s.pt);return}
   if(t==='rotate'){rotMove(mx,my,e);return}
   if(op&&op.type==='offset'){moveOffset();return}
+  if(t==='board'&&!op){const h=ray.intersectObjects(panelMeshes(),false)[0];behindG.visible=false;if(h){const pp=panelById(h.object.userData.id);if(!pp.hw&&!pp.rot){const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a))),L=loc(pp,h.point),[u,v]=AX.filter(q=>q!==a);behindSnap(pp,a,sg,L[u],L[v])}}}
   if(state.tool==='circle'&&!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h){const pp=panelById(h.object.userData.id);if(!pp.hw&&!pp.rot){const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a))),L=loc(pp,h.point),[u,v]=AX.filter(q=>q!==a),b=behindSnap(pp,a,sg,L[u],L[v]);if(b){const P0=faceP(pp,a,sg,u,v,b.u,b.v,0.5),m=scr(P0);snapEl.hidden=false;snapEl.className='snapmk';snapEl.style.transform=`translate(${m.x}px,${m.y}px)`;snapEl.querySelector('span').textContent='Центр детали за доской: «'+b.R.q.name+'»';return}}}else behindG.visible=false}
   if(op&&op.type==='circle'){const p=op.p,a=op.a,[u,v]=AX.filter(q=>q!==a),F=(op.s>0?p[a]+p[SZ[a]]:p[a]),pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(AXV[a].clone(),-F*MM),pt))return;
     const sn=infer(mx,my);if(sn&&sn.type!=='face'&&sn.type!=='ground'){pt.copy(sn.pt);showSnap(sn)}else snapEl.hidden=true;const L=loc(p,pt);let r=Math.hypot(L[u]-op.cu,L[v]-op.cv);if(state.snap)r=Math.round(r);op.r=r4(r);circleShow();return}
@@ -1008,7 +1009,7 @@ function finishRect(du,dv){if(!op)return;let r=rectDims();if(du==null){du=r.du;d
   for(const pp of [panelById(op.pid),...state.panels].filter(Boolean)){if(!pp.rot&&!pp.hw&&(isoId==null||pp.id===isoId)){const a=op.a,ai=AX.indexOf(a),[u,v]=AX.filter(q=>q!==a),fu=op.from.getComponent(AX.indexOf(u))*1000-pp[u],fv=op.from.getComponent(AX.indexOf(v))*1000-pp[v],pl=op.sign>0?pp[a]+pp[SZ[a]]:pp[a];
     const u0=r4(Math.min(fu,fu+du)),u1=r4(Math.max(fu,fu+du)),v0=r4(Math.min(fv,fv+dv)),v1=r4(Math.max(fv,fv+dv)),Su=pp[SZ[u]],Sv=pp[SZ[v]];
     if(Math.abs(du)>=0.5&&Math.abs(dv)>=0.5&&Math.abs(op.from.getComponent(ai)*1000-pl)<0.5&&u0>-0.01&&v0>-0.01&&u1<Su+0.01&&v1<Sv+0.01){if(u1-u0>=Su-0.01&&v1-v0>=Sv-0.01){toast('Прямоугольник равен всей грани — используйте «Выдавить» сразу');opEnd();return}
-      pushUndo();const f={id:fidN++,a,s:op.sign,u0:Math.max(0,u0),u1:Math.min(Su,u1),v0:Math.max(0,v0),v1:Math.min(Sv,v1),depth:0};pp.feat=(pp.feat||[]).concat(f);opEnd();buildMesh(pp);setSel(pp.id);setSub({kind:'region',id:pp.id,fid:f.id});save();toast('Область на грани «'+pp.name+'» — P: внутрь — выборка (пойдёт в фрезеровку), наружу — выступ');return}}}
+      pushUndo();const f={id:fidN++,a,s:op.sign,u0:Math.max(0,u0),u1:Math.min(Su,u1),v0:Math.max(0,v0),v1:Math.min(Sv,v1),depth:0};pp.feat=(pp.feat||[]).concat(f);opEnd();buildMesh(pp);setTool('select');setSel(pp.id);setSub({kind:'region',id:pp.id,fid:f.id});renderInsp();save();toast('Область на грани «'+pp.name+'» — P: внутрь — выборка (пойдёт в фрезеровку), наружу — выступ');return}}}
   if(Math.abs(du)<5&&Math.abs(dv)<5){du=state.nb.w;dv=state.nb.d}
   if(Math.abs(du)<10||Math.abs(dv)<10){toast('Слишком маленькая доска');return}
   const b=rectBox(du,dv);pushUndo();const p=mk('Доска '+(state.panels.length+1),b.w,b.h,b.d,b.x,b.y,b.z,op.a,state.nb.mat);state.panels.push(p);buildMesh(p);opEnd();setSel(p.id);save();fitShadows();renderInsp();if(op===null&&b)toast('Создана новая доска «'+p.name+'». Чтобы сделать паз в детали, рисуйте прямоугольник целиком внутри её грани')}
@@ -1166,27 +1167,51 @@ const orientHTML=(o,scope)=>`<div class="seg">${[['y','Полка'],['z','Сте
 const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>`;
 const dimsTxt=p=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${d[0]}×${d[1]}×${thick(p)}`};
 function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>')}
-function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.kind==='face')t=`Грань ${S.a.toUpperCase()}${S.s>0?'+':'−'}: Shift+клик по ребру — подтянуть к нему, M или P — сдвинуть, F — смещение`;else if(S.kind==='edge')t='Ребро: Shift+клик по другому ребру — подтянуть, M — сдвинуть';else{const f=featById(p,S.fid);if(!f)return'';t=S.kind==='region'?`Область ${fmtMM(f.u1-f.u0)} × ${fmtMM(f.v1-f.v0)}, ${f.depth>=p[SZ[f.a]]?'вырез насквозь':f.depth<0?'выступ '+fmtMM(-f.depth):'глубина '+fmtMM(f.depth)}. P — вдавить или выдавить, M — сдвинуть, Del — удалить`:'Ребро области: M — сдвинуть, Del — удалить область'}let extra='';if(S.kind==='region'){const f=featById(p,S.fid);if(f&&f.c){const bh=behindRects(p,f.a,f.s,(f.u0+f.u1)/2,(f.v0+f.v1)/2);
-    extra=bh.length?`<div class="grp"><span class="lbl">Шкант / сквозное сверление</span><p class="note">За этой доской: «${esc(bh[0].q.name)}». Отверстие пройдёт насквозь и продолжится в ней на заданную глубину — под шкант или шип.</p><label class="fld"><span>Глубина во второй детали</span><input id="dowelDepth" inputmode="decimal" value="${state.dowelD||30}"><i>мм</i></label><button class="btn" data-act="dowel">Просверлить в «${esc(bh[0].q.name)}»</button></div>`:`<p class="note">За этим кругом нет другой доски вплотную — сверлить дальше некуда.</p>`}}
+function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.kind==='face')t=`Грань ${S.a.toUpperCase()}${S.s>0?'+':'−'}: Shift+клик по ребру — подтянуть к нему, M или P — сдвинуть, F — смещение`;else if(S.kind==='edge')t='Ребро: Shift+клик по другому ребру — подтянуть, M — сдвинуть';else{const f=featById(p,S.fid);if(!f)return'';t=S.kind==='region'?`Область ${fmtMM(f.u1-f.u0)} × ${fmtMM(f.v1-f.v0)}, ${f.depth>=p[SZ[f.a]]?'вырез насквозь':f.depth<0?'выступ '+fmtMM(-f.depth):'глубина '+fmtMM(f.depth)}. P — вдавить или выдавить, M — сдвинуть, Del — удалить`:'Ребро области: M — сдвинуть, Del — удалить область'}let extra='';if(S.kind==='region'){const f=featById(p,S.fid);if(f){const cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,sec=secAt(behindSecs(p,f.a,f.s),cu,cv,Math.hypot(f.u1-f.u0,f.v1-f.v0)/2+20);
+    extra=sec?`<div class="grp"><span class="lbl">${f.c?'Шкант':'Шип / паз'} · соединение с «${esc(sec.q.name)}»</span><p class="note">За этой доской вплотную стоит «${esc(sec.q.name)}»${sec.q.rot?' (под углом)':''}. Выровняйте ${f.c?'круг':'прямоугольник'} по её центру и продолжите ${f.c?'отверстие':'вырез'} в неё — получится соединение на ${f.c?'шкант':'шип'}.</p>
+      <button class="btn" data-act="dalign">Поставить по центру «${esc(sec.q.name)}»</button>
+      <label class="fld"><span>Глубина во второй детали</span><input id="dowelDepth" inputmode="decimal" value="${state.dowelD||30}"><i>мм</i></label><button class="btn" data-act="dowel">${f.c?'Просверлить':'Пропилить'} насквозь и в «${esc(sec.q.name)}»</button></div>`:`<p class="note">За этой областью нет другой доски вплотную — соединение на шкант или шип сделать не с чем.</p>`}}
   return `<p class="multi sub">${t}</p>${extra}`}
 function faceP(p,a,s,u,v,uu,vv,lift){const T=p[SZ[a]],o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[a]=(s>0?p[a]+T:p[a])+s*(lift||0);return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)}
-function behindRects(p,a,s,cu,cv){const [u,v]=AX.filter(q=>q!==a),T=p[SZ[a]],back=s>0?p[a]:p[a]+T,out=[];
-  for(const q of BRD()){if(q.id===p.id||q.rot)continue;const qa0=q[a],qa1=q[a]+q[SZ[a]];const touch=s>0?Math.abs(qa1-back)<1.5||(qa0<back-0.01&&qa1>back-1.5&&qa1<=back+1.5):Math.abs(qa0-back)<1.5;if(!touch)continue;
-    const u0=Math.max(p[u],q[u])-p[u],u1=Math.min(p[u]+p[SZ[u]],q[u]+q[SZ[u]])-p[u],v0=Math.max(p[v],q[v])-p[v],v1=Math.min(p[v]+p[SZ[v]],q[v]+q[SZ[v]])-p[v];if(u1-u0<1||v1-v0<1)continue;
-    const r={q,u0,u1,v0,v1};if(cu!=null&&!(cu>=u0-0.5&&cu<=u1+0.5&&cv>=v0-0.5&&cv<=v1+0.5))continue;out.push(r)}
+/* cross-sections of boards standing right behind face (p,a,s): polygon in p's face coords + centre line of the board's thickness */
+function behindSecs(p,a,s){const [u,v]=AX.filter(q=>q!==a),ai=AX.indexOf(a),T=p[SZ[a]],back=s>0?p[a]:p[a]+T,pl=back-s*0.6,out=[];
+  for(const q of BRD()){if(q.id===p.id)continue;const C=corners(q).map(c=>c.clone().multiplyScalar(1000)),pts=[];
+    for(const [i,j] of EDGES){const A=C[i],B=C[j],da=A.getComponent(ai)-pl,db=B.getComponent(ai)-pl;if(Math.abs(da)<1e-6)pts.push(A);if((da<-1e-6&&db>1e-6)||(da>1e-6&&db<-1e-6)){pts.push(A.clone().lerp(B,da/(da-db)))}}
+    if(pts.length<3)continue;
+    /* q must actually reach p's back face (not just pass through somewhere far) */
+    const ext=C.map(c=>c.getComponent(ai));const near=s>0?Math.max(...ext):Math.min(...ext);if(Math.abs(near-back)>1.6&&!(s>0?near>back:near<back))continue;
+    let P2=pts.map(P=>[P.getComponent(AX.indexOf(u))-p[u],P.getComponent(AX.indexOf(v))-p[v]]);const cx=P2.reduce((a2,b)=>a2+b[0],0)/P2.length,cy=P2.reduce((a2,b)=>a2+b[1],0)/P2.length;
+    P2.sort((A,B)=>Math.atan2(A[1]-cy,A[0]-cx)-Math.atan2(B[1]-cy,B[0]-cx));P2=P2.filter((A,i)=>{const B=P2[(i+1)%P2.length];return Math.hypot(A[0]-B[0],A[1]-B[1])>1e-3});if(P2.length<3)continue;
+    const td=AXV[q.t].clone();if(q.rot)td.applyQuaternion(rotQ(q));let tu=td.getComponent(AX.indexOf(u)),tv=td.getComponent(AX.indexOf(v));const tl=Math.hypot(tu,tv);if(tl<0.3)continue;tu/=tl;tv/=tl;
+    const Lu=-tv,Lv=tu,pr=P2.map(A=>(A[0]-cx)*Lu+(A[1]-cy)*Lv),th=P2.map(A=>(A[0]-cx)*tu+(A[1]-cy)*tv);
+    const Su=p[SZ[u]],Sv=p[SZ[v]];if(cx<-1||cx>Su+1||cy<-1||cy>Sv+1)continue;
+    out.push({q,poly:P2,c:[cx,cy],L:[Lu,Lv],t:[tu,tv],l0:Math.min(...pr),l1:Math.max(...pr),w:Math.max(...th)-Math.min(...th)})}
   return out}
+function inPoly(P,x,y,m){let inside=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const [xi,yi]=P[i],[xj,yj]=P[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))inside=!inside}if(inside)return true;
+  if(m){for(let i=0;i<P.length;i++){const A=P[i],B=P[(i+1)%P.length],dx=B[0]-A[0],dy=B[1]-A[1],t=Math.max(0,Math.min(1,((x-A[0])*dx+(y-A[1])*dy)/(dx*dx+dy*dy||1)));if(Math.hypot(A[0]+dx*t-x,A[1]+dy*t-y)<=m)return true}}return false}
+const secAt=(secs,x,y,m=0.5)=>secs.find(S=>inPoly(S.poly,x,y,Math.max(0.5,m)))||null;
 const behindG=new THREE.LineSegments(new THREE.BufferGeometry(),new THREE.LineDashedMaterial({color:0xd2342c,dashSize:.006,gapSize:.004,depthTest:false,transparent:true}));behindG.renderOrder=13;behindG.visible=false;scene.add(behindG);
-function behindSnap(p,a,s,Lu,Lv){const [u,v]=AX.filter(q=>q!==a);let best=null;for(const R0 of behindRects(p,a,s)){const m=25;if(Lu<R0.u0-m||Lu>R0.u1+m||Lv<R0.v0-m||Lv>R0.v1+m)continue;
-    const du=R0.u1-R0.u0,dv=R0.v1-R0.v0,mu=(R0.u0+R0.u1)/2,mv=(R0.v0+R0.v1)/2;let su=Lu,sv=Lv;if(du<=dv){su=mu;if(Math.abs(Lv-mv)<12)sv=mv}else{sv=mv;if(Math.abs(Lu-mu)<12)su=mu}
-    const d=Math.hypot(su-Lu,sv-Lv);if(!best||d<best.d)best={d,R:R0,u:su,v:sv}}
+function secSnap(S,x,y,r=0){const dx=x-S.c[0],dy=y-S.c[1];let l=dx*S.L[0]+dy*S.L[1];if(Math.abs(l)<12)l=0;const m=Math.min(r+1,(S.l1-S.l0)/2);l=Math.max(S.l0+m,Math.min(S.l1-m,l));return[S.c[0]+S.L[0]*l,S.c[1]+S.L[1]*l]}
+function behindSnap(p,a,s,Lu,Lv){const [u,v]=AX.filter(q=>q!==a);const secs=behindSecs(p,a,s);let best=null;for(const S of secs){if(!inPoly(S.poly,Lu,Lv,25))continue;const [su,sv]=secSnap(S,Lu,Lv,5),d=Math.hypot(su-Lu,sv-Lv);if(!best||d<best.d)best={d,R:S,u:su,v:sv}}
   if(!best){behindG.visible=false;return null}
-  const R0=best.R,P=(uu,vv)=>faceP(p,a,s,u,v,uu,vv,0.5),pts=[P(R0.u0,R0.v0),P(R0.u1,R0.v0),P(R0.u1,R0.v0),P(R0.u1,R0.v1),P(R0.u1,R0.v1),P(R0.u0,R0.v1),P(R0.u0,R0.v1),P(R0.u0,R0.v0)];
-  const du=R0.u1-R0.u0,dv=R0.v1-R0.v0;if(du<=dv)pts.push(P((R0.u0+R0.u1)/2,R0.v0),P((R0.u0+R0.u1)/2,R0.v1));else pts.push(P(R0.u0,(R0.v0+R0.v1)/2),P(R0.u1,(R0.v0+R0.v1)/2));
+  const S=best.R,P=(uu,vv)=>faceP(p,a,s,u,v,uu,vv,0.5),pts=[];S.poly.forEach((A,i)=>{const B=S.poly[(i+1)%S.poly.length];pts.push(P(A[0],A[1]),P(B[0],B[1]))});
+  pts.push(P(S.c[0]+S.L[0]*S.l0,S.c[1]+S.L[1]*S.l0),P(S.c[0]+S.L[0]*S.l1,S.c[1]+S.L[1]*S.l1));
   behindG.geometry.dispose();behindG.geometry=new THREE.BufferGeometry().setFromPoints(pts);behindG.computeLineDistances();behindG.visible=view==='build';return best}
-function makeDowel(p,f,depth){const cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,r=(f.u1-f.u0)/2,bh=behindRects(p,f.a,f.s,cu,cv);if(!bh.length)return toast('За кругом нет доски');const R0=bh[0],q=R0.q,a=f.a,[u,v]=AX.filter(x=>x!==a);
-  const qu=p[u]+cu-q[u],qv=p[v]+cv-q[v],Su=q[SZ[u]],Sv=q[SZ[v]];if(qu-r<-0.01||qu+r>Su+0.01||qv-r<-0.01||qv+r>Sv+0.01)return toast(`Круг Ø${f1(r*2)} шире торца «${q.name}» — уменьшите диаметр или сдвиньте центр`);
-  pushUndo();f.depth=p[SZ[a]];const qf={id:fidN++,a,s:f.s,u0:r4(qu-r),u1:r4(qu+r),v0:r4(qv-r),v1:r4(qv+r),depth:r4(Math.min(depth,q[SZ[a]])),c:1};q.feat=(q.feat||[]).concat(qf);buildMesh(p);buildMesh(q);save();renderInsp();
-  toast(`Сверление Ø${f1(r*2)}: насквозь через «${p.name}» + ${f1(qf.depth)} мм в «${q.name}»`,4000)}
+function alignToBehind(p,f){const cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,S=secAt(behindSecs(p,f.a,f.s),cu,cv,Math.hypot(f.u1-f.u0,f.v1-f.v0)/2+20);if(!S)return toast('За областью нет доски');
+  const [nu,nv]=secSnap(S,cu,cv,f.c?(f.u1-f.u0)/2:Math.max(f.u1-f.u0,f.v1-f.v0)/2),du=nu-cu,dv=nv-cv,[u,v]=AX.filter(x=>x!==f.a);pushUndo();f.u0=r4(f.u0+du);f.u1=r4(f.u1+du);f.v0=r4(f.v0+dv);f.v1=r4(f.v1+dv);
+  const Su=p[SZ[u]],Sv=p[SZ[v]];if(f.u0<0){f.u1-=f.u0;f.u0=0}if(f.v0<0){f.v1-=f.v0;f.v0=0}if(f.u1>Su){f.u0-=f.u1-Su;f.u1=Su}if(f.v1>Sv){f.v0-=f.v1-Sv;f.v1=Sv}
+  buildMesh(p);save();renderInsp();toast(`По центру «${S.q.name}»${f.c?'':' · ширина паза по толщине: '+f1(S.w)+' мм'}`)}
+function makeDowel(p,f,depth){const a=f.a,[u,v]=AX.filter(x=>x!==a),ai=AX.indexOf(a),cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,S=secAt(behindSecs(p,a,f.s),cu,cv,(f.u1-f.u0)/2);if(!S)return toast('За областью нет доски');const q=S.q;
+  /* centre of the hole on p's back face, world mm -> q local (unrotated) mm */
+  const T=p[SZ[a]],back=f.s>0?p[a]:p[a]+T,W={};W[u]=p[u]+cu;W[v]=p[v]+cv;W[a]=back;let w=new THREE.Vector3(W.x,W.y,W.z);
+  const qc=new THREE.Vector3(q.x+q.w/2,q.y+q.h/2,q.z+q.d/2),qi=q.rot?rotQ(q).invert():new THREE.Quaternion(),dirW=AXV[a].clone().multiplyScalar(-f.s),dl=dirW.clone().applyQuaternion(qi);
+  const la=AX[[0,1,2].reduce((m,i)=>Math.abs(dl.getComponent(i))>Math.abs(dl.getComponent(m))?i:m,0)];if(Math.abs(dl.getComponent(AX.indexOf(la)))<0.999)return toast(`Торец «${q.name}» не параллелен доске — сверлить можно только в плоский торец`);
+  if(!f.c&&q.rot){const ru=AXV[u].clone().applyQuaternion(qi);if(Math.max(Math.abs(ru.x),Math.abs(ru.y),Math.abs(ru.z))<0.999)return toast('Прямоугольный паз в доске под углом не получится — используйте круг (шкант)')}
+  const lw=w.clone().sub(qc).applyQuaternion(qi).add(qc),sq=-Math.sign(dl.getComponent(AX.indexOf(la))),[lu,lv]=AX.filter(x=>x!==la),L={x:lw.x-q.x,y:lw.y-q.y,z:lw.z-q.z};
+  let hu,hv;if(f.c){hu=hv=(f.u1-f.u0)/2}else{const ru=AXV[u].clone().applyQuaternion(qi);const uOnLu=Math.abs(ru.getComponent(AX.indexOf(lu)))>0.5;hu=(uOnLu?f.u1-f.u0:f.v1-f.v0)/2;hv=(uOnLu?f.v1-f.v0:f.u1-f.u0)/2}
+  const Su=q[SZ[lu]],Sv=q[SZ[lv]];if(L[lu]-hu<-0.05||L[lu]+hu>Su+0.05||L[lv]-hv<-0.05||L[lv]+hv>Sv+0.05)return toast(`${f.c?'Круг Ø'+f1(hu*2):'Прямоугольник'} шире торца «${q.name}» — уменьшите размер или нажмите «Поставить по центру»`);
+  pushUndo();f.depth=T;const qf={id:fidN++,a:la,s:sq,u0:r4(L[lu]-hu),u1:r4(L[lu]+hu),v0:r4(L[lv]-hv),v1:r4(L[lv]+hv),depth:r4(Math.min(depth,q[SZ[la]])),c:f.c?1:0};if(!qf.c)delete qf.c;q.feat=(q.feat||[]).concat(qf);buildMesh(p);buildMesh(q);save();renderInsp();
+  toast(`${f.c?'Сверление Ø'+f1(hu*2):'Вырез'}: насквозь через «${p.name}» + ${f1(qf.depth)} мм в «${q.name}»`,4000)}
 
 function doorHTML(d){const hs=doorHinges(d.id);if(!hs.length)return '';const D=d.door||{},S=doorSim[d.id],a=S?S.a:0,mx=D.max||105;
   return `<div class="grp"><span class="lbl">Дверь на петлях · ${hs.length} шт.</span>
@@ -1256,6 +1281,7 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   if(['dside','dsoft','dmax'].includes(a)){const d=panelById(did);if(!d)return;pushUndo();d.door=d.door||{};if(a==='dside')d.door.side=b.dataset.v;else if(a==='dsoft'){d.door.soft=+b.dataset.v;doorHinges(d.id).forEach(h=>h.soft=+b.dataset.v)}else{d.door.max=+b.dataset.v;doorHinges(d.id).forEach(h=>h.ang=+b.dataset.v);const S=doorSim[d.id];if(S&&S.a>d.door.max)S.a=d.door.max}relayHinges(d);placeMesh(d);save();renderInsp();return}
   if(a==='dunhinge'){const d=panelById(did);if(!d)return;pushUndo();delete doorSim[d.id];state.panels=state.panels.filter(q=>!(q.hw==='hinge'&&q.door===d.id));delete d.door;rebuildAll();save();renderInsp();toast('Петли сняты');return}
   if(a==='hov'||a==='hcup'){if(!o||o.hw!=='hinge')return;pushUndo();doorHinges(o.door).forEach(h=>{if(a==='hov')h.ov=b.dataset.v;else h.cup=+b.dataset.v;buildMesh(h)});save();renderInsp();return}}
+  if(a==='dalign'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;alignToBehind(o,featById(o,S.fid));return}
   if(a==='dowel'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;const f=featById(o,S.fid);const v=num($('#dowelDepth').value);if(!isFinite(v)||v<=0)return toast('Введите глубину');state.dowelD=v;makeDowel(o,f,v);return}
   if(a==='hwrib'||a==='hwsec'){const o=selP();if(!o||!o.hw)return;pushUndo();selPanels().filter(q=>q.hw===o.hw).forEach(q=>{if(a==='hwrib')q.prib=+b.dataset.v;else q.psec=+b.dataset.v;buildMesh(q)});save();renderInsp();return}
   if(a==='cancelTool')return setTool('select');
