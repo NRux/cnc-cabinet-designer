@@ -773,6 +773,8 @@ function gzHit(){if(!gizmo.visible)return null;gizmo.updateMatrixWorld();const h
 function corners(p){const a=cornersLocal(p);if(!p.rot)return a;const c=pCenter(p),q=rotQ(p);return a.map(v=>v.sub(c).applyQuaternion(q).add(c))}
 const EDGES=[];for(let i=0;i<8;i++)for(let b=0;b<3;b++)if(!(i&(1<<b)))EDGES.push([i,i|(1<<b)]);
 function rayLine(o,d,clamp){const r=o.clone().sub(ray.ray.origin),d2=ray.ray.direction,A=d.dot(d),B=d.dot(d2),C=d.dot(r),E=d2.dot(d2),F=d2.dot(r),den=A*E-B*B;let s=den>1e-12?(B*F-C*E)/den:0;if(clamp)s=Math.max(0,Math.min(1,s));return o.clone().addScaledVector(d,s)}
+function pickRegionLine(mx,my,p){let best=null,bd=7;for(const f of p.feat||[]){const segs=[];if(f.c){const L=circPts(p,f,true);for(let i=0;i<L.length-1;i++)segs.push([L[i],L[i+1]]);if(Math.abs(f.depth)>0.01){const B=circPts(p,f,false,Math.min(Math.max(f.depth,0),p[SZ[f.a]]));for(let i=0;i<B.length-1;i++)segs.push([B[i],B[i+1]])}}else ['u0','u1','v0','v1'].forEach(sd=>segs.push(redgePts(p,f,sd,true)));
+  for(const [A,B] of segs){const d=segDistPx(mx,my,A,B);if(d<bd){bd=d;best=f}}}return best}
 function segDistPx(mx,my,a,b){const A=scr(a),B=scr(b);if(A.z>1||B.z>1)return 1e9;const dx=B.x-A.x,dy=B.y-A.y,L=dx*dx+dy*dy;let t=L?((mx-A.x)*dx+(my-A.y)*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(A.x+dx*t-mx,A.y+dy*t-my)}
 function lineDistPx(mx,my,a,b){const A=scr(a),B=scr(b),dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy);if(L<1e-3)return 1e9;return Math.abs((mx-A.x)*dy-(my-A.y)*dx)/L}
 const AXV={x:new THREE.Vector3(1,0,0),y:new THREE.Vector3(0,1,0),z:new THREE.Vector3(0,0,1)};
@@ -885,6 +887,7 @@ function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#hwpop')
   if(selGuide>=0){selGuide=-1;buildGuides()}
   if(!h)return;const id=h.object.userData.id,pp=panelById(id);
   if(pp.hw==='hinge'){setSel(id);grab();drag={type:'none'};return}
+  {const rf=!pp.hw&&!pp.rot&&pickRegionLine(mx,my,pp);if(rf){if(!isSel(id))setSel(id);setSub({kind:'region',id,fid:rf.id},e.shiftKey);renderInsp();renderHint();toast((rf.c?'Круг':'Область')+' выбран'+(rf.c?'':'а')+' · Del — удалить, P — вдавить/выдавить, M — сдвинуть');grab();drag={type:'none'};return}}
   if(pp.rot||pp.hw){if(e.shiftKey){setSel(id,true);grab();drag={type:'none'};return}subClear();if(!isSel(id)){setSel(id);return}startMove(pp,h.point,e.altKey);return}
   const pe=pickEdge(mx,my,pp),pf=pickFace(h),S=pf.f?{kind:'region',id,fid:pf.f.id}:{kind:'face',id,a:pf.a,s:pf.s};
   if(state.tool==='edge'){if(!pe||pe.kind!=='edge'){if(!e.shiftKey)setSub(null);return}if(!isSel(id))setSel(id);setSub(pe,e.shiftKey);grab();drag={type:'none'};return}
