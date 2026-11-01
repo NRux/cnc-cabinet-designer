@@ -76,6 +76,7 @@ main{position:relative;overflow:hidden;min-height:0}
 .btn.pri:hover{background:#333}
 .btn.warn{color:#A2452F}
 .fl{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}.fl span{overflow-wrap:anywhere}.fl .btn{padding:4px 9px;font-size:12px}
+.pal{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.pal button,.pal label{width:28px;height:28px;border-radius:50%;padding:2px;border:1.5px solid transparent;background:none;cursor:pointer;display:grid;place-items:center}.pal button[aria-pressed="true"]{border-color:#111}.pal span{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.12)}.pal input{width:24px;height:24px;border:0;padding:0;background:none;cursor:pointer}
 .kv{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;font-size:13px}.kv>*{min-width:0}
 .kv>*{padding:8px 0;border-bottom:1px solid var(--line)}
 .kv b{font:400 13px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
@@ -255,7 +256,7 @@ td.n{font-family:var(--f-mono);text-align:right}
       <button class="ib" data-act="undo" data-tip="Отменить" data-key="Ctrl+Z"><svg viewBox="0 0 20 20"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10H9"/></svg></button>
       <button class="ib" data-act="redo" data-tip="Повторить" data-key="Ctrl+Y"><svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4"/><path d="M17 9H8a5 5 0 0 0 0 10h3"/></svg></button>
       <button class="ib" data-act="hwpop" data-tip="Фурнитура: уголки, направляющие" data-key=""><svg viewBox="0 0 20 20"><path d="M4 3v13h13"/><path d="M4 16l4-4"/><circle cx="4" cy="7" r=".9"/><circle cx="12" cy="16" r=".9"/></svg></button>
-      <button class="ib" data-act="tplpop" data-tip="Шаблоны и новый проект" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
+      <button class="ib" data-act="tplpop" data-tip="Готовые изделия: шкаф, кухня, комод…" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
       <button class="ib" data-act="cols" data-tip="Один или два ряда кнопок" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="5.5" height="14" rx="1"/><rect x="11.5" y="3" width="5.5" height="14" rx="1"/></svg></button>
       <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button></div>
     </div>
@@ -269,7 +270,7 @@ td.n{font-family:var(--f-mono);text-align:right}
     </div>
     <div class="tplpop viewpop" id="viewpop" hidden><span class="lbl">Вид</span><div class="vgrid"><button class="btn" data-view="iso">Изометрия<i>0</i></button><button class="btn" data-view="front">Спереди<i>1</i></button><button class="btn" data-view="top">Сверху<i>2</i></button><button class="btn" data-view="right">Справа<i>3</i></button><button class="btn" data-view="left">Слева<i>4</i></button><button class="btn" data-view="back">Сзади<i>5</i></button><button class="btn" data-view="bottom">Снизу<i>6</i></button></div></div>
     <div class="tplpop" id="hwpop" hidden><span class="lbl">Фурнитура</span><button class="btn" data-hw="hinge">Петли для двери</button><button class="btn" data-hw="slide">Направляющая для ящика</button><button class="btn" data-hw="angle">Металлический уголок</button><p class="note" style="margin:0">Петли: выделите доску-дверь — петли встанут на её край, дверь можно открыть. Уголок и направляющая появятся рядом с выделенной доской.</p></div>
-    <div class="tplpop" id="tplpop" hidden><span class="lbl">Начать с шаблона</span><div class="row" id="tplRow"></div><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>
+    <div class="tplpop" id="tplpop" hidden><span class="lbl">Готовые изделия · по параметрам</span><div class="row" id="tplRow"></div><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>
     <aside class="insp" id="insp" aria-label="Параметры" data-dock="right"></aside><datalist id="thkL"><option value="3"><option value="4"><option value="6"><option value="9"><option value="12"><option value="15"><option value="18"><option value="21"><option value="24"><option value="27"><option value="30"></datalist>
     <div class="status" id="status">
       <span id="hint"></span>
@@ -401,11 +402,12 @@ function rnd(seed){let s=seed%2147483647||1;return()=>(s=s*16807%2147483647)/214
 const selP=()=>state.panels.find(p=>p.id===state.sel)||null;
 const nf=v=>String(+(+v).toFixed(2)).replace('.',',');
 function tidy(){for(const p of state.panels)for(const k of ['x','y','z','w','h','d'])if(typeof p[k]==='number')p[k]=Math.round(p[k]*1e4)/1e4}
-function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
-function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
-function pushUndo(){undoS.push(JSON.stringify(state.panels));if(undoS.length>120)undoS.shift();redoS.length=0}
-function undo(){if(!undoS.length)return toast('Нечего отменять');toast('Отменено · Ctrl+Y — вернуть');redoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(undoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
-function redo(){if(!redoS.length)return toast('Нечего возвращать');toast('Возвращено');undoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(redoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
+function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,prods:state.prods||[],nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
+function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;state.prods=Array.isArray(j.prods)?j.prods:[];if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
+const snap=()=>JSON.stringify({p:state.panels,r:state.prods||[]});function unsnap(t){const j=JSON.parse(t);if(Array.isArray(j))state.panels=j;else{state.panels=j.p;state.prods=j.r}}
+function pushUndo(){undoS.push(snap());if(undoS.length>120)undoS.shift();redoS.length=0}
+function undo(){if(!undoS.length)return toast('Нечего отменять');toast('Отменено · Ctrl+Y — вернуть');redoS.push(snap());unsnap(undoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
+function redo(){if(!redoS.length)return toast('Нечего возвращать');toast('Возвращено');undoS.push(snap());unsnap(redoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
 function bbox(list=state.panels){if(!list.length)return{x0:0,x1:800,y0:0,y1:800,z0:0,z1:400};const b={x0:1e9,x1:-1e9,y0:1e9,y1:-1e9,z0:1e9,z1:-1e9};list.forEach(p=>{b.x0=Math.min(b.x0,p.x);b.x1=Math.max(b.x1,p.x+p.w);b.y0=Math.min(b.y0,p.y);b.y1=Math.max(b.y1,p.y+p.h);b.z0=Math.min(b.z0,p.z);b.z1=Math.max(b.z1,p.z+p.d)});return b}
 
 /* ---------- three setup ---------- */
@@ -489,13 +491,16 @@ const texC={},canvC={};
 const cnv=(key,mk)=>canvC[key]||(canvC[key]=mk());
 function canvasTex(key,mk,clampT,linear){if(texC[key])return texC[key];const t=new THREE.CanvasTexture(mk());t.wrapS=t.wrapT=THREE.RepeatWrapping;if(clampT)t.wrapT=THREE.ClampToEdgeWrapping;t.anisotropy=maxAniso;t.colorSpace=linear?THREE.NoColorSpace:THREE.SRGBColorSpace;return texC[key]=t}
 const matC={};
-function matsFor(p){const T=thick(p),key=p.mat+'|'+T;if(matC[key])return matC[key];
+const PAL=[['', 'Натуральный',''],['#efe6d6','Белёный','stain'],['#d8b787','Светлый дуб','stain'],['#9a6b45','Орех','stain'],['#5b4535','Мокко','stain'],['#f1ece3','Молочный','paint'],['#d8cbb8','Лён','paint'],['#b9a48e','Глина','paint'],['#8a8d76','Олива','paint'],['#b0694a','Терракота','paint'],['#56595a','Графит','paint'],['#222120','Чёрный','paint']];
+const colName=p=>{if(!p.col)return '';const e=PAL.find(x=>x[0]===p.col);return e?e[1]:p.col};
+function matsFor(p){const T=thick(p),key=p.mat+'|'+T+'|'+(p.col||'')+'|'+(p.fin||'');if(matC[key])return matC[key];
   const blk=p.mat==='black',oil=p.mat==='oiled',fk=blk?'fb':'fw';
   const ft=canvasTex(fk,()=>cnv(fk,()=>faceCanvas(blk?'black':'birch'))),fn=canvasTex(fk+'n',()=>normalCanvas(cnv(fk,()=>faceCanvas(blk?'black':'birch')),blk?2:5),false,true);
   const et=canvasTex('e'+T,()=>cnv('e'+T,()=>edgeCanvas(T))),en=canvasTex('e'+T+'n',()=>normalCanvas(cnv('e'+T,()=>edgeCanvas(T)),6),false,true);
   const tint=oil?0xf0d2a4:0xffffff;
   const face=new THREE.MeshPhysicalMaterial({map:ft,normalMap:fn,normalScale:new THREE.Vector2(.45,.45),roughness:blk?0.36:oil?0.46:0.64,color:blk?0xffffff:tint,clearcoat:blk?0.35:oil?0.3:0,clearcoatRoughness:0.32});
   const edge=new THREE.MeshStandardMaterial({map:et,normalMap:en,normalScale:new THREE.Vector2(.6,.6),roughness:0.82,color:tint});
+  if(p.col){const c=new THREE.Color(p.col);if(p.fin==='paint'){face.map=null;face.color.copy(c);face.roughness=0.55;face.clearcoat=0.15;face.normalScale.set(.12,.12);edge.color.copy(c).lerp(new THREE.Color(0xffffff),0.15)}else{const k=c.clone().multiplyScalar(1.18);face.color.copy(k);edge.color.copy(k)}face.needsUpdate=true;edge.needsUpdate=true}
   allMats.push(face,edge);return matC[key]=[face,edge]}
 
 /* ---------- panel meshes ---------- */
@@ -519,10 +524,24 @@ function edgeMat(id){return isSel(id)&&!(state.sub&&state.sub.id===id)?edgeMatSe
 /* pockets (offset regions pushed in) are cut with boolean subtraction */
 let CSG=null,csgEval=null,fidN=1;
 import('three-bvh-csg').then(mod=>{CSG=mod;csgEval=new mod.Evaluator();csgEval.attributes=['position','uv','normal'];csgEval.useGroups=true;state.panels.forEach(p=>{if((p.feat||[]).some(f=>f.depth>0))buildMesh(p)})}).catch(e=>console.warn('CSG недоступен',e));
-function bossGeo(p,f){if(f.c){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),h=-f.depth,F=f.s*T/2,g=cylGeo(f,(f.u1-f.u0)/2,h+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(h-1)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),h=-f.depth,F=f.s*T/2;const q={id:p.id*11+f.id,t:p.t};q[SZ[u]]=f.u1-f.u0;q[SZ[v]]=f.v1-f.v0;q[SZ[f.a]]=h+1;
+function bossGeo(p,f){if(!f.c&&f.rr>0){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),h=-f.depth,F=f.s*T/2,g=rrGeo(f.a,f.u1-f.u0,f.v1-f.v0,f.rr,h+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(h-1)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}
+  if(f.c){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),h=-f.depth,F=f.s*T/2,g=cylGeo(f,(f.u1-f.u0)/2,h+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(h-1)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),h=-f.depth,F=f.s*T/2;const q={id:p.id*11+f.id,t:p.t};q[SZ[u]]=f.u1-f.u0;q[SZ[v]]=f.v1-f.v0;q[SZ[f.a]]=h+1;
   const g=makeGeo(q),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(h-1)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}
+function rrShape(w,h,r){r=Math.max(0,Math.min(r,w/2-0.01,h/2-0.01));const s=new THREE.Shape(),x0=-w/2,y0=-h/2,x1=w/2,y1=h/2;s.moveTo(x0+r,y0);s.lineTo(x1-r,y0);if(r>0)s.absarc(x1-r,y0+r,r,-Math.PI/2,0,false);s.lineTo(x1,y1-r);if(r>0)s.absarc(x1-r,y1-r,r,0,Math.PI/2,false);s.lineTo(x0+r,y1);if(r>0)s.absarc(x0+r,y1-r,r,Math.PI/2,Math.PI,false);s.lineTo(x0,y0+r);if(r>0)s.absarc(x0+r,y0+r,r,Math.PI,Math.PI*1.5,false);return s}
+function rrGeo(a,w,h,r,D){const [u,v]=AX.filter(q=>q!==a),right=AXV[u].clone().cross(AXV[v]).dot(AXV[a])>0,g=new THREE.ExtrudeGeometry(right?rrShape(w,h,r):rrShape(h,w,r),{depth:D,bevelEnabled:false,curveSegments:12});g.translate(0,0,-D/2);g.scale(MM,MM,MM);
+  const m=new THREE.Matrix4().makeBasis(right?AXV[u]:AXV[v],right?AXV[v]:AXV[u],AXV[a]);g.applyMatrix4(m);return g}
+function rrLoop(r,w,h,n=10){const pts=[],c=[[w/2-r,-h/2+r,-Math.PI/2],[w/2-r,h/2-r,0],[-w/2+r,h/2-r,Math.PI/2],[-w/2+r,-h/2+r,Math.PI]];for(const [cx,cy,a0] of c)for(let i=0;i<=n;i++){const a=a0+i/n*Math.PI/2;pts.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r])}pts.push(pts[0]);return pts}
+function rrPts(p,f,lift,dep){const [u,v]=AX.filter(q=>q!==f.a),T=p[SZ[f.a]],F=(f.s>0?p[f.a]+T:p[f.a])+(lift?f.s*0.25:0)-f.s*(dep||0),w=f.u1-f.u0,h=f.v1-f.v0,r=Math.min(f.rr,w/2,h/2),cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2;
+  return rrLoop(r,w,h).map(([x,y])=>{const o={};o[u]=p[u]+cu+x;o[v]=p[v]+cv+y;o[f.a]=F;return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)})}
+const shapePts=(p,f,lift,dep)=>f.c?circPts(p,f,lift,dep):rrPts(p,f,lift,dep);
+function filletGeos(p){const t=p.t,[u,v]=AX.filter(q=>q!==t),Su=p[SZ[u]],Sv=p[SZ[v]],T=p[SZ[t]],r=Math.min(p.cr,Su/2-0.5,Sv/2-0.5),out=[];if(r<0.5)return out;
+  for(const su of [-1,1])for(const sv of [-1,1]){const box=new THREE.BoxGeometry(1,1,1),sz={},c={};sz[u]=r+1;sz[v]=r+1;sz[t]=T+4;c[u]=su*(Su/2-(r-1)/2);c[v]=sv*(Sv/2-(r-1)/2);c[t]=0;box.scale(sz.x*MM,sz.y*MM,sz.z*MM);box.translate(c.x*MM,c.y*MM,c.z*MM);
+    const cy=cylGeo({a:t},r,T+6),cc={};cc[u]=su*(Su/2-r);cc[v]=sv*(Sv/2-r);cc[t]=0;cy.translate(cc.x*MM,cc.y*MM,cc.z*MM);
+    try{const A=new CSG.Brush(box),B=new CSG.Brush(cy);A.updateMatrixWorld();B.updateMatrixWorld();const ev=new CSG.Evaluator();ev.attributes=['position','uv','normal'];out.push(ev.evaluate(A,B,CSG.SUBTRACTION).geometry)}catch(e){}}
+  return out}
 function cylGeo(f,r,h){const g=new THREE.CylinderGeometry(r*MM,r*MM,h*MM,64,1);if(f.a==='x')g.rotateZ(Math.PI/2);else if(f.a==='z')g.rotateX(Math.PI/2);return g}
-function pocketGeo(p,f){if(f.c){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2,g=cylGeo(f,(f.u1-f.u0)/2,dd+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(1-dd)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2;const q={id:p.id*7+f.id,t:f.a};q[SZ[u]]=f.u1-f.u0;q[SZ[v]]=f.v1-f.v0;q[SZ[f.a]]=dd+1;
+function pocketGeo(p,f){if(!f.c&&f.rr>0){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2,g=rrGeo(f.a,f.u1-f.u0,f.v1-f.v0,f.rr,dd+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(1-dd)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}
+  if(f.c){const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2,g=cylGeo(f,(f.u1-f.u0)/2,dd+1),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(1-dd)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}const T=p[SZ[f.a]],[u,v]=AX.filter(q=>q!==f.a),thr=f.depth>=T-0.01,dd=thr?T+1:f.depth,F=f.s*T/2;const q={id:p.id*7+f.id,t:f.a};q[SZ[u]]=f.u1-f.u0;q[SZ[v]]=f.v1-f.v0;q[SZ[f.a]]=dd+1;
   const g=makeGeo(q),c={};c[u]=(f.u0+f.u1)/2-p[SZ[u]]/2;c[v]=(f.v0+f.v1)/2-p[SZ[v]]/2;c[f.a]=F+f.s*(1-dd)/2;g.translate(c.x*MM,c.y*MM,c.z*MM);return g}
 function innerMat(){if(matC.inner)return matC.inner;const ft=canvasTex('fw',()=>cnv('fw',()=>faceCanvas('birch'))),fn=canvasTex('fwn',()=>normalCanvas(cnv('fw',()=>faceCanvas('birch')),5),false,true);
   const m=new THREE.MeshStandardMaterial({map:ft,normalMap:fn,normalScale:new THREE.Vector2(.9,.9),color:0xd9c19a,roughness:.88});allMats.push(m);return matC.inner=m}
@@ -537,13 +556,13 @@ function remapCut(geo,p){const g=geo.index?geo.toNonIndexed():geo,pos=g.attribut
   const tot=out.reduce((s,a)=>s+a.length/8,0),P=new Float32Array(tot*3),Nn=new Float32Array(tot*3),U=new Float32Array(tot*2),res=new THREE.BufferGeometry();let k=0;
   out.forEach((arr,gi)=>{const st=k;for(let j=0;j<arr.length;j+=8){P.set(arr.slice(j,j+3),k*3);Nn.set(arr.slice(j+3,j+6),k*3);U.set(arr.slice(j+6,j+8),k*2);k++}if(k>st)res.addGroup(st,k-st,gi)});
   res.setAttribute('position',new THREE.BufferAttribute(P,3));res.setAttribute('normal',new THREE.BufferAttribute(Nn,3));res.setAttribute('uv',new THREE.BufferAttribute(U,2));return res}
-function meshParts(p){const base=makeGeo(p),mats=matsFor(p),fs=(p.feat||[]).filter(f=>Math.abs(f.depth)>0.01);if(!fs.length||!CSG)return{geo:base,mat:mats};
-  try{let r=new CSG.Brush(base,mats);r.updateMatrixWorld();for(const f of fs.filter(f=>f.depth<0)){const b=new CSG.Brush(bossGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.ADDITION)}for(const f of fs.filter(f=>f.depth>0)){const b=new CSG.Brush(pocketGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}return{geo:remapCut(r.geometry,p),mat:[mats[0],mats[1],innerMat()]}}catch(e){console.warn(e);return{geo:base,mat:mats}}}
+function meshParts(p){const base=makeGeo(p),mats=matsFor(p),fs=(p.feat||[]).filter(f=>Math.abs(f.depth)>0.01);if((!fs.length&&!(p.cr>0))||!CSG)return{geo:base,mat:mats};
+  try{let r=new CSG.Brush(base,mats);r.updateMatrixWorld();for(const f of fs.filter(f=>f.depth<0)){const b=new CSG.Brush(bossGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.ADDITION)}for(const f of fs.filter(f=>f.depth>0)){const b=new CSG.Brush(pocketGeo(p,f),mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}if(p.cr>0)for(const g of filletGeos(p)){const b=new CSG.Brush(g,mats);b.updateMatrixWorld();r=csgEval.evaluate(r,b,CSG.SUBTRACTION)}return{geo:remapCut(r.geometry,p),mat:[mats[0],mats[1],innerMat()]}}catch(e){console.warn(e);return{geo:base,mat:mats}}}
 const regionMat=new THREE.LineBasicMaterial({color:0x2a2a2a,transparent:true,opacity:.8});
-function panelLines(p){const pts=[],C=cornersLocal(p);EDGES.forEach(([i,j])=>pts.push(C[i].clone(),C[j].clone()));
-  (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{if(f.c){const T=p[SZ[f.a]],dep=Math.min(f.depth,T);pts.push(...loopSegs(circPts(p,f)),...loopSegs(circPts(p,f,false,dep)));return}const T=p[SZ[f.a]],dep=Math.min(f.depth,T),off=AXV[f.a].clone().multiplyScalar(-f.s*dep*MM);const top=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));top.forEach(([A,B])=>{pts.push(A.clone(),B.clone(),A.clone().add(off),B.clone().add(off))});[top[0][0],top[0][1],top[1][0],top[1][1]].forEach(v=>pts.push(v.clone(),v.clone().add(off)))});
+function panelLines(p){const pts=[],C=cornersLocal(p);if(p.cr>0){const t=p.t,[u,v]=AX.filter(q=>q!==t),Su=p[SZ[u]],Sv=p[SZ[v]],r=Math.min(p.cr,Su/2-0.5,Sv/2-0.5),L=rrLoop(r,Su,Sv);for(const tt of [p[t],p[t]+p[SZ[t]]]){const W=L.map(([x,y])=>{const o={};o[u]=p[u]+Su/2+x;o[v]=p[v]+Sv/2+y;o[t]=tt;return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)});pts.push(...loopSegs(W))}}else EDGES.forEach(([i,j])=>pts.push(C[i].clone(),C[j].clone()));
+  (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{if(f.c||f.rr>0){const T=p[SZ[f.a]],dep=Math.min(f.depth,T);pts.push(...loopSegs(shapePts(p,f)),...loopSegs(shapePts(p,f,false,dep)));return}const T=p[SZ[f.a]],dep=Math.min(f.depth,T),off=AXV[f.a].clone().multiplyScalar(-f.s*dep*MM);const top=['u0','u1','v0','v1'].map(sd=>redgePts(p,f,sd));top.forEach(([A,B])=>{pts.push(A.clone(),B.clone(),A.clone().add(off),B.clone().add(off))});[top[0][0],top[0][1],top[1][0],top[1][1]].forEach(v=>pts.push(v.clone(),v.clone().add(off)))});
   const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c)))}
-function regionLines(p){const pts=[];(p.feat||[]).filter(f=>Math.abs(f.depth)<=0.01).forEach(f=>{if(f.c){pts.push(...loopSegs(circPts(p,f,true)));return}['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
+function regionLines(p){const pts=[];(p.feat||[]).filter(f=>Math.abs(f.depth)<=0.01).forEach(f=>{if(f.c||f.rr>0){pts.push(...loopSegs(shapePts(p,f,true)));return}['u0','u1','v0','v1'].forEach(sd=>{const [A,B]=redgePts(p,f,sd,true);pts.push(A,B)})});if(!pts.length)return null;const c=new THREE.Vector3((p.x+p.w/2)*MM,(p.y+p.h/2)*MM,(p.z+p.d/2)*MM);return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts.map(v=>v.sub(c))),regionMat)}
 function buildMesh(p){(p.feat||[]).forEach(f=>{if(f.id>=fidN)fidN=f.id+1});const old=meshes[p.id];if(old){scene.remove(old);old.geometry.dispose();old.children.forEach(c=>c.geometry.dispose())}
   if(p.hw==='hinge'){if(!hingePlace(p))return;const H=hingeMesh(p),m=H.m;m.castShadow=true;m.userData.id=p.id;const e=new THREE.LineSegments(hwLines(H.gc),edgeMat(p.id));e.visible=view==='build';m.add(e);m.add(H.dm);const e2=new THREE.LineSegments(hwLines(H.gd),edgeMat(p.id));e2.visible=view==='build';H.dm.add(e2);placeMesh(p,m);scene.add(m);meshes[p.id]=m;return}
   const {geo,mat}=p.hw?{geo:hwGeo(p),mat:hwMats}:meshParts(p);const m=new THREE.Mesh(geo,mat);m.castShadow=m.receiveShadow=true;m.userData.id=p.id;
@@ -563,8 +582,8 @@ const HWDEF={angle:{a:25,b:25,w:28,t:2,n:2,dh:4.5,rib:1},slide:{L:400,H:45,T:12.
 const steelMat=new THREE.MeshStandardMaterial({color:0xd4d8de,metalness:0.55,roughness:0.36,envMapIntensity:1.1});
 const steelDark=new THREE.MeshStandardMaterial({color:0xaab0b8,metalness:0.55,roughness:0.4});
 const steelBlack=new THREE.MeshStandardMaterial({color:0x2b2d31,metalness:0.6,roughness:0.45});
-function hwFix(p){const c=pCenter(p);if(p.hw==='angle'){p.w=p.pw;p.h=p.pa;p.d=p.pb}else{p.w=p.pT;p.h=p.pH;p.d=p.pL}p.t='x';if(p.rot){p.x=r4(c.x*1000-p.w/2);p.y=r4(c.y*1000-p.h/2);p.z=r4(c.z*1000-p.d/2)}}
-function mkHW(kind){const id=nextId++;if(kind==='angle'){const d=HWDEF.angle;return{id,hw:'angle',name:'Уголок '+d.a+'×'+d.b+'×'+d.w,pa:d.a,pb:d.b,pw:d.w,pt:d.t,pn:d.n,pd:d.dh,prib:d.rib,w:d.w,h:d.a,d:d.b,x:0,y:0,z:0,t:'x',mat:'steel'}}
+function hwFix(p){const c=pCenter(p);if(p.hw==='rod'){p.w=p.pL;p.h=p.pD;p.d=p.pD}else if(p.hw==='angle'){p.w=p.pw;p.h=p.pa;p.d=p.pb}else{p.w=p.pT;p.h=p.pH;p.d=p.pL}p.t='x';if(p.rot){p.x=r4(c.x*1000-p.w/2);p.y=r4(c.y*1000-p.h/2);p.z=r4(c.z*1000-p.d/2)}}
+function mkHW(kind){const id=nextId++;if(kind==='rod')return{id,hw:'rod',name:'Штанга для вешалок',pL:600,pD:25,w:600,h:25,d:25,x:0,y:0,z:0,t:'x',mat:'steel'};if(kind==='angle'){const d=HWDEF.angle;return{id,hw:'angle',name:'Уголок '+d.a+'×'+d.b+'×'+d.w,pa:d.a,pb:d.b,pw:d.w,pt:d.t,pn:d.n,pd:d.dh,prib:d.rib,w:d.w,h:d.a,d:d.b,x:0,y:0,z:0,t:'x',mat:'steel'}}
   const d=HWDEF.slide;return{id,hw:'slide',name:'Направляющая '+d.L,pL:d.L,pH:d.H,pT:d.T,psec:d.sec,pext:d.ext,w:d.T,h:d.H,d:d.L,x:0,y:0,z:0,t:'x',mat:'steel'}}
 function mergeG(parts){let n=0;parts.forEach(q=>{q.g=q.g.index?q.g.toNonIndexed():q.g;n+=q.g.attributes.position.count});const pos=new Float32Array(n*3),nor=new Float32Array(n*3),uv=new Float32Array(n*2),g=new THREE.BufferGeometry();let o=0;
   parts.forEach(q=>{const a=q.g.attributes;pos.set(a.position.array,o*3);nor.set(a.normal.array,o*3);if(a.uv)uv.set(a.uv.array.subarray(0,a.position.count*2),o*2);g.addGroup(o,a.position.count,q.m);o+=a.position.count;q.g.dispose()});
@@ -573,6 +592,7 @@ const boxG=(x0,y0,z0,x1,y1,z1)=>{const g=new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0
 function plateShape(W,Lg,t,n,dh){const s=new THREE.Shape(),r=Math.min(3,W/5,Lg/5);s.moveTo(0,0);s.lineTo(W,0);s.lineTo(W,Lg-r);s.quadraticCurveTo(W,Lg,W-r,Lg);s.lineTo(r,Lg);s.quadraticCurveTo(0,Lg,0,Lg-r);s.lineTo(0,0);
   const hv=t+(Lg-t)*0.55;for(let i=0;i<n;i++){const hx=W*(i+1)/(n+1),h=new THREE.Path();h.absarc(hx,hv,dh/2,0,Math.PI*2,true);s.holes.push(h)}return s}
 function hwGeo(p){const S=MM,parts=[];
+  if(p.hw==='rod'){const L=p.pL,D=p.pD,cy=new THREE.CylinderGeometry(D/2,D/2,L-4,24);cy.rotateZ(Math.PI/2);cy.translate(L/2,D/2,D/2);parts.push({g:cy,m:0});for(const x of [1,L-1]){const hd=new THREE.CylinderGeometry(D*0.85,D*0.85,2,24);hd.rotateZ(Math.PI/2);hd.translate(x,D/2,D/2);parts.push({g:hd,m:1})}const g=mergeG(parts);g.scale(S,S,S);g.translate(-p.w*S/2,-p.h*S/2,-p.d*S/2);g.computeBoundingBox();g.computeBoundingSphere();return g}
   if(p.hw==='angle'){const W=p.pw,a=p.pa,b=p.pb,t=p.pt,n=Math.max(0,Math.min(6,p.pn|0)),dh=Math.min(p.pd,W/(n+1)*0.9,(Math.min(a,b)-t)*0.8);
     const ok=(n>0&&dh>0.3)?n:0;
     const hz=new THREE.ExtrudeGeometry(plateShape(W,b,t,ok,dh),{depth:t,bevelEnabled:false,curveSegments:16});hz.rotateX(Math.PI/2);hz.translate(0,t,0);parts.push({g:hz,m:0});
@@ -595,15 +615,16 @@ function hwInsp(p){const f=(k,l,u='мм',step='')=>`<label class="fld"><span>${l
   if(p.hw==='angle')return `<div class="grp"><span class="lbl">Металлический уголок</span>${f('pa','Полка A (вверх)')}${f('pb','Полка B (вглубь)')}${f('pw','Ширина')}${f('pt','Толщина металла')}${f('pn','Отверстий на полке','шт')}${f('pd','Диаметр отверстия')}
     <div class="fld"><span>Ребро жёсткости</span><div class="seg" style="grid-column:2/-1"><button data-act="hwrib" data-v="1" aria-pressed="${!!p.prib}">Есть</button><button data-act="hwrib" data-v="0" aria-pressed="${!p.prib}">Нет</button></div></div>
     <p class="note">Всего отверстий: ${2*(p.pn|0)} · под саморез Ø${Math.max(2.5,Math.round((p.pd-0.5)*2)/2)} мм</p></div>`;
+  if(p.hw==='rod')return `<div class="grp"><span class="lbl">Штанга для вешалок</span>${f('pL','Длина')}${f('pD','Диаметр')}<p class="note">Крепится держателями к боковинам секции, обычно на 50–60 мм ниже полки.</p></div>`;
   return `<div class="grp"><span class="lbl">Направляющая для ящика</span>${f('pL','Длина (закрытая)')}${f('pH','Высота')}${f('pT','Толщина (зазор)')}
     <div class="fld"><span>Выдвижение</span><div class="seg" style="grid-column:2/-1"><button data-act="hwsec" data-v="3" aria-pressed="${p.psec!==2}">Полное</button><button data-act="hwsec" data-v="2" aria-pressed="${p.psec===2}">Частичное</button></div></div>
     <label class="fld"><span>Показать открытой</span><input type="range" min="0" max="100" step="5" data-k="hwp" data-p="pext" data-scope="sel" value="${p.pext||0}"><i>${p.pext||0}%</i></label>
     <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="sopen">Выдвинуть</button><button class="btn" style="flex:1" data-act="sclose">Задвинуть</button></div>
     <p class="note">Ход: ${Math.round((p.psec===2?0.72:1)*p.pL)} мм · зазор между ящиком и боковиной = толщине направляющей (${p.pT} мм). Ставится парой — слева и справа.</p></div>`}
-const HWLIM={pa:[8,300],pb:[8,300],pw:[8,200],pt:[0.5,6],pn:[0,6],pd:[1,20],pL:[150,1200],pH:[20,80],pT:[8,20],pext:[0,100]};
+const HWLIM={pD:[16,40],pa:[8,300],pb:[8,300],pw:[8,200],pt:[0.5,6],pn:[0,6],pd:[1,20],pL:[150,1200],pH:[20,80],pT:[8,20],pext:[0,100]};
 function hwSet(p,k,v){const [lo,hi]=HWLIM[k]||[0,1e4];v=Math.max(lo,Math.min(hi,v));if(k==='pn')v=Math.round(v);p[k]=r4(v);hwFix(p);
   if(p.hw==='angle'&&/^Уголок/.test(p.name))p.name='Уголок '+p.pa+'×'+p.pb+'×'+p.pw;if(p.hw==='slide'&&/^Направляющая/.test(p.name))p.name='Направляющая '+p.pL}
-function hwList(){const g=new Map();state.panels.filter(p=>p.hw).forEach(p=>{const key=p.hw==='hinge'?`Петля мебельная ${HOVN[p.ov||'full'].toLowerCase()}, чашка Ø${p.cup} мм, ${p.ang||105}°${p.soft?', с доводчиком':''}`:p.hw==='angle'?`Уголок металлический ${p.pa}×${p.pb}×${p.pw} мм, t=${p.pt} мм, ${2*(p.pn|0)} отв. Ø${p.pd} мм${p.prib?', с ребром':''}`:`Направляющая шариковая ${p.pL} мм, H=${p.pH} мм, ${p.psec===2?'частичное':'полное'} выдвижение`;g.set(key,(g.get(key)||0)+1)});return[...g].map(([name,qty])=>({name,qty}))}
+function hwList(){const g=new Map();state.panels.filter(p=>p.hw).forEach(p=>{const key=p.hw==='rod'?`Штанга для вешалок Ø${p.pD} мм, ${p.pL} мм`:p.hw==='hinge'?`Петля мебельная ${HOVN[p.ov||'full'].toLowerCase()}, чашка Ø${p.cup} мм, ${p.ang||105}°${p.soft?', с доводчиком':''}`:p.hw==='angle'?`Уголок металлический ${p.pa}×${p.pb}×${p.pw} мм, t=${p.pt} мм, ${2*(p.pn|0)} отв. Ø${p.pd} мм${p.prib?', с ребром':''}`:`Направляющая шариковая ${p.pL} мм, H=${p.pH} мм, ${p.psec===2?'частичное':'полное'} выдвижение`;g.set(key,(g.get(key)||0)+1)});return[...g].map(([name,qty])=>({name,qty}))}
 
 /* ---------- hinges & door physics ---------- */
 const HOV={full:18,half:9,inset:-2},HOVN={full:'Накладная',half:'Полунакладная',inset:'Вкладная'};
@@ -668,6 +689,81 @@ function slideStep(dt){let busy=false;for(const id in slideSim){const S=slideSim
   const e=S.to-S.a;let acc=40*e-12*S.v;if(S.to===0&&S.a<15&&S.v<0){const vm=8+S.a*2.2;if(-S.v>vm)S.v=-vm}
   S.v+=acc*dt;S.a=Math.max(0,Math.min(100,S.a+S.v*dt));if(Math.abs(e)<0.2&&Math.abs(S.v)<0.5){S.a=S.to;delete slideSim[id];p.pext=S.a;save()}else busy=true;p.pext=r4(S.a);buildMesh(p)}
   return busy}
+
+/* ---------- parametric products (Japandi plywood) ---------- */
+const PRODS={
+  wardrobe:{name:'Шкаф',f:[['W','Ширина',1200,400,3000],['H','Высота',2100,600,2700],['D','Глубина',580,300,800],['T','Толщина корпуса',18,12,24],['sec','Секций',2,1,5,1],['hang','Секций со штангой',1,0,5,1],['sh','Полок в секции',4,0,10,1],['dr','Ящиков (секция справа)',2,0,5,1],['doors','Двери','1','sel',[['1','Есть'],['0','Нет']]],['pl','Цоколь',80,0,200],['pull','Ручки','cut','sel',[['cut','Вырез'],['none','Тип-он']]],['cc','Цвет корпуса','','col'],['fc','Цвет фасадов','#d8cbb8','col']]},
+  kitchen:{name:'Кухня',f:[['L','Длина',2400,600,6000],['H','Высота нижних',820,700,950],['D','Глубина',560,400,700],['T','Толщина корпуса',18,12,24],['mw','Ширина модуля',600,300,1000],['sink','Мойка в модуле №',2,0,10,1],['hob','Варочная в модуле №',3,0,10,1],['drm','Ящики в модуле №',1,0,10,1],['top','Столешница, мм',30,18,40],['upper','Верхние шкафы','1','sel',[['1','Есть'],['0','Нет']]],['uh','Высота верхних',720,300,1000],['ud','Глубина верхних',320,200,450],['uy','Низ верхних от пола',1450,1200,1800],['pl','Цоколь',100,0,200],['pull','Ручки','cut','sel',[['cut','Вырез'],['none','Тип-он']]],['cc','Цвет корпуса','','col'],['fc','Цвет фасадов','#f1ece3','col']]},
+  dresser:{name:'Комод',f:[['W','Ширина',900,400,2000],['H','Высота',850,400,1300],['D','Глубина',450,300,600],['T','Толщина',18,12,24],['cols','Колонок ящиков',1,1,3,1],['n','Ящиков в колонке',4,1,8,1],['legs','Ножки, мм',120,0,300],['pull','Ручки','cut','sel',[['cut','Вырез'],['none','Тип-он']]],['cc','Цвет корпуса','','col'],['fc','Цвет фасадов','#d8b787','col']]},
+  shelf:{name:'Стеллаж',f:[['W','Ширина',900,300,3000],['H','Высота',1800,400,2700],['D','Глубина',350,200,600],['T','Толщина',18,12,24],['sec','Секций',2,1,6,1],['sh','Полок в секции',4,1,12,1],['back','Задняя стенка','1','sel',[['1','Есть'],['0','Нет']]],['pl','Цоколь',60,0,200],['cc','Цвет','','col']]},
+  bedside:{name:'Тумба',f:[['W','Ширина',450,300,800],['H','Высота',550,300,900],['D','Глубина',400,250,600],['T','Толщина',18,12,24],['dr','Ящиков',1,0,3,1],['legs','Ножки, мм',150,0,300],['pull','Ручки','cut','sel',[['cut','Вырез'],['none','Тип-он']]],['cc','Цвет корпуса','','col'],['fc','Цвет фасадов','#b9a48e','col']]},
+  table:{name:'Стол',f:[['W','Длина',1400,600,3000],['D','Ширина',750,400,1200],['H','Высота',750,400,1100],['T','Толщина столешницы',24,18,40],['r','Скругление углов',40,0,200],['cc','Цвет','','col']]}
+};
+const prodDef=t=>{const P={};PRODS[t].f.forEach(f=>P[f[0]]=f[2]);return P};
+function genProduct(rec){const P=rec.P,o={x:rec.x||0,y:rec.y||0,z:rec.z||0},out=[],T=+P.T||18,BK=6,G=2;let fid=1;
+  const col=(q,c)=>{if(c){const e=PAL.find(x=>x[0]===c);q.col=c;q.fin=e?e[2]:'paint'}return q};
+  const B=(name,x,y,z,w,h,d,t,c=P.cc)=>{const q={id:nextId++,name,w:r4(w),h:r4(h),d:r4(d),x:r4(o.x+x),y:r4(o.y+y),z:r4(o.z+z),t,mat:'birch',prod:rec.id};col(q,c);out.push(q);return q};
+  const pull=(q,kind,where,vp)=>{if(P.pull!=='cut'||!q)return;const t=q.t,[u,v]=AX.filter(a=>a!==t),Su=q[SZ[u]],Sv=q[SZ[v]];let w,h,cu,cv;
+    if(kind==='h'){w=Math.min(110,Su*0.4);h=26;cu=Su/2;cv=Sv-22-h/2}else{w=26;h=Math.min(120,Sv*0.3);cu=where==='l'?24+w/2:Su-24-w/2;const lo=50+h/2,hi=Sv-50-h/2;cv=vp==='top'?hi:vp==='bot'?lo:Math.max(lo,Math.min(hi,1000-(q.y-o.y)))}
+    q.feat=(q.feat||[]).concat({id:fid++,a:t,s:1,u0:r4(cu-w/2),u1:r4(cu+w/2),v0:r4(cv-h/2),v1:r4(cv+h/2),depth:q[SZ[t]],rr:13})};
+  const hinges=(door,side)=>{door.door={side,max:105,soft:1};const t=door.t,P2=AX.filter(a=>a!==t),vax=P2.includes('y')?'y':P2[1],hax=P2.find(a=>a!==vax),eAx=AX.find(a=>a!==t&&a!==hax),Lh=door[SZ[eAx]],n=Lh<=900?2:Lh<=1600?3:Lh<=2000?4:5;
+    for(let i=0;i<n;i++)out.push({id:nextId++,hw:'hinge',name:'Петля',door:door.id,pos:r4(n===1?Lh/2:100+(Lh-200)*i/(n-1)),cup:35,ov:'full',soft:1,ang:105,t:'x',mat:'steel',x:0,y:0,z:0,w:1,h:1,d:1,prod:rec.id})};
+  const slide=(x,y,z,L,side)=>{const s=mkHW('slide');s.pL=Math.max(250,Math.min(600,Math.floor((L)/50)*50));s.prod=rec.id;hwFix(s);s.x=r4(o.x+x-(side<0?12.7:0));s.y=r4(o.y+y);s.z=r4(o.z+z);out.push(s)};
+  /* drawer: front overlay at z=front, box inside [x0,x1] */
+  const drawer=(x0,x1,y0,y1,zFront,depth,fx0,fx1,fc)=>{const fr=B('Фасад ящика',fx0,y0,zFront,fx1-fx0,y1-y0,T,'z',fc);pull(fr,'h');
+    const bx0=x0+13.7,bx1=x1-13.7,bh=Math.max(60,(y1-y0)-40),bd=Math.max(250,Math.floor((depth-30)/50)*50),by=y0+15,bz=zFront-bd;
+    B('Ящик · бок',bx0,by,bz,12,bh,bd,'x');B('Ящик · бок',bx1-12,by,bz,12,bh,bd,'x');B('Ящик · задняя',bx0+12,by,bz,bx1-bx0-24,bh,12,'z');B('Ящик · передняя',bx0+12,by,zFront-12,bx1-bx0-24,bh,12,'z');B('Ящик · дно',bx0+12,by,bz+12,bx1-bx0-24,6,bd-24,'y');
+    slide(x0,by+4,bz,bd,-1);slide(bx1,by+4,bz,bd,1)};
+  const carcass=(x,y,W,H,D,opts={})=>{const s=[B('Боковина',x,y,0,T,H,D,'x'),B('Боковина',x+W-T,y,0,T,H,D,'x')];B('Дно',x+T,y,0,W-2*T,T,D,'y');
+    if(opts.rails){B('Царга передняя',x+T,y+H-T,D-100,W-2*T,T,100,'y');B('Царга задняя',x+T,y+H-T,0,W-2*T,T,100,'y')}else B('Крышка',x+T,y+H-T,0,W-2*T,T,D,'y');
+    if(opts.back!==false)B('Задняя стенка',x+T,y+T,0,W-2*T,H-2*T,BK,'z');return s};
+  const t=rec.type;
+  if(t==='wardrobe'){const W=+P.W,H=+P.H,D=+P.D,pl=+P.pl,n=Math.max(1,P.sec|0),door=P.doors==='1',cd=door?D-T:D;
+    B('Боковина',0,0,0,T,H,cd,'x');B('Боковина',W-T,0,0,T,H,cd,'x');B('Крышка',T,H-T,0,W-2*T,T,cd,'y');B('Дно',T,pl,0,W-2*T,T,cd,'y');if(pl>0)B('Цоколь',T,0,cd-50-T,W-2*T,pl,T,'z');B('Задняя стенка',T,pl+T,0,W-2*T,H-pl-2*T,BK,'z');
+    const iw=(W-2*T-(n-1)*T)/n,top=H-T,bot=pl+T;
+    for(let i=0;i<n;i++){const x0=T+i*(iw+T),x1=x0+iw;if(i>0)B('Перегородка',x0-T,bot,BK,T,top-bot,cd-BK,'x');
+      const hang=i<(P.hang|0),last=i===n-1,ndr=last?(P.dr|0):0,drH=180;let y0=bot;
+      if(ndr){const zf=door?cd-T-3:cd;for(let k=0;k<ndr;k++){drawer(x0,x1,y0+k*drH+G,y0+(k+1)*drH,zf,zf-BK,door?x0+2:x0+1,door?x1-2:x1-1,P.fc)}y0+=ndr*drH;B('Полка',x0,y0,BK,iw,T,cd-BK-20,'y');y0+=T}
+      if(hang){const sy=top-320;B('Полка',x0,sy,BK,iw,T,cd-BK-20,'y');const rod=mkHW('rod');rod.pL=r4(iw);rod.prod=rec.id;hwFix(rod);rod.x=r4(o.x+x0);rod.y=r4(o.y+sy-60);rod.z=r4(o.z+cd/2-12.5);out.push(rod)}
+      else{const k=P.sh|0;for(let j=1;j<=k;j++){const yy=y0+(top-y0)*j/(k+1);B('Полка',x0,yy,BK,iw,T,cd-BK-20,'y')}}}
+    if(door){const dw=[],bnd=i=>i===0?0:i===n?W:T+i*(iw+T)-T/2;for(let i=0;i<n;i++){const x0=bnd(i),x1=bnd(i+1);const sw=x1-x0;if(sw>650){dw.push([x0,x0+sw/2,'left'],[x0+sw/2,x1,'right'])}else dw.push([x0,x1,i<n/2?'left':'right'])}
+      const doorH=H-pl-G;for(const [a0,a1,side] of dw){const d=B('Дверь',a0+G/2,pl+G/2,cd,a1-a0-G,doorH-G/2,T,'z',P.fc);pull(d,'v',side==='left'?'r':'l','auto');hinges(d,side)}
+      }}
+  else if(t==='kitchen'){const L=+P.L,H=+P.H,D=+P.D,pl=+P.pl,mw=+P.mw,ct=+P.top;let n=Math.max(1,Math.round(L/mw)),wds=Array(n).fill(L/n);
+    const ch=H-pl;let x=0;for(let i=0;i<n;i++){const W=wds[i],m=i+1;carcass(x,pl,W,ch,D-T,{rails:true});
+      if(m===(P.drm|0)){const k=3,hh=(ch-G*k)/k;for(let j=0;j<k;j++)drawer(x+T,x+W-T,pl+j*(hh+G)+G,pl+(j+1)*(hh+G),D-T,D-T-BK,x+G/2,x+W-G/2,P.fc)}
+      else{if(m!==(P.sink|0))B('Полка',x+T,pl+ch/2,BK,W-2*T,T,D-T-BK-30,'y');const two=W>500,dw=two?(W-G)/2:W-G;for(let j=0;j<(two?2:1);j++){const d=B('Дверь',x+G/2+j*(dw+G/2),pl+G,D-T,dw-(two?G/2:0),ch-2*G,T,'z',P.fc);pull(d,'v',two?(j===0?'r':'l'):'r','top');hinges(d,two?(j===0?'left':'right'):'left')}}
+      x+=W}
+    if(pl>0)B('Цоколь',0,0,D-T-60,L,pl,T,'z');
+    const top=B('Столешница',0,H,0,L,ct,D+20,'y','');top.cr=6;const cut=(i,w,h,r)=>{if(i<1||i>n)return;const cx=wds.slice(0,i-1).reduce((a,b)=>a+b,0)+wds[i-1]/2;top.feat=(top.feat||[]).concat({id:fid++,a:'y',s:1,u0:r4(cx-w/2),u1:r4(cx+w/2),v0:r4((D+20)/2-h/2+20),v1:r4((D+20)/2+h/2+20),depth:ct,rr:r})};
+    cut(P.sink|0,Math.min(500,wds[0]-120),420,40);cut(P.hob|0,Math.min(560,wds[0]-60),490,10);
+    if(P.upper==='1'){const uh=+P.uh,ud=+P.ud,uy=+P.uy;let ux=0;for(let i=0;i<n;i++){const W=wds[i];carcass(ux,uy,W,uh,ud-T);B('Полка',ux+T,uy+uh/2,BK,W-2*T,T,ud-T-BK-20,'y');const two=W>500,dw=two?(W-G)/2:W-G;for(let j=0;j<(two?2:1);j++){const d=B('Дверь верхняя',ux+G/2+j*(dw+G/2),uy+G,ud-T,dw-(two?G/2:0),uh-2*G,T,'z',P.fc);pull(d,'v',two?(j===0?'r':'l'):'r','bot');hinges(d,two?(j===0?'left':'right'):'left')}ux+=W}}}
+  else if(t==='dresser'||t==='bedside'){const W=+P.W,H=+P.H,D=+P.D,lg=+P.legs,cols=t==='bedside'?1:Math.max(1,P.cols|0),nd=t==='bedside'?(P.dr|0):Math.max(1,P.n|0),ch=H-lg,cd=D-T;
+    carcass(0,lg,W,ch,cd);if(lg>0)for(const [lx,lz] of [[30,30],[W-70,30],[30,cd-70],[W-70,cd-70]])B('Ножка',lx,0,lz,40,lg,40,'x');
+    const iw=(W-2*T-(cols-1)*T)/cols;for(let c=0;c<cols;c++){const x0=T+c*(iw+T),x1=x0+iw;if(c>0)B('Перегородка',x0-T,lg+T,BK,T,ch-2*T,cd-BK,'x');
+      const zoneH=t==='bedside'?Math.min(ch-2*T,nd*170):ch-2*T,yTop=lg+ch-T;if(t==='bedside'&&nd<1){B('Полка',x0,lg+ch/2,BK,iw,T,cd-BK-20,'y');continue}
+      const hh=zoneH/nd;for(let k=0;k<nd;k++){const y1=yTop-k*hh,y0=y1-hh;drawer(x0,x1,y0+G/2,y1-G/2,cd,cd-BK,(c===0?0:x0-T/2)+G/2,(c===cols-1?W:x1+T/2)-G/2,P.fc)}
+      if(t==='bedside'&&zoneH<ch-2*T-60)B('Полка',x0,lg+T+(ch-2*T-zoneH)/2,BK,iw,T,cd-BK-20,'y')}}
+  else if(t==='shelf'){const W=+P.W,H=+P.H,D=+P.D,pl=+P.pl,n=Math.max(1,P.sec|0),k=Math.max(1,P.sh|0),bk=P.back==='1';
+    B('Боковина',0,0,0,T,H,D,'x');B('Боковина',W-T,0,0,T,H,D,'x');B('Крышка',T,H-T,0,W-2*T,T,D,'y');B('Дно',T,pl,0,W-2*T,T,D,'y');if(pl>0)B('Цоколь',T,0,D-40-T,W-2*T,pl,T,'z');if(bk)B('Задняя стенка',T,pl+T,0,W-2*T,H-pl-2*T,BK,'z');
+    const iw=(W-2*T-(n-1)*T)/n,z0=bk?BK:0;for(let i=0;i<n;i++){const x0=T+i*(iw+T);if(i>0)B('Стойка',x0-T,pl+T,z0,T,H-pl-2*T,D-z0,'x');for(let j=1;j<k;j++)B('Полка',x0,pl+T+(H-pl-2*T)*j/k-T/2,z0,iw,T,D-z0,'y')}}
+  else if(t==='table'){const W=+P.W,D=+P.D,H=+P.H,TT=+P.T;const top=B('Столешница',0,H-TT,0,W,TT,D,'y');top.cr=+P.r||0;
+    const lw=D-120;B('Опора',90,0,60,T*1.33,H-TT,lw,'x');B('Опора',W-90-T*1.33,0,60,T*1.33,H-TT,lw,'x');B('Царга',90+T*1.33,H-TT-140,D/2-T/2,W-180-2*T*1.33,120,T,'z');
+    const leg=out.filter(q=>q.name==='Опора');leg.forEach(q=>{q.feat=[{id:fid++,a:'x',s:1,u0:r4(80),u1:r4(q.h-160),v0:r4(lw/2-60),v1:r4(lw/2+60),depth:q.w,rr:60}]})}
+  return out}
+function placeProduct(rec,keepPos){if(keepPos){const old=state.panels.filter(q=>q.prod===rec.id&&!q.hw);if(old.length){const b=bbox(old);rec.x=b.x0;rec.y=b.y0;rec.z=b.z0}}
+  state.panels=state.panels.filter(q=>q.prod!==rec.id);const items=genProduct(rec);items.sort((a,b)=>(a.hw==='hinge')-(b.hw==='hinge'));state.panels.push(...items);return items}
+function addProduct(type){const rec={id:(state.prods||[]).reduce((m,r)=>Math.max(m,r.id),0)+1,type,P:prodDef(type),x:0,y:0,z:0};state.prods=state.prods||[];
+  const ex=BRD();if(ex.length){const b=bbox(ex);rec.x=Math.round(b.x1+250);rec.z=b.z0}else state.name=PRODS[type].name+' TR-01';
+  rec.name=PRODS[type].name+' '+(state.prods.filter(r=>r.type===type).length+1);pushUndo();state.prods.push(rec);const items=placeProduct(rec);isoId=null;state.sel=items[0].id;state.multi=null;rebuildAll();save();renderInsp();fitView();
+  toast(`Добавлено: ${rec.name} · параметры справа · клик по любой его детали откроет их снова`,4500)}
+function prodOf(p){return p&&p.prod&&(state.prods||[]).find(r=>r.id===p.prod)||null}
+function prodHTML(rec){const fs=PRODS[rec.type].f;return `<div class="grp"><span class="lbl">Изделие · ${esc(rec.name)}</span><p class="note">Параметры пересобирают изделие целиком — ручные правки его деталей сбросятся.</p>
+  ${fs.map(([k,l,d,a,b,step])=>a==='sel'?`<div class="fld"><span>${l}</span><div class="seg" style="grid-column:2/-1">${b.map(([v,n])=>`<button data-act="prodsel" data-k="${k}" data-v="${v}" aria-pressed="${String(rec.P[k])===v}">${n}</button>`).join('')}</div></div>`
+    :a==='col'?`<div class="fld" style="grid-template-columns:1fr"><span>${l}</span><div class="pal">${PAL.map(([c,n])=>`<button data-act="prodcol" data-k="${k}" data-c="${c}" title="${n}" aria-pressed="${(rec.P[k]||'')===c}"><span style="background:${c||'#e2cda4'}"></span></button>`).join('')}</div></div>`
+    :`<label class="fld"><span>${l}</span><input data-k="prodp" data-p="${k}" inputmode="decimal" value="${rec.P[k]}"><i>${step?'шт':'мм'}</i></label>`).join('')}
+  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="prodselall">Выделить изделие</button><button class="btn" style="flex:1" data-act="produngroup">Разгруппировать</button></div></div>`}
+function prodSet(rec,k,v){const f=PRODS[rec.type].f.find(x=>x[0]===k);if(f&&typeof f[2]==='number'){v=num(v);if(!isFinite(v))return false;v=Math.max(f[3],Math.min(f[4],v));if(f[5])v=Math.round(v)}pushUndo();rec.P[k]=v;const sel=selP(),items=placeProduct(rec,true);rebuildAll();state.sel=(items.find(q=>sel&&q.name===sel.name)||items[0]).id;state.multi=null;save();renderInsp();return true}
 
 /* ---------- selection ---------- */
 let hoverId=null;
@@ -773,7 +869,7 @@ function gzHit(){if(!gizmo.visible)return null;gizmo.updateMatrixWorld();const h
 function corners(p){const a=cornersLocal(p);if(!p.rot)return a;const c=pCenter(p),q=rotQ(p);return a.map(v=>v.sub(c).applyQuaternion(q).add(c))}
 const EDGES=[];for(let i=0;i<8;i++)for(let b=0;b<3;b++)if(!(i&(1<<b)))EDGES.push([i,i|(1<<b)]);
 function rayLine(o,d,clamp){const r=o.clone().sub(ray.ray.origin),d2=ray.ray.direction,A=d.dot(d),B=d.dot(d2),C=d.dot(r),E=d2.dot(d2),F=d2.dot(r),den=A*E-B*B;let s=den>1e-12?(B*F-C*E)/den:0;if(clamp)s=Math.max(0,Math.min(1,s));return o.clone().addScaledVector(d,s)}
-function pickRegionLine(mx,my,p){let best=null,bd=7;for(const f of p.feat||[]){const segs=[];if(f.c){const L=circPts(p,f,true);for(let i=0;i<L.length-1;i++)segs.push([L[i],L[i+1]]);if(Math.abs(f.depth)>0.01){const B=circPts(p,f,false,Math.min(Math.max(f.depth,0),p[SZ[f.a]]));for(let i=0;i<B.length-1;i++)segs.push([B[i],B[i+1]])}}else ['u0','u1','v0','v1'].forEach(sd=>segs.push(redgePts(p,f,sd,true)));
+function pickRegionLine(mx,my,p){let best=null,bd=7;for(const f of p.feat||[]){const segs=[];if(f.c||f.rr>0){const L=shapePts(p,f,true);for(let i=0;i<L.length-1;i++)segs.push([L[i],L[i+1]]);if(Math.abs(f.depth)>0.01){const B=shapePts(p,f,false,Math.min(Math.max(f.depth,0),p[SZ[f.a]]));for(let i=0;i<B.length-1;i++)segs.push([B[i],B[i+1]])}}else ['u0','u1','v0','v1'].forEach(sd=>segs.push(redgePts(p,f,sd,true)));
   for(const [A,B] of segs){const d=segDistPx(mx,my,A,B);if(d<bd){bd=d;best=f}}}return best}
 function segDistPx(mx,my,a,b){const A=scr(a),B=scr(b);if(A.z>1||B.z>1)return 1e9;const dx=B.x-A.x,dy=B.y-A.y,L=dx*dx+dy*dy;let t=L?((mx-A.x)*dx+(my-A.y)*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(A.x+dx*t-mx,A.y+dy*t-my)}
 function lineDistPx(mx,my,a,b){const A=scr(a),B=scr(b),dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy);if(L<1e-3)return 1e9;return Math.abs((mx-A.x)*dy-(my-A.y)*dx)/L}
@@ -1088,7 +1184,7 @@ function act(a){
   if(a==='cols'){DOCK.rail.cols=DOCK.rail.cols===2?1:2;saveDock();layoutPanels();return}
   if(a==='hwpop'){const pp=$('#hwpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;$('#viewpop').hidden=true;placePop(pp,$('[data-act=hwpop]'));return}
   if(a==='viewpop'){const pp=$('#viewpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;placePop(pp,$('[data-act=viewpop]'));return}
-  if(a==='tplpop'){$('#viewpop').hidden=true;const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.keys(TPL).map(n=>`<button class="btn" data-act="tpl" data-n="${n}">${n}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
+  if(a==='tplpop'){$('#viewpop').hidden=true;const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.entries(PRODS).map(([k,v])=>`<button class="btn" data-act="prodadd" data-n="${k}">${v.name}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
     const rr=$('#rail').getBoundingClientRect(),br=$('[data-act=tplpop]').getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?rr.top-sr.top-pp.offsetHeight-8:rr.bottom-sr.top+8)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?rr.left-sr.left-pp.offsetWidth-8:rr.right-sr.left+8)+'px'}return}
   if(a==='snap'){state.snap=!state.snap;$('[data-act="snap"]').setAttribute('aria-pressed',state.snap);return toast(state.snap?'Шаг 10 мм включён':'Шаг выключен — точность 0,0001 мм')}
   if(a==='del'&&selGuide>=0){state.guides.splice(selGuide,1);selGuide=-1;buildGuides();save();toast('Направляющая удалена');return}
@@ -1119,6 +1215,7 @@ window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/
   if(code==='KeyQ'&&e.shiftKey){act('rot');return}
   if(code==='Slash'||k==='?'){toggleHelp();return}
   if(code==='KeyZ'){fitView();return}
+  if(code==='KeyK'){const el=$('#frrIn')||$('#pcrIn');if(el){e.preventDefault();el.focus();el.select();toast('Введите радиус скругления в мм и Enter')}else toast('Выберите доску или прямоугольную область');return}
   const tools={KeyC:'circle',KeyL:'edge',KeyQ:'rotate',KeyM:'move',KeyP:'push',KeyR:'board',KeyB:'board',KeyG:'magnet',KeyE:'erase',KeyT:'tape',KeyO:'orbit',KeyH:'pan',KeyF:'offset'};if(tools[code]){const keep=state.sub,keepAll=state.subs.slice();setTool(tools[code]);if(keep){subSet(keepAll,keep);showSub();if(code==='KeyF'&&keep.kind==='face'){startOffset(panelById(keep.id),keep.a,keep.s)}}return}
 if(code==='KeyS'){act('snap');return}
   const cv2={Digit1:'front',Digit2:'top',Digit3:'right',Digit4:'left',Digit5:'back',Digit6:'bottom',Digit0:'iso',Numpad1:'front',Numpad2:'top',Numpad3:'right',Numpad0:'iso'};if(cv2[code]){setCamView(cv2[code]);return}
@@ -1128,8 +1225,9 @@ if(code==='KeyS'){act('snap');return}
 function placePop(pp,btn){const br=btn.getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?br.top-sr.top-pp.offsetHeight-12:br.bottom-sr.top+12)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?br.left-sr.left-pp.offsetWidth-12:br.right-sr.left+12)+'px'}}
 $('#viewpop').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b)return;setCamView(b.dataset.view);$('#viewpop').hidden=true});
 $('#tplpop').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
+  if(a==='prodadd'){$('#tplpop').hidden=true;addProduct(b.dataset.n);return}
   if(a==='tpl'){if(isoId!=null)setIso(null);pushUndo();state.panels=TPL[b.dataset.n]();state.name=b.dataset.n+' TR-01';state.sel=null;state.multi=null;rebuildAll();save();renderInsp();fitView();$('#tplpop').hidden=true;return}
-  if(a==='clear'){if(b.dataset.armed){pushUndo();state.panels=[];state.sel=null;state.multi=null;rebuildAll();save();renderInsp()}else{b.dataset.armed=1;b.textContent='Точно очистить? Нажмите ещё раз'}return}});
+  if(a==='clear'){if(b.dataset.armed){pushUndo();state.panels=[];state.prods=[];state.sel=null;state.multi=null;rebuildAll();save();renderInsp()}else{b.dataset.armed=1;b.textContent='Точно очистить? Нажмите ещё раз'}return}});
 $('#keys').addEventListener('click',e=>{if(e.target.closest('[data-act="help"]'))toggleHelp(false)});
 /* ---------- dockable toolbar & inspector ---------- */
 const DOCK={rail:{side:'left'},insp:{side:'right'}};try{Object.assign(DOCK,JSON.parse(localStorage.getItem('bat_dock2')||'{}'))}catch(e){}
@@ -1171,7 +1269,7 @@ function fldsHTML(o,scope){return AX.map(a=>{const lab={x:'Ширина',y:'Вы
   if(a===o.t)return `<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>Толщина</span><input id="${scope}-T" data-k="T" data-scope="${scope}" list="thkL" inputmode="decimal" value="${o[SZ[a]]}"><i>мм</i></label>`;
   return `<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${lab}</span><input id="${scope}-${SZ[a]}" data-k="${SZ[a]}" data-scope="${scope}" inputmode="decimal" value="${o[SZ[a]]}"><i>мм</i></label>`}).join('')}
 const orientHTML=(o,scope)=>`<div class="seg">${[['y','Полка'],['z','Стенка'],['x','Боковина']].map(([t,n])=>`<button data-act="orient" data-t="${t}" data-scope="${scope}" aria-pressed="${o.t===t}">${n}</button>`).join('')}</div>`;
-const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>`;
+const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>${o.mat==='black'?'':`<span class="lbl" style="margin-top:10px">Цвет · морилка или краска</span><div class="pal">${PAL.map(([c,n,f])=>`<button data-act="col" data-c="${c}" data-fin="${f}" data-scope="${scope}" title="${n}${f==='paint'?' · краска':f==='stain'?' · морилка, видна текстура':''}" aria-pressed="${(o.col||'')===c}"><span style="background:${c||'#e2cda4'}${f==='stain'?';box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)':''}"></span></button>`).join('')}<label title="Свой цвет"><input type="color" data-k="pcol" data-scope="${scope}" value="${o.col||'#d8cbb8'}"></label></div><p class="note" style="margin:4px 0 0">${o.col?colName(o)+(o.fin==='paint'?' · краска':' · морилка'):'Натуральный цвет фанеры'}</p>`}`;
 const dimsTxt=p=>{if(p.hw)return p.hw==='hinge'?'петля':p.hw==='slide'?'направл.':'уголок';const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${nf(d[0])}×${nf(d[1])}×${nf(thick(p))}`};
 function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>')}
 function featList(p){const fs=p.feat||[];if(!fs.length)return'';const T=a=>p[SZ[a]];
@@ -1181,6 +1279,7 @@ function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.
     extra=sec?`<div class="grp"><span class="lbl">${f.c?'Шкант':'Шип / паз'} · соединение с «${esc(sec.q.name)}»</span><p class="note">За этой доской вплотную стоит «${esc(sec.q.name)}»${sec.q.rot?' (под углом)':''}. Выровняйте ${f.c?'круг':'прямоугольник'} по её центру и продолжите ${f.c?'отверстие':'вырез'} в неё — получится соединение на ${f.c?'шкант':'шип'}.</p>
       <button class="btn" data-act="dalign">Поставить по центру «${esc(sec.q.name)}»</button>
       <label class="fld"><span>Глубина во второй детали</span><input id="dowelDepth" inputmode="decimal" value="${state.dowelD||30}"><i>мм</i></label><button class="btn" data-act="dowel">${f.c?'Просверлить':'Пропилить'} насквозь и в «${esc(sec.q.name)}»</button></div>`:`<p class="note">За этой областью нет другой доски вплотную — соединение на шкант или шип сделать не с чем.</p>`}}
+  if(S.kind==='region'){const f=featById(p,S.fid);if(f&&!f.c)extra=`<label class="fld"><span>Скругление углов · K</span><input id="frrIn" data-k="frr" data-scope="sel" inputmode="decimal" value="${f.rr||0}"><i>мм</i></label>`+extra}
   return `<p class="multi sub">${t}</p>${extra}`}
 function faceP(p,a,s,u,v,uu,vv,lift){const T=p[SZ[a]],o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[a]=(s>0?p[a]+T:p[a])+s*(lift||0);return new THREE.Vector3(o.x*MM,o.y*MM,o.z*MM)}
 /* cross-sections of boards standing right behind face (p,a,s): polygon in p's face coords + centre line of the board's thickness */
@@ -1245,16 +1344,16 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Материал</span>${matHTML(nb,'nb')}</div>
     <div class="grp"><span class="lbl">Размер по умолчанию</span><div class="fld"><span>Длина</span><input id="nb-w" data-k="w" data-scope="nb" value="${nb.w}"><i>мм</i></div><div class="fld"><span>Ширина</span><input id="nb-d" data-k="d" data-scope="nb" value="${nb.d}"><i>мм</i></div></div>`;return}
   if(p&&p.hw==='hinge'){insp.innerHTML=`<div class="grp"><h2>Фурнитура</h2><h3 style="margin:0">Петля</h3></div>${hingeHTML(p)}<div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
-  if(p&&p.hw){const n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Фурнитура</h2><label class="lbl" for="sel-name">Название</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
+  if(p&&p.hw){const n=selIds().length,pr=prodOf(p);insp.innerHTML=`${pr?prodHTML(pr):''}<div class="grp"><h2>Фурнитура</h2><label class="lbl" for="sel-name">Название</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
     ${hwInsp(p)}
     ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}</div>`:''}
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
-  if(p){const T=thick(p),n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
+  if(p){const T=thick(p),n=selIds().length,pr=prodOf(p);insp.innerHTML=`${pr?prodHTML(pr):''}<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
     ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n<2?featList(p):''}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
     ${doorHTML(p)}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
-    <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}</div>
+    <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}<label class="fld"><span>Скругление углов · K</span><input id="pcrIn" data-k="pcr" data-scope="sel" inputmode="decimal" value="${p.cr||0}"><i>мм</i></label></div>
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
     <div class="grp"><span class="lbl">Материал · ${T} мм</span>${matHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
@@ -1271,6 +1370,10 @@ insp.addEventListener('change',e=>{const el=e.target,k=el.dataset.k;if(!k)return
   if(k==='olname'){const p=panelById(+el.dataset.id);if(!p)return;pushUndo();p.name=el.value.trim()||'Деталь';el.readOnly=true;save();renderInsp();return}
   const o=el.dataset.scope==='nb'?state.nb:selP();if(!o)return;
   if(k==='name'){pushUndo();o.name=el.value.trim()||'Деталь';save();renderInsp();return}
+  if(k==='pcol'){const o2=el.dataset.scope==='nb'?state.nb:selP();if(!o2)return;if(o2!==state.nb)pushUndo();(o2===state.nb?[o2]:selPanels().filter(q=>!q.hw)).forEach(q=>{q.col=el.value;q.fin='paint';if(q!==state.nb)buildMesh(q)});if(o2!==state.nb)save();renderInsp();return}
+  if(k==='frr'){const S=state.sub,f=S&&featById(o,S.fid);const v=num(el.value);if(!f||!isFinite(v)||v<0)return renderInsp();pushUndo();f.rr=r4(Math.min(v,Math.min(f.u1-f.u0,f.v1-f.v0)/2));if(!f.rr)delete f.rr;buildMesh(o);save();renderInsp();return}
+  if(k==='pcr'){const v=num(el.value);if(!isFinite(v)||v<0)return renderInsp();pushUndo();selPanels().filter(q=>!q.hw).forEach(q=>{const [u,v2]=AX.filter(x=>x!==q.t);q.cr=r4(Math.min(v,q[SZ[u]]/2-0.5,q[SZ[v2]]/2-0.5));if(!q.cr)delete q.cr;buildMesh(q)});save();renderInsp();return}
+  if(k==='prodp'){const pr=prodOf(selP());if(pr&&!prodSet(pr,el.dataset.p,el.value))renderInsp();return}
   if(k==='hgp'){const v=num(el.value);if(!isFinite(v))return renderInsp();pushUndo();o[el.dataset.p]=r4(Math.max(0,v));buildMesh(o);save();renderInsp();return}
   if(k==='hwp'){const v=num(el.value);if(!isFinite(v))return renderInsp();pushUndo();selPanels().filter(q=>q.hw===o.hw).forEach(q=>{hwSet(q,el.dataset.p,v);buildMesh(q)});save();fitShadows();renderInsp();return}
   if(k==='rot'){const v=num(el.value);if(!isFinite(v))return;const eu=rotEuler(o);eu[+el.dataset.i]=v;pushUndo();setRotation(o,new THREE.Quaternion().setFromEuler(new THREE.Euler(...eu.map(d=>d*Math.PI/180),'XYZ')));buildMesh(o);placeHandles();save();fitShadows();renderInsp();return}
@@ -1284,6 +1387,7 @@ insp.addEventListener('dblclick',e=>{const el=e.target.closest('input[data-k="ol
 insp.addEventListener('keydown',e=>{const el=e.target;if(el.dataset&&el.dataset.k==='olname'&&e.key==='Enter')el.blur();if(e.key==='Escape')el.blur()});
 insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e.target.matches('input')&&!e.target.readOnly)){setSel(+row.dataset.id,e.shiftKey);return}
   const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
+  if(a==='col'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels().filter(q=>!q.hw);tgt.forEach(q=>{if(b.dataset.c){q.col=b.dataset.c;q.fin=b.dataset.fin}else{delete q.col;delete q.fin}if(q!==state.nb)buildMesh(q)});if(o!==state.nb)save();renderInsp();return}
   if(a==='orient'||a==='mat'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels();tgt.forEach(q=>{if(a==='orient')orient(q,b.dataset.t);else q.mat=b.dataset.m;if(q!==state.nb)buildMesh(q)});if(o!==state.nb){placeHandles();save();fitShadows()}renderInsp();return}
   {const o=selP();const did=o&&(o.hw==='hinge'?o.door:o.id);
   if(a==='dopen'){doorCmd(did,'open');return}if(a==='dclose'){doorCmd(did,'close');return}if(a==='dpush'){doorCmd(did,'push');return}
@@ -1294,6 +1398,10 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   if(a==='fsel'||a==='fdel'){const o=selP();if(!o)return;const fid=+b.dataset.f;if(a==='fsel'){setSub({kind:'region',id:o.id,fid});renderInsp();return}pushUndo();o.feat=(o.feat||[]).filter(f=>f.id!==fid);if(state.sub&&state.sub.fid===fid)subClear();buildMesh(o);save();renderInsp();toast('Обработка удалена');return}
   if(a==='dalign'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;alignToBehind(o,featById(o,S.fid));return}
   if(a==='dowel'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;const f=featById(o,S.fid);const v=num($('#dowelDepth').value);if(!isFinite(v)||v<=0)return toast('Введите глубину');state.dowelD=v;makeDowel(o,f,v);return}
+  if(a==='prodsel'||a==='prodcol'||a==='prodselall'||a==='produngroup'){const pr=prodOf(selP());if(!pr)return;
+    if(a==='prodselall'){const ids=state.panels.filter(q=>q.prod===pr.id).map(q=>q.id);state.multi=new Set(ids);state.sel=ids[0];refreshEdges();placeHandles();renderInsp();return}
+    if(a==='produngroup'){pushUndo();state.panels.forEach(q=>{if(q.prod===pr.id)delete q.prod});state.prods=state.prods.filter(r=>r!==pr);save();renderInsp();toast('Изделие разгруппировано — детали теперь обычные');return}
+    prodSet(pr,b.dataset.k,a==='prodcol'?b.dataset.c:b.dataset.v);return}
   if(a==='hwrib'||a==='hwsec'){const o=selP();if(!o||!o.hw)return;pushUndo();selPanels().filter(q=>q.hw===o.hw).forEach(q=>{if(a==='hwrib')q.prib=+b.dataset.v;else q.psec=+b.dataset.v;buildMesh(q)});save();renderInsp();return}
   if(a==='cancelTool')return setTool('select');
   if(a==='unrot'){const o=selP();if(!o)return;pushUndo();setRotation(o,new THREE.Quaternion());buildMesh(o);placeHandles();save();fitShadows();renderInsp();return}
@@ -1478,8 +1586,8 @@ function loop(){requestAnimationFrame(loop);if(capturing)return;{const now=perfo
 
 /* ---------- parts & nesting ---------- */
 function partsList(){const g=new Map();BRD().forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>Math.round(p[SZ[a]]*100)/100).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
-  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s,c:f.c?1:0,jn:f.j&&panelById(f.j)?panelById(f.j).name:''}}),cups=doorHinges(p.id).map(h=>{const F=hingeFrame(h);if(!F)return null;const c={x:F.cup.x*1000,y:F.cup.y*1000,z:F.cup.z*1000};return{x:r4(c[ax[0]]-p[ax[0]]),y:r4(c[ax[1]]-p[ax[1]]),dia:h.cup,dep:12,s:F.I.s>0?-1:1}}).filter(Boolean),ed=(p.feat||[]).filter(f=>f.a!==p.t&&Math.abs(f.depth)>0.01).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];const e=AX.find(q=>q!==f.a&&q!==p.t);return{jn:f.j&&panelById(f.j)?panelById(f.j).name:'',len:p[SZ[e]],long:e===ax[0],s:f.s,x0:r[e][0],x1:r[e][1],y0:r[p.t][0],y1:r[p.t][1],depth:f.depth,thr:f.depth>=p[SZ[f.a]]}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+JSON.stringify(fe)+JSON.stringify(ed)+JSON.stringify(cups);
-  if(!g.has(key))g.set(key,{L:dm[0],W:dm[1],T,mat:p.mat,names:[],qty:0,fe,ed,cups,edgeF:ed.length});const o=g.get(key);o.qty++;if(!o.names.includes(p.name))o.names.push(p.name)});
+  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s,rr:f.rr||0,c:f.c?1:0,jn:f.j&&panelById(f.j)?panelById(f.j).name:''}}),cups=doorHinges(p.id).map(h=>{const F=hingeFrame(h);if(!F)return null;const c={x:F.cup.x*1000,y:F.cup.y*1000,z:F.cup.z*1000};return{x:r4(c[ax[0]]-p[ax[0]]),y:r4(c[ax[1]]-p[ax[1]]),dia:h.cup,dep:12,s:F.I.s>0?-1:1}}).filter(Boolean),ed=(p.feat||[]).filter(f=>f.a!==p.t&&Math.abs(f.depth)>0.01).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];const e=AX.find(q=>q!==f.a&&q!==p.t);return{jn:f.j&&panelById(f.j)?panelById(f.j).name:'',len:p[SZ[e]],long:e===ax[0],s:f.s,x0:r[e][0],x1:r[e][1],y0:r[p.t][0],y1:r[p.t][1],depth:f.depth,thr:f.depth>=p[SZ[f.a]]}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+'|'+(p.col||'')+(p.fin||'')+'|'+(p.cr||0)+JSON.stringify(fe)+JSON.stringify(ed)+JSON.stringify(cups);
+  if(!g.has(key))g.set(key,{L:dm[0],W:dm[1],T,mat:p.mat,col:p.col||'',fin:p.fin||'',cn:colName(p),cr:p.cr||0,names:[],qty:0,fe,ed,cups,edgeF:ed.length});const o=g.get(key);o.qty++;if(!o.names.includes(p.name))o.names.push(p.name)});
   const arr=[...g.values()].sort((a,b)=>b.T-a.T||b.L*b.W-a.L*a.W);arr.forEach((o,i)=>o.no=i+1);return arr}
 function pack(items,SW,SH,kerf=4,trim=10){const sheets=[],over=[];const W=SW-2*trim,H=SH-2*trim;
   items.sort((a,b)=>Math.max(b.L,b.W)-Math.max(a.L,a.W)||b.W-a.W);
@@ -1523,17 +1631,17 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
   const parts=partsList(),maxW=Math.max(ex,fx+3000);o.push(Tx(0,oy,k*1.6,'Детали','h'));oy+=k*5;
   let cx=fx,rowH=0;
   parts.forEach(pt=>{const bw=pt.L+k*5,bh=pt.W+k*7.5;if(cx+bw>maxW&&cx>fx){cx=fx;oy+=rowH;rowH=0}
-    const x=cx,y=oy+k*1.6;o.push(R(x,y,pt.L,pt.W),dH(x,x+pt.L,y-k*1.6,y,pt.L),dV(y,y+pt.W,x+pt.L+k*1.8,x+pt.L,pt.W));
-    (pt.fe||[]).forEach(f=>{o.push(f.c?`<circle class="pk${f.thr?' thr':''}" cx="${f1(x+(f.x0+f.x1)/2)}" cy="${f1(y+(f.y0+f.y1)/2)}" r="${f1((f.x1-f.x0)/2)}"/>`:`<rect class="pk${f.thr?' thr':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*1.6,k*.8,f.thr?'вырез насквозь':f.depth>0?`выборка ${f1(f.depth)}${f.s<0?' (снизу)':''}`:f.depth<0?`выступ ${f1(-f.depth)}`:'разметка'))});
+    const x=cx,y=oy+k*1.6;o.push(pt.cr?`<rect class="pn" x="${f1(x)}" y="${f1(y)}" width="${f1(pt.L)}" height="${f1(pt.W)}" rx="${f1(pt.cr)}"/>`:R(x,y,pt.L,pt.W),dH(x,x+pt.L,y-k*1.6,y,pt.L),dV(y,y+pt.W,x+pt.L+k*1.8,x+pt.L,pt.W));
+    (pt.fe||[]).forEach(f=>{o.push(f.c?`<circle class="pk${f.thr?' thr':''}" cx="${f1(x+(f.x0+f.x1)/2)}" cy="${f1(y+(f.y0+f.y1)/2)}" r="${f1((f.x1-f.x0)/2)}"/>`:`<rect class="pk${f.thr?' thr':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}" rx="${f1(f.rr||0)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*1.6,k*.8,f.thr?'вырез насквозь':f.depth>0?`выборка ${f1(f.depth)}${f.s<0?' (снизу)':''}`:f.depth<0?`выступ ${f1(-f.depth)}`:'разметка'))});
     (pt.cups||[]).forEach(c=>o.push(`<circle class="pk" cx="${f1(x+c.x)}" cy="${f1(y+c.y)}" r="${f1(c.dia/2)}"/>`));
     if(pt.mat!=='black'){const gy=y+pt.W/2,gl=Math.min(pt.L*0.5,k*12);o.push(`<line class="gr" x1="${f1(x+pt.L/2-gl/2)}" y1="${f1(gy)}" x2="${f1(x+pt.L/2+gl/2)}" y2="${f1(gy)}"/>`)}
     o.push(Tx(x+pt.L/2,y+pt.W/2-k*.6,k*1.5,'Д'+pt.no));
-    o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ${pt.L} × ${pt.W} мм · ${pt.qty} шт.`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
+    o.push(Tx(x,y+pt.W+k*2,k*.95,`Д${pt.no} · ${pt.names.join(', ')} · ${pt.L} × ${pt.W} мм · ${pt.qty} шт.`,'s'),Tx(x,y+pt.W+k*3.4,k*.85,`${pt.T} мм · ${MATS[pt.mat].name}${pt.cn?' · '+pt.cn+(pt.fin==='paint'?' (краска)':' (морилка)'):''}${pt.cr?' · углы R'+pt.cr:''}${pt.mat!=='black'?' · волокна ↔':''}`,'s'));
     cx+=Math.max(bw,k*22)+k*3;rowH=Math.max(rowH,bh+k*3)});
   oy+=rowH+G*0.6;
   const mill=parts.filter(pt=>(pt.fe||[]).some(f=>Math.abs(f.depth)>0.001)||pt.edgeF||(pt.cups||[]).length);
   if(mill.length){oy+=k*3;o.push(`<line class="sep" x1="0" y1="${f1(oy-k*2.2)}" x2="${f1(maxW)}" y2="${f1(oy-k*2.2)}"/>`,Tx(0,oy,k*1.6,'Фрезерная обработка','h'),Tx(0,oy+k*1.9,k*.85,'Отдельная операция после раскроя · фреза Ø6 мм · внутренние углы R3 · все размеры в мм от краёв детали','s'));oy+=k*6;
-    const opN=f=>f.c?(f.thr?`Сквозное отверстие Ø${f1(f.x1-f.x0)} мм`:f.depth>0?`Отверстие Ø${f1(f.x1-f.x0)} мм, глубина ${f1(f.depth)} мм`:`Круглый выступ Ø${f1(f.x1-f.x0)} мм, ${f1(-f.depth)} мм — приклеить`):f.thr?'Сквозной вырез':f.depth>0?'Выборка глубиной '+f1(f.depth)+' мм':'Накладка (выступ) '+f1(-f.depth)+' мм — приклеить';
+    const opN=f=>f.c?(f.thr?`Сквозное отверстие Ø${f1(f.x1-f.x0)} мм`:f.depth>0?`Отверстие Ø${f1(f.x1-f.x0)} мм, глубина ${f1(f.depth)} мм`:`Круглый выступ Ø${f1(f.x1-f.x0)} мм, ${f1(-f.depth)} мм — приклеить`):(f.thr?'Сквозной вырез':f.depth>0?'Выборка глубиной '+f1(f.depth)+' мм':'Накладка (выступ) '+f1(-f.depth)+' мм — приклеить')+(f.rr?', углы R'+f1(f.rr):'');
     const sect=(x,y,L,T,f,ve)=>{const d=Math.min(Math.abs(f.depth)*ve,T),a=x+f.x0,b=x+f.x1,top=f.s>0;let P;
       if(f.thr)return R(x,y,f.x0,T,'pc')+R(b,y,L-f.x1,T,'pc');
       if(f.depth>0)P=top?`M${f1(x)} ${f1(y)}H${f1(a)}V${f1(y+d)}H${f1(b)}V${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(x)}Z`:`M${f1(x)} ${f1(y)}H${f1(x+L)}V${f1(y+T)}H${f1(b)}V${f1(y+T-d)}H${f1(a)}V${f1(y+T)}H${f1(x)}Z`;
@@ -1546,7 +1654,7 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
       let n=0;
       ops.forEach(f=>{n++;const top=y+k*3.4;
         o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · ${f.s>0?'лицевая пласть':'обратная пласть'}${f.jn?' · ответная часть соединения с «'+f.jn+'» (скрыта стыком)':''}`,'mh'));
-        const cx0=x+(f.x0+f.x1)/2,cy0=top+(f.y0+f.y1)/2,rr=(f.x1-f.x0)/2;o.push(R(x,top,L,W),f.c?`<circle class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" cx="${f1(cx0)}" cy="${f1(cy0)}" r="${f1(rr)}"/><line class="sep" x1="${f1(cx0-rr*1.3)}" y1="${f1(cy0)}" x2="${f1(cx0+rr*1.3)}" y2="${f1(cy0)}"/><line class="sep" x1="${f1(cx0)}" y1="${f1(cy0-rr*1.3)}" x2="${f1(cx0)}" y2="${f1(cy0+rr*1.3)}"/>`:`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}"/>`);
+        const cx0=x+(f.x0+f.x1)/2,cy0=top+(f.y0+f.y1)/2,rr=(f.x1-f.x0)/2;o.push(R(x,top,L,W),f.c?`<circle class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" cx="${f1(cx0)}" cy="${f1(cy0)}" r="${f1(rr)}"/><line class="sep" x1="${f1(cx0-rr*1.3)}" y1="${f1(cy0)}" x2="${f1(cx0+rr*1.3)}" y2="${f1(cy0)}"/><line class="sep" x1="${f1(cx0)}" y1="${f1(cy0-rr*1.3)}" x2="${f1(cx0)}" y2="${f1(cy0+rr*1.3)}"/>`:`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}" rx="${f1(f.rr||0)}"/>`);
         o.push(dH(x,x+L,top-k*1.4,top,f1(L)),dV(top,top+W,x-k*2.2,x,f1(W)));
         if(f.c){const cxm=(f.x0+f.x1)/2,cym=(f.y0+f.y1)/2;o.push(dH(x,x+cxm,top+W+k*2.4,top+W,f1(cxm)),dH(x+cxm,x+L,top+W+k*2.4,top+W,f1(L-cxm)),dV(top,top+cym,x+L+k*2.4,x+L,f1(cym)),dV(top+cym,top+W,x+L+k*2.4,x+L,f1(W-cym)),Tx(cx0+rr*0.75+k*.4,cy0-rr*0.75-k*.3,k*.95,'Ø'+f1(rr*2),'mh'))}
         else o.push(chainH(x,L,f.x0,f.x1,top+W+k*2.4,top+W),chainV(top,W,f.y0,f.y1,x+L+k*2.4,x+L));
@@ -1614,7 +1722,7 @@ sheetEl.addEventListener('pointerleave',()=>ntip.hidden=true);
 $('#zin').onclick=()=>zc(1/1.4);$('#zout').onclick=()=>zc(1.4);$('#zfit').onclick=()=>{vb=vb0.slice();applyVB()};
 function renderSpec(){const parts=partsList(),groups=nestAll();
   $('#spec').innerHTML=`<div class="grp"><h2 style="font:500 12px var(--f-body);color:var(--mute);margin:0">Спецификация · Product sheet</h2><h3 style="font:600 26px/1.1 var(--f-display);letter-spacing:-.02em;margin:6px 0 0">${esc(state.name)}</h3></div>
-  <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th style="white-space:nowrap">Д×Ш, мм</th><th style="white-space:nowrap">Т, мм</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
+  <div class="grp"><span class="lbl">Таблица деталей</span><div style="overflow-x:auto"><table><thead><tr><th>№</th><th>Деталь</th><th style="white-space:nowrap">Д×Ш, мм</th><th style="white-space:nowrap">Т, мм</th><th>шт</th></tr></thead><tbody>${parts.map(p=>`<tr><td class="n">Д${p.no}</td><td>${esc(p.names.join(', '))}<br><span class="note">${MATS[p.mat].short}${p.cn?' · '+p.cn:''}${p.cr?' · R'+p.cr:''}</span></td><td class="n">${p.L}×${p.W}</td><td class="n">${p.T}</td><td class="n">${p.qty}</td></tr>`).join('')||'<tr><td colspan="5">Нет деталей</td></tr>'}</tbody></table></div></div>
   <label class="fld" style="grid-template-columns:1fr 160px"><span>Формат листа</span><select id="sheetSel">${Object.keys(SHEETS).map(k=>`<option value="${k}" ${k===state.sheet?'selected':''}>${k.replace('x',' × ')} мм</option>`).join('')}<option value="custom" ${state.sheet==='custom'?'selected':''}>Свой размер</option></select></label>
   ${state.sheet==='custom'?`<div class="fld"><span>Длина листа</span><input id="shW" inputmode="decimal" value="${state.sheetW||2500}"><i>мм</i></div><div class="fld"><span>Ширина листа</span><input id="shH" inputmode="decimal" value="${state.sheetH||1250}"><i>мм</i></div>`:''}
   ${(()=>{const S=nestSummary();const n2=v=>v.toFixed(2);return `<div class="grp"><span class="lbl">Данные по раскрою</span><div class="kv"><span>Количество деталей</span><b>${S.cnt}</b><span>Общий периметр</span><b>${n2(S.per)} пог. м</b><span>Количество листов</span><b>${S.sheets}</b><span>Общая длина резов</span><b>${n2(S.cut)} пог. м</b><span>Площадь листов</span><b>${n2(S.sheetA)} м²</b><span>Площадь деталей</span><b>${n2(S.partA)} м²</b><span>Площадь отходов</span><b>${n2(S.wasteA)} м²</b><span>Использование листа</span><b>${(S.util*100).toFixed(2)}%</b></div></div>
@@ -1646,9 +1754,10 @@ function toOBJ(){let s='# Бюро Артёма Терехова · мм\nmtllib
 function dxf(lines,texts){let s='0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n';
   lines.forEach(([x1,y1,x2,y2,l])=>s+=`0\nLINE\n8\n${l}\n10\n${x1}\n20\n${y1}\n30\n0\n11\n${x2}\n21\n${y2}\n31\n0\n`);texts.forEach(([x,y,h,t,l])=>s+=`0\nTEXT\n8\n${l}\n10\n${x}\n20\n${y}\n30\n0\n40\n${h}\n1\n${t}\n`);return s+'0\nENDSEC\n0\nEOF\n'}
 const rectL=(x,y,w,h,l)=>[[x,y,x+w,y,l],[x+w,y,x+w,y+h,l],[x+w,y+h,x,y+h,l],[x,y+h,x,y,l]];
+const rrL=(x,y,w,h,r,l)=>{const L=rrLoop(Math.min(r,w/2,h/2),w,h,8);const o=[];for(let i=0;i<L.length-1;i++)o.push([r4(x+w/2+L[i][0]),r4(y+h/2+L[i][1]),r4(x+w/2+L[i+1][0]),r4(y+h/2+L[i+1][1]),l]);return o};
 const circL=(cx,cy,r,l)=>Array.from({length:72},(_,i)=>{const a=i/72*Math.PI*2,b=(i+1)/72*Math.PI*2;return[r4(cx+r*Math.cos(a)),r4(cy+r*Math.sin(a)),r4(cx+r*Math.cos(b)),r4(cy+r*Math.sin(b)),l]});
 const tr={birch:'BIRCH',oiled:'BIRCH-OIL',black:'FILM-BLACK'};
-function detailsDXF(){const L=[],T=[];let x=0;partsList().forEach(p=>{L.push(...rectL(x,0,p.L,p.W,'CUT'));(p.fe||[]).forEach(f=>{L.push(...(f.c?circL(x+(f.x0+f.x1)/2,p.W-(f.y0+f.y1)/2,(f.x1-f.x0)/2,f.thr?'CUT':'POCKET'):rectL(x+f.x0,p.W-f.y1,f.x1-f.x0,f.y1-f.y0,f.thr?'CUT':'POCKET')));if(!f.thr)T.push([x+f.x0+5,p.W-f.y1+5,15,`DEPTH ${f.depth}`,'POCKET'])});T.push([x,-40,25,`D${p.no} ${p.L}x${p.W}x${p.T} x${p.qty} ${tr[p.mat]}`,'TEXT']);x+=p.L+100});return dxf(L,T)}
+function detailsDXF(){const L=[],T=[];let x=0;partsList().forEach(p=>{L.push(...(p.cr?rrL(x,0,p.L,p.W,p.cr,'CUT'):rectL(x,0,p.L,p.W,'CUT')));(p.fe||[]).forEach(f=>{L.push(...(f.c?circL(x+(f.x0+f.x1)/2,p.W-(f.y0+f.y1)/2,(f.x1-f.x0)/2,f.thr?'CUT':'POCKET'):f.rr?rrL(x+f.x0,p.W-f.y1,f.x1-f.x0,f.y1-f.y0,f.rr,f.thr?'CUT':'POCKET'):rectL(x+f.x0,p.W-f.y1,f.x1-f.x0,f.y1-f.y0,f.thr?'CUT':'POCKET')));if(!f.thr)T.push([x+f.x0+5,p.W-f.y1+5,15,`DEPTH ${f.depth}`,'POCKET'])});T.push([x,-40,25,`D${p.no} ${p.L}x${p.W}x${p.T} x${p.qty} ${tr[p.mat]}`,'TEXT']);x+=p.L+100});return dxf(L,T)}
 function nestDXF(){const L=[],T=[];let y=0;nestAll().forEach(g=>g.sheets.forEach((s,i)=>{L.push(...rectL(0,y,g.SW,g.SH,'SHEET'));T.push([0,y+g.SH+30,30,`${g.T}mm ${tr[g.mat]} sheet ${i+1}/${g.sheets.length}`,'TEXT']);
   s.parts.forEach(p=>{const py=y+g.SH-p.y-p.h;L.push(...rectL(p.x,py,p.w,p.h,'CUT'));T.push([p.x+10,py+10,Math.min(30,p.h/3),`D${p.no}`,'TEXT'])});y+=g.SH+200}));return dxf(L,T)}
 function toRuby(){const C=(x,y,z)=>`Geom::Point3d.new(${r4(x)}.mm,${r4(-z)}.mm,${r4(y)}.mm)`;const col={birch:[226,205,164],oiled:[214,174,122],black:[42,40,38]};
@@ -1662,7 +1771,7 @@ function toRuby(){const C=(x,y,z)=>`Geom::Point3d.new(${r4(x)}.mm,${r4(-z)}.mm,$
       const out=f.s>0?OUT[f.a]:OUT[f.a]+'.reverse';rb+=f.c?`ed=e.add_circle(${P((f.u0+f.u1)/2,(f.v0+f.v1)/2)},${OUT[f.a]},${r4((f.u1-f.u0)/2)}.mm,48)\nf=ed[0].faces.min_by{|x|x.area}\nf.reverse! if f.normal.dot(${out})<0\nf.pushpull(`:`f=at_face(e,[${P(f.u0,f.v0)},${P(f.u1,f.v0)},${P(f.u1,f.v1)},${P(f.u0,f.v1)}],${out})\nf.pushpull(${f.depth>0?'-':''}${r4(Math.min(Math.abs(f.depth),T))}.mm)\n`});
     rb+=`g.material=mats['${p.mat}']\n`;if(p.rot){const c=pCenter(p),q=rotQ(p);if(q.w<0)q.set(-q.x,-q.y,-q.z,-q.w);const an=2*Math.acos(Math.min(1,q.w)),sn=Math.sin(an/2)||1,f=v=>(+v.toFixed(9));rb+=`g.transform!(Geom::Transformation.rotation(${C(c.x*1000,c.y*1000,c.z*1000)},Geom::Vector3d.new(${f(q.x/sn)},${f(-q.z/sn)},${f(q.y/sn)}),${f(an*180/Math.PI)}.degrees))\n`}});
   rb+=`model.commit_operation\nUI.messagebox('Готово: ${BRD().length} деталей. Сохраните модель как .skp')\n`;return rb}
-function toCSV(){const rows=[['№','Наименование','Длина, мм','Ширина, мм','Толщина, мм','Кол-во','Материал','Площадь, м²']];partsList().forEach(p=>rows.push(['Д'+p.no,p.names.join(', '),p.L,p.W,p.T,p.qty,MATS[p.mat].name,(p.L*p.W*p.qty/1e6).toFixed(3).replace('.',',')]));return'﻿'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n')}
+function toCSV(){const rows=[['№','Наименование','Длина, мм','Ширина, мм','Толщина, мм','Кол-во','Материал','Площадь, м²']];partsList().forEach(p=>rows.push(['Д'+p.no,p.names.join(', '),p.L,p.W,p.T,p.qty,MATS[p.mat].name+(p.cn?', '+p.cn:''),(p.L*p.W*p.qty/1e6).toFixed(3).replace('.',',')]));return'﻿'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n')}
 const projJSON=()=>JSON.stringify({app:'bureau-tereKhov',version:2,name:state.name,panels:state.panels,guides:state.guides},null,1);
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
