@@ -208,6 +208,23 @@ td.n{font-family:var(--f-mono);text-align:right}
   .hint{display:none}
   #draw{grid-template-columns:1fr;grid-template-rows:1fr 40%}
   .spec{border-left:0;border-top:1px solid var(--line)}
+  header{backdrop-filter:none;background:#fff;padding-block:8px;flex-wrap:nowrap}
+  .brand .mark{display:none}.wm{font-size:19px}.hstat{min-width:0;font-size:10px}
+  nav{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:6px max(6px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px))}
+  nav a{text-align:center;padding:9px 2px;font-size:12px;border-radius:10px}
+  .app{padding-bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+  .rail{top:8px;padding:3px;border-radius:14px}.rail-sc .ib{width:42px;height:42px}
+  .insp{max-height:58%;padding:10px 16px 16px;gap:14px;border-radius:18px 18px 14px 14px;transition:max-height .25s ease}
+  .insp .grip{margin:-2px auto 0;height:20px}
+  .insp.min{max-height:92px!important}
+  .fld{grid-template-columns:1fr 110px 22px}.fld input,.fld select,.txt{font-size:16px;padding:8px 10px}
+  .btn{min-height:40px}
+  .status{display:none;left:8px;right:8px;top:62px;bottom:auto;justify-content:center}
+.vizbar{left:8px;right:8px;bottom:8px;display:flex;flex-direction:column;align-items:stretch;gap:6px}
+  .vizbar .card{flex-direction:row;align-items:center;gap:10px;padding:6px 8px 6px 12px;border-radius:14px}.vizbar .card .lbl{border:0;padding:0;width:64px;flex:none;font-size:11px;color:var(--mute)}.vizbar .card .seg{flex:1}
+  .vizbar .card:last-child{margin-left:0!important;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px}.vizbar .card:last-child .lbl{width:auto;grid-column:1/-1}.vizbar .card:last-child .prog{grid-column:1/-1}.vizbar .card:last-child .btn{padding:8px 6px;font-size:12px;min-height:38px}
+  #draw{grid-template-rows:62% 38%}
+  .status:has(.vcb.on){display:flex}.vcb input{width:120px;font-size:16px}
 }
 @media (min-width:761px) and (max-width:1100px){.insp{font-size:13px}}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
@@ -1594,7 +1611,7 @@ let view='build',drawDirty=true,renderCamSet=false;
 function setView(v){if(!['build','render','drawings','export'].includes(v))v='build';if(op)opCancel();view=v;
   document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';
-  const b3=v==='build';['#rail','#insp','#status'].forEach(s=>$(s).hidden=!b3);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
+  const b3=v==='build';['#rail','#insp','#status'].forEach(s=>$(s).hidden=!b3);if(!b3)Object.values(dls).forEach(d=>d.hidden=true);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
   gridMinor.visible=gridMajor.visible=shadowPlane.visible=axesG.visible=guideG.visible=b3;room.visible=v==='render';Object.values(meshes).forEach(m=>m.children.forEach(c=>c.visible=b3));applyIso();
   if(v==='render'){controls.maxPolarAngle=Math.PI*0.495;buildRoom();renderer.shadowMap.type=THREE.PCFShadowMap;sun.shadow.mapSize.set(4096,4096);resetShadowMaps();renderer.setPixelRatio(baseDPR*state.q);resize();fitShadows();lastMove=performance.now();prevOK=false;syncSeg();ptSceneDirty=true;if(state.env==='wall'&&!capturing&&!renderCamSet){renderCam();renderCamSet=true}if(!capturing)loadPT();else ptExit()}
   else{controls.maxPolarAngle=Math.PI;ptExit();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sun.shadow.mapSize.set(2048,2048);resetShadowMaps();hemi.intensity=0.5;fill.visible=false;setEnvI(1);sun.intensity=1.6;renderer.setPixelRatio(baseDPR);scene.background=stageColor();resize();fitShadows()}
