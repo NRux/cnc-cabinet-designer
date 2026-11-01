@@ -114,6 +114,23 @@ td.n{font-family:var(--f-mono);text-align:right}
 .ntip{position:absolute;z-index:6;background:#1d1f26;color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.25);min-width:200px}.ntip b{display:block;color:#f3c76b;margin-bottom:6px;font-weight:600}.ntip div{display:flex;justify-content:space-between;gap:14px;color:#c9cad1}.ntip div span:last-child{color:#fff;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .dw .tb{fill:none;stroke:var(--ink);stroke-width:1.2;vector-effect:non-scaling-stroke}
 #exp{overflow:auto;background:var(--bg);padding-block:40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.catw{max-width:1180px;margin:0 auto;padding:56px 0 96px}
+#cat{overflow:auto;background:#fff;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.cath{margin-bottom:56px}.cath h1{font:500 40px/1.1 var(--f-display);letter-spacing:-.03em;margin:8px 0 10px}.cath p{color:var(--mute);margin:0;max-width:52ch}
+.cath .lbl,.catd .lbl{border:0;padding:0;color:var(--mute);font:400 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.catg{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 28px}
+.cc{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:14px}
+.ci{position:relative;aspect-ratio:4/5;background:#f1eee9;overflow:hidden}.ci img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s ease,transform .8s ease}.ci img.h{opacity:0}
+.cc:hover .ci img.h{opacity:1}.cc:hover .ci img{transform:scale(1.015)}.cc:focus-visible{outline:1px solid #111;outline-offset:6px}
+.ct{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.ct b{font:500 15px var(--f-display);letter-spacing:-.01em}.ct span,.cs{font:400 11px var(--f-mono);color:var(--mute);letter-spacing:.04em}.ct span{white-space:nowrap}.cs{margin-top:-8px}
+.cempty{grid-column:1/-1;padding:80px 0;color:var(--mute);border-top:1px solid var(--line)}
+.catd{position:absolute;inset:0;background:#fff;overflow:auto;z-index:5;padding:0 max(24px,env(safe-area-inset-right,0px)) 64px max(24px,env(safe-area-inset-left,0px))}
+.cdw{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:64px;padding-top:32px}
+.cdx{all:unset;cursor:pointer;font:400 12px var(--f-mono);color:var(--mute);display:block;width:100%;text-align:left;max-width:1180px;margin:24px auto 0}.cdx:hover{color:#111}
+.cdg{display:flex;flex-direction:column;gap:12px}.cdg .ci{aspect-ratio:4/5}.cdt{display:flex;gap:8px}.cdt button{all:unset;cursor:pointer;width:64px;aspect-ratio:4/5;background:#f1eee9 center/cover;opacity:.45;transition:opacity .2s}.cdt button[aria-pressed="true"],.cdt button:hover{opacity:1}
+.cdi{position:sticky;top:32px;align-self:start;display:flex;flex-direction:column;gap:22px}.cdi h2{font:500 34px/1.1 var(--f-display);letter-spacing:-.03em;margin:6px 0 0}.cdi p{margin:0;color:#444;max-width:44ch}
+.cdi dl{display:grid;grid-template-columns:110px 1fr;gap:10px 16px;margin:0;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:13px}.cdi dt{color:var(--mute)}.cdi dd{margin:0;font-family:var(--f-mono);font-size:12px}
+.cdp{font:500 18px var(--f-display)}.cdi .btn{align-self:flex-start}
 .exw{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 .exw h1{font:600 44px/1.08 var(--f-display);letter-spacing:-.03em;margin:6px 0 0;text-wrap:balance}
 .exw>p{color:var(--mute);max-width:62ch;margin:0}
@@ -226,9 +243,12 @@ td.n{font-family:var(--f-mono);text-align:right}
   .vizbar .card{flex-direction:row;align-items:center;gap:10px;padding:6px 8px 6px 12px;border-radius:14px}.vizbar .card .lbl{border:0;padding:0;width:64px;flex:none;font-size:11px;color:var(--mute)}.vizbar .card .seg{flex:1}
   .vizbar .card:last-child{margin-left:0!important;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px}.vizbar .card:last-child .lbl{width:auto;grid-column:1/-1}.vizbar .card:last-child .prog{grid-column:1/-1}.vizbar .card:last-child .btn{padding:8px 6px;font-size:12px;min-height:38px}
   #draw{grid-template-rows:62% 38%}
+  nav{grid-template-columns:repeat(5,1fr)}nav a{font-size:10.5px;letter-spacing:-.02em;padding:9px 0}
+  .catw{padding:28px 0 64px}.cath{margin-bottom:32px}.cath h1{font-size:30px}.catg{grid-template-columns:1fr 1fr;gap:32px 12px}.ct{flex-direction:column;gap:4px}.cs{margin-top:-10px}
+  .cdw{grid-template-columns:1fr;gap:28px;padding-top:12px}.cdi{position:static}.cdi h2{font-size:28px}
   .status:has(.vcb.on){display:flex}.vcb input{width:120px;font-size:16px}
 }
-@media (min-width:761px) and (max-width:1100px){.insp{font-size:13px}}
+.catg{}@media (min-width:761px) and (max-width:1100px){.catg{grid-template-columns:1fr 1fr}.insp{font-size:13px}}
 @media (prefers-reduced-motion:reduce){.toast{transition:none}}
 </style>
 
@@ -243,6 +263,7 @@ td.n{font-family:var(--f-mono);text-align:right}
     <a href="#render" data-v="render">Визуализация</a>
     <a href="#drawings" data-v="drawings">Чертежи</a>
     <a href="#export" data-v="export">Экспорт</a>
+    <a href="#catalog" data-v="catalog">Каталог</a>
   </nav>
   <div class="hstat" id="hstat">—</div>
 </header>
@@ -330,6 +351,13 @@ td.n{font-family:var(--f-mono);text-align:right}
     <aside class="spec" id="spec"></aside>
   </section>
 
+  <section class="view" id="cat" hidden>
+    <div class="catw">
+      <div class="cath"><span class="lbl">Каталог</span><h1>Готовые работы</h1><p>Мебель из фанеры, сделанная в мастерской. В наличии и под заказ.</p></div>
+      <div class="catg" id="catGrid"></div>
+    </div>
+    <div class="catd" id="catD" hidden></div>
+  </section>
   <section class="view" id="exp" hidden>
     <div class="exw">
       <div>
@@ -1556,7 +1584,7 @@ function addInterior(b,cx,zb){
   /* floor, back wall, ceiling */
   const f=plane(W+0.4,zF-zb,oakM,oakM.userData.rep);f.rotation.x=-Math.PI/2;f.position.set((xL+xR)/2,0,(zb+zF)/2);f.castShadow=false;room.add(f);
   const bw=plane(W,H,wallM,wallM.userData.rep);bw.position.set((xL+xR)/2,H/2,zb);room.add(bw);
-  const ceil=new THREE.Mesh(new THREE.PlaneGeometry(W+0.4,zF-zb),whiteM);ceil.rotation.x=Math.PI/2;ceil.position.set((xL+xR)/2,H,(zb+zF)/2);room.add(ceil);
+  const ceilM=rmats.ceil||(rmats.ceil=Object.assign(whiteM.clone(),{emissive:new THREE.Color(0xefebe5),emissiveIntensity:0.5}));const ceil=new THREE.Mesh(new THREE.PlaneGeometry(W+0.4,zF-zb),ceilM);ceil.rotation.x=Math.PI/2;ceil.position.set((xL+xR)/2,H,(zb+zF)/2);room.add(ceil);
   /* left wall with a tall window opening */
   const t=0.14,wz0=zb+0.55,wz1=Math.min(zb+2.05,zF-0.6),wy0=0.32,wy1=2.45,xw=xL-t/2;
   const lw=(w,h,d,y,z)=>room.add(boxM(t,h,d,wallM,xw,y,z));
@@ -1642,15 +1670,26 @@ function progress(){const pr=$('#rprog'),st=$('#rstat');
 
 /* ---------- views ---------- */
 let view='build',drawDirty=true,renderCamSet=false;
-function setView(v){if(!['build','render','drawings','export'].includes(v))v='build';if(op)opCancel();view=v;
+function setView(v){if(!['build','render','drawings','export','catalog'].includes(v))v='build';if(op)opCancel();view=v;
   document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';
+  $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';$('#cat').hidden=v!=='catalog';if(v==='catalog')loadCat();
   const b3=v==='build';['#rail','#insp','#status'].forEach(s=>$(s).hidden=!b3);if(!b3)Object.values(dls).forEach(d=>d.hidden=true);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
   gridMinor.visible=gridMajor.visible=shadowPlane.visible=axesG.visible=guideG.visible=b3;room.visible=v==='render';Object.values(meshes).forEach(m=>m.children.forEach(c=>c.visible=b3));applyIso();
   if(v==='render'){controls.maxPolarAngle=Math.PI*0.495;buildRoom();renderer.shadowMap.type=THREE.PCFShadowMap;sun.shadow.mapSize.set(4096,4096);resetShadowMaps();renderer.setPixelRatio(baseDPR*state.q);resize();fitShadows();lastMove=performance.now();prevOK=false;syncSeg();ptSceneDirty=true;if(state.env==='wall'&&!capturing&&!renderCamSet){renderCam();renderCamSet=true}if(!capturing)loadPT();else ptExit()}
   else{controls.maxPolarAngle=Math.PI;ptExit();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sun.shadow.mapSize.set(2048,2048);resetShadowMaps();hemi.intensity=0.5;fill.visible=false;setEnvI(1);sun.intensity=1.6;renderer.setPixelRatio(baseDPR);scene.background=stageColor();resize();fitShadows()}
   placeHandles();if(v==='drawings'&&drawDirty)renderDrawing();if(v==='drawings')renderSpec();
   if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v)}
+let CAT=null;const catImg=u=>esc(u);
+async function loadCat(){if(CAT)return;try{const r=await fetch('catalog/catalog.json',{cache:'no-cache'});CAT=r.ok?await r.json():[]}catch(e){CAT=[]}renderCat()}
+function renderCat(){const g=$('#catGrid');g.innerHTML=CAT.length?CAT.map((it,i)=>`<button class="cc" data-ci="${i}"><div class="ci">${(it.photos||[]).slice(0,2).map((p,j)=>`<img src="${catImg(p)}" alt="${j?'':esc(it.name)}"${i>5?' loading="lazy"':''}${j?' class="h"':''}>`).join('')}</div><div class="ct"><b>${esc(it.name)}</b><span>${esc(it.status||'')}</span></div><div class="cs">${esc([it.type,it.size].filter(Boolean).join(' · '))}</div></button>`).join(''):'<div class="cempty">Скоро здесь появятся работы.</div>'}
+function openCat(i){const it=CAT[i];if(!it)return;const ph=it.photos||[],d=$('#catD');const row=(k,v)=>v?`<dt>${k}</dt><dd>${esc(v)}</dd>`:'';
+  d.innerHTML=`<button class="cdx" data-cx>← Каталог</button><div class="cdw"><div class="cdg"><div class="ci"><img id="cdMain" src="${catImg(ph[0]||'')}" alt="${esc(it.name)}"></div>${ph.length>1?`<div class="cdt">${ph.map((p,j)=>`<button data-cp="${j}" aria-pressed="${!j}" style="background-image:url('${catImg(p)}')" aria-label="Фото ${j+1}"></button>`).join('')}</div>`:''}</div>
+  <div class="cdi"><div><span class="lbl">${esc(it.type||'')}${it.year?' · '+esc(it.year):''}</span><h2>${esc(it.name)}</h2></div>${it.text?`<p>${esc(it.text)}</p>`:''}<dl>${row('Размер',it.size)}${row('Материал',it.material)}${row('Наличие',it.status)}</dl>${it.price?`<div class="cdp">${esc(it.price)}</div>`:''}${it.product&&PRODS[it.product.type]?`<button class="btn" data-copen="${i}">Открыть в конструкторе</button>`:''}</div></div>`;
+  d.dataset.i=i;d.hidden=false;d.scrollTop=0}
+$('#cat').addEventListener('click',e=>{const c=e.target.closest('[data-ci]');if(c)return openCat(+c.dataset.ci);if(e.target.closest('[data-cx]')){$('#catD').hidden=true;return}
+  const t=e.target.closest('[data-cp]');if(t){$('#cdMain').src=catImg(CAT[+$('#catD').dataset.i].photos[+t.dataset.cp]);document.querySelectorAll('.cdt button').forEach(b=>b.setAttribute('aria-pressed',b===t));return}
+  const o=e.target.closest('[data-copen]');if(o){const it=CAT[+o.dataset.copen];location.hash='#build';setView('build');addProduct(it.product.type);const rec=state.prods[state.prods.length-1];Object.assign(rec.P,it.product.P||{});prodSet(rec,'W',rec.P.W);rec.name=it.name;save();renderInsp();fitView();toast('«'+it.name+'» открыт — меняйте размеры и состав')}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&view==='catalog'&&!$('#catD').hidden)$('#catD').hidden=true});
 function resetShadowMaps(){[sun,fill].forEach(l=>{if(l.shadow.map){l.shadow.map.dispose();l.shadow.map=null}})}
 let viewPending=0;window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});const n=++viewPending;requestAnimationFrame(()=>setTimeout(()=>{if(n===viewPending)setView(v)},0))});
 function syncSeg(){document.querySelectorAll('#envSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.env===state.env));document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.light===state.light));document.querySelectorAll('#qSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.q===state.q))}
@@ -1924,16 +1963,16 @@ function drawViews(g,x0,y0,wA,hA){const b=bbox(),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-
   [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(b.y1-p.y-p.h)*k,p.w*k,p.h*k));dimB(x,x+W*k,y0+H*k+8,nf(W)+' мм');dimR(y0,y0+H*k,x+W*k+7,nf(H)+' мм');x+=W*k+gap;
   [...P].sort((a,c)=>(a.x+a.w)-(c.x+c.w)).forEach(p=>box(x+(b.z1-p.z-p.d)*k,y0+(b.y1-p.y-p.h)*k,p.d*k,p.h*k));dimB(x,x+D*k,y0+H*k+8,nf(D)+' мм');x+=D*k+gap;
   [...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(p.z-b.z0)*k,p.w*k,p.d*k));dimB(x,x+W*k,y0+D*k+8,nf(W)+' мм');dimR(y0,y0+D*k,x+W*k+7,nf(D)+' мм')}
-async function captureProduct(W,H,views){const pv=view,penv=state.env,pcam=camera.position.clone(),ptg=controls.target.clone();capturing=true;
-  try{state.env='studio';setView('render');renderer.setPixelRatio(1);renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
+async function captureProduct(W,H,views,env){const pv=view,penv=state.env,pcam=camera.position.clone(),ptg=controls.target.clone();capturing=true;
+  try{state.env=env||'studio';setView('render');buildRoom();renderer.setPixelRatio(1);renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
     const c=center(),Rr=radius(),bx=bbox(),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3((i&1?bx.x1:bx.x0)*MM,(i&2?bx.y1:bx.y0)*MM,(i&4?bx.z1:bx.z0)*MM));const res=[];
-    for(const vw of views||[{dir:[-0.55,0.3,0.85],fill:0.95}]){const dir=new THREE.Vector3(...vw.dir).normalize();let d=Rr/Math.sin(camera.fov*Math.PI/360);controls.target.copy(c);
-    for(let it=0;it<3;it++){camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c);camera.updateMatrixWorld();let m=0;cs.forEach(v=>{const q=v.clone().project(camera);m=Math.max(m,Math.abs(q.x),Math.abs(q.y))});d*=Math.max(0.3,m/vw.fill)}
-    camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c);
+    for(const vw of views||[{dir:[-0.55,0.3,0.85],fill:0.95}]){const dir=new THREE.Vector3(...(vw.dir||[0,0,1])).normalize();let d=Rr/Math.sin(camera.fov*Math.PI/360);controls.target.copy(c);
+    if(vw.cam){(vw.cam==='front'?frontCam:renderCam)();camera.lookAt(controls.target);camera.updateMatrixWorld()}else{for(let it=0;it<3;it++){camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c);camera.updateMatrixWorld();let m=0;cs.forEach(v=>{const q=v.clone().project(camera);m=Math.max(m,Math.abs(q.x),Math.abs(q.y))});d*=Math.max(0.3,m/vw.fill)}
+    camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c)}
     if(acc)['rt','a','b','pv'].forEach(k=>acc[k].dispose());acc=null;accTargets();renderer.toneMapping=THREE.NoToneMapping;outMat.uniforms.vig.value=0;
     for(let i=0;i<(vw.n||96);i++){lightsSample();camera.setViewOffset(acc.w,acc.h,rr()-.5,rr()-.5,acc.w,acc.h);renderer.setRenderTarget(acc.rt);renderer.render(scene,camera);camera.clearViewOffset();blendInto(acc.rt,acc.a,acc.b,1/(i+1));[acc.a,acc.b]=[acc.b,acc.a];if(i%12===11)await new Promise(r=>setTimeout(r))}
     show(acc.a);const out=document.createElement('canvas');out.width=W;out.height=H;const g=out.getContext('2d');g.drawImage(cv,0,0,W,H);
-    const id=g.getImageData(0,0,W,H),dd=id.data,o=(4*W+4)*4,bg=[dd[o],dd[o+1],dd[o+2]];for(let i=0;i<dd.length;i+=4)for(let j=0;j<3;j++)dd[i+j]=Math.min(255,dd[i+j]*255/Math.max(bg[j],1));g.putImageData(id,0,0);res.push(out)}
+    if(!env||env==='studio'){const id=g.getImageData(0,0,W,H),dd=id.data,o=(4*W+4)*4,bg=[dd[o],dd[o+1],dd[o+2]];for(let i=0;i<dd.length;i+=4)for(let j=0;j<3;j++)dd[i+j]=Math.min(255,dd[i+j]*255/Math.max(bg[j],1));g.putImageData(id,0,0)}res.push(out)}
     return views?res:res[0]}
   finally{outMat.uniforms.vig.value=1;state.env=penv;camera.position.copy(pcam);controls.target.copy(ptg);if(acc)['rt','a','b','pv'].forEach(k=>acc[k].dispose());acc=null;capturing=false;setView(pv);controls.update()}}
 function sheetPages(imgs){const PW=595.28,PH=841.89,S=2480/PW,M=45,pages=[];
