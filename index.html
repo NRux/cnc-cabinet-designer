@@ -1646,24 +1646,32 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
   const R=(x,y,w,h,c='pn')=>{ex=Math.max(ex,x+w);return`<rect class="${c}" x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(h)}"/>`};
   const Tx=(x,y,s,t,c='')=>`<text${c?` class="${c}"`:''} x="${f1(x)}" y="${f1(y)}" font-size="${f1(s)}">${esc(t)}</text>`;
   const e=k*0.45,tick=(x,y)=>`<line class="tk" x1="${f1(x-e)}" y1="${f1(y+e)}" x2="${f1(x+e)}" y2="${f1(y-e)}"/>`;
-  const dH=(x1,x2,y,ref,t)=>{const s=Math.sign(y-ref)||1;return`<g class="dm"><line x1="${f1(x1)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x1)}" y2="${f1(y+s*e)}"/><line x1="${f1(x2)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x2)}" y2="${f1(y+s*e)}"/><line x1="${f1(x1-e)}" y1="${f1(y)}" x2="${f1(x2+e)}" y2="${f1(y)}"/>${tick(x1,y)}${tick(x2,y)}<text x="${f1((x1+x2)/2)}" y="${f1(y-k*.35)}" font-size="${f1(k)}">${t}</text></g>`};
-  const dV=(y1,y2,x,ref,t)=>{const s=Math.sign(x-ref)||1,ty=(y1+y2)/2,tx=x-k*.35;ex=Math.max(ex,x+k);return`<g class="dm"><line x1="${f1(ref+s*k*.3)}" y1="${f1(y1)}" x2="${f1(x+s*e)}" y2="${f1(y1)}"/><line x1="${f1(ref+s*k*.3)}" y1="${f1(y2)}" x2="${f1(x+s*e)}" y2="${f1(y2)}"/><line x1="${f1(x)}" y1="${f1(y1-e)}" x2="${f1(x)}" y2="${f1(y2+e)}"/>${tick(x,y1)}${tick(x,y2)}<text x="${f1(tx)}" y="${f1(ty)}" font-size="${f1(k)}" transform="rotate(-90 ${f1(tx)} ${f1(ty)})">${t}</text></g>`};
+  const LB=[],hit=b=>LB.some(q=>b[0]<q[2]&&b[2]>q[0]&&b[1]<q[3]&&b[3]>q[1]),twd=t=>String(t).length*k*0.62;
+  const putH=(c,by,w,h)=>{for(const [cx,yy] of c){const b=[cx-w/2-k*.15,yy-h,cx+w/2+k*.15,yy+k*.15];if(!hit(b)){LB.push(b);return[cx,yy]}}const [cx,yy]=c[0];LB.push([cx-w/2,yy-h,cx+w/2,yy]);return[cx,yy]};
+  const dH=(x1,x2,y,ref,t)=>{const s=Math.sign(y-ref)||1,w=twd(t),L=x2-x1,cands=[];if(L>=w+k*.4)cands.push([(x1+x2)/2,y-k*.35]);cands.push([x2+k*.5+w/2,y-k*.35],[x1-k*.5-w/2,y-k*.35]);for(let n=1;n<4;n++)cands.push([(x1+x2)/2,y-k*.35-s*k*1.15*n]);if(L>=w+k*.4)cands.unshift();const [cx,ty]=putH(cands,y,w,k);ex=Math.max(ex,cx+w/2);
+    return`<g class="dm"><line x1="${f1(x1)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x1)}" y2="${f1(y+s*e)}"/><line x1="${f1(x2)}" y1="${f1(ref+s*k*.3)}" x2="${f1(x2)}" y2="${f1(y+s*e)}"/><line x1="${f1(x1-e)}" y1="${f1(y)}" x2="${f1(x2+e)}" y2="${f1(y)}"/>${tick(x1,y)}${tick(x2,y)}<text x="${f1(cx)}" y="${f1(ty)}" font-size="${f1(k)}">${t}</text></g>`};
+  const dV=(y1,y2,x,ref,t)=>{const s=Math.sign(x-ref)||1,w=twd(t),L=y2-y1,c=[];const base=x-k*.35;if(L>=w+k*.4)c.push([base,(y1+y2)/2]);for(let n=1;n<4;n++)c.push([base+s*k*1.6*n,(y1+y2)/2]);c.push([base,y2+k*.5+w/2],[base,y1-k*.5-w/2]);
+    let pos=null;for(const [tx,ty] of c){const b=[tx-k*.85,ty-w/2-k*.15,tx+k*.15,ty+w/2+k*.15];if(!hit(b)){LB.push(b);pos=[tx,ty];break}}if(!pos){pos=c[0];LB.push([pos[0]-k,pos[1]-w/2,pos[0],pos[1]+w/2])}const [tx,ty]=pos;ex=Math.max(ex,x+k,tx+k);
+    return`<g class="dm"><line x1="${f1(ref+s*k*.3)}" y1="${f1(y1)}" x2="${f1(x+s*e)}" y2="${f1(y1)}"/><line x1="${f1(ref+s*k*.3)}" y1="${f1(y2)}" x2="${f1(x+s*e)}" y2="${f1(y2)}"/><line x1="${f1(x)}" y1="${f1(y1-e)}" x2="${f1(x)}" y2="${f1(y2+e)}"/>${tick(x,y1)}${tick(x,y2)}<text x="${f1(tx)}" y="${f1(ty)}" font-size="${f1(k)}" transform="rotate(-90 ${f1(tx)} ${f1(ty)})">${t}</text></g>`};
+  const TxP=(x,y,sz,t,cls)=>{const w=String(t).length*sz*0.62,c=[[x,y],[x,y-sz*1.3],[x,y+sz*1.4],[x+w*0.6,y-sz*1.3],[x-w-sz,y],[x,y+sz*2.8]];for(const [cx,cy] of c){const b=[cx,cy-sz,cx+w,cy+sz*.2];if(!hit(b)){LB.push(b);return Tx(cx,cy,sz,t,cls)}}return Tx(x,y,sz,t,cls)};
   let oy=0;const SEC=[];let secN=0;const secOpen=(t,sub)=>{secN++;SEC.push({i:o.length,y0:oy});o.push(`<text class="num" x="0" y="${f1(oy)}" font-size="${f1(k*1.6)}">${String(secN).padStart(2,'0')}</text>`,Tx(k*3.2,oy,k*1.6,t,'h'));if(sub)o.push(Tx(k*3.2,oy+k*1.9,k*.9,sub,'s'))};const secClose=y=>{SEC[SEC.length-1].y1=y};
   const card=(x,y,w,h)=>`<rect class="card" x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(k*.7)}"/>`,badge=(x,y,t)=>`<circle class="badge" cx="${f1(x)}" cy="${f1(y)}" r="${f1(k*1.05)}"/><text class="bt" x="${f1(x)}" y="${f1(y+k*.34)}" font-size="${f1(k*.85)}">${esc(t)}</text>`;
   secOpen('Общий вид','Фасад, вид справа и вид сверху · все размеры в миллиметрах');oy+=k*5.5;
   const fx=k*5,fy=oy;
   [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>o.push(R(fx+p.x-b.x0,fy+b.y1-p.y-p.h,p.w,p.h)));
-  o.push(dH(fx,fx+W,fy+H+k*2.4,fy+H,W),dV(fy,fy+H,fx-k*2.4,fx,H),Tx(fx,fy+H+k*5,k*.9,'Фасад','s'));
+  const CL=[];[...P].sort((a,c)=>a.x-c.x).forEach(p=>{const c=CL[CL.length-1];if(c&&p.x<=c.x1+30){c.x1=Math.max(c.x1,p.x+p.w);c.y0=Math.min(c.y0,p.y);c.y1=Math.max(c.y1,p.y+p.h)}else CL.push({x0:p.x,x1:p.x+p.w,y0:p.y,y1:p.y+p.h})});
+  let rowY=fy+H+k*2.4;if(CL.length>1){CL.forEach(c=>{o.push(dH(fx+c.x0-b.x0,fx+c.x1-b.x0,rowY,fy+H,f1(c.x1-c.x0)),TxP(fx+(c.x0+c.x1)/2-b.x0-k*1.6,fy+b.y1-c.y1-k*.7,k*.85,'H '+f1(c.y1-c.y0),'s'))});rowY+=k*2.6}
+  o.push(dH(fx,fx+W,rowY,fy+H,f1(W)),dV(fy,fy+H,fx-k*2.4,fx,f1(H)),Tx(fx,rowY+k*2.6,k*.9,CL.length>1?'Фасад · размеры каждого изделия и общий габарит':'Фасад','s'));
   const sx=fx+W+G;[...P].sort((a,c)=>(a.x+a.w)-(c.x+c.w)).forEach(p=>o.push(R(sx+b.z1-p.z-p.d,fy+b.y1-p.y-p.h,p.d,p.h)));
-  o.push(dH(sx,sx+D,fy+H+k*2.4,fy+H,D),dV(fy,fy+H,sx+D+k*2.4,sx+D,H),Tx(sx,fy+H+k*5,k*.9,'Вид справа','s'));
-  const ty=fy+H+G;[...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>o.push(R(fx+p.x-b.x0,ty+p.z-b.z0,p.w,p.d)));
-  o.push(dH(fx,fx+W,ty+D+k*2.4,ty+D,W),dV(ty,ty+D,fx-k*2.4,fx,D),Tx(fx,ty+D+k*5,k*.9,'Вид сверху','s'));
-  secClose(ty+D+k*7);oy=ty+D+G*1.2;
+  o.push(dH(sx,sx+D,fy+H+k*2.4,fy+H,f1(D)),dV(fy,fy+H,sx+D+k*2.4,sx+D,f1(H)),Tx(sx,fy+H+k*5,k*.9,'Вид справа','s'));
+  const ty=Math.max(fy+H+G,rowY+k*5.5);[...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>o.push(R(fx+p.x-b.x0,ty+p.z-b.z0,p.w,p.d)));
+  o.push(dH(fx,fx+W,ty+D+k*2.4,ty+D,f1(W)),dV(ty,ty+D,fx-k*2.4,fx,f1(D)),Tx(fx,ty+D+k*5,k*.9,'Вид сверху','s'));
+  secClose(ty+D+k*7);oy=ty+D+k*7+Math.max(G*.6,k*5);
   const parts=partsList(),maxW=Math.max(ex,fx+3000);secOpen('Детали',`${parts.length} типов · ${parts.reduce((a,q)=>a+q.qty,0)} шт. · волокна шпона вдоль длинной стороны`);oy+=k*6;
   let cx=fx,rowH=0;
   parts.forEach(pt=>{const bw=pt.L+k*5,bh=pt.W+k*10;if(cx+bw>maxW&&cx>fx){cx=fx;oy+=rowH;rowH=0}
     const x=cx,y=oy+k*1.6,ci=o.length;o.push(pt.cr?`<rect class="pn" x="${f1(x)}" y="${f1(y)}" width="${f1(pt.L)}" height="${f1(pt.W)}" rx="${f1(pt.cr)}"/>`:R(x,y,pt.L,pt.W),dH(x,x+pt.L,y-k*1.6,y,pt.L),dV(y,y+pt.W,x+pt.L+k*1.8,x+pt.L,pt.W));
-    (pt.fe||[]).forEach(f=>{o.push(f.c?`<circle class="pk${f.thr?' thr':''}" cx="${f1(x+(f.x0+f.x1)/2)}" cy="${f1(y+(f.y0+f.y1)/2)}" r="${f1((f.x1-f.x0)/2)}"/>`:`<rect class="pk${f.thr?' thr':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}" rx="${f1(f.rr||0)}"/>`,Tx(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*1.6,k*.8,f.thr?'вырез насквозь':f.depth>0?`выборка ${f1(f.depth)}${f.s<0?' (снизу)':''}`:f.depth<0?`выступ ${f1(-f.depth)}`:'разметка'))});
+    (pt.fe||[]).forEach(f=>{o.push(f.c?`<circle class="pk${f.thr?' thr':''}" cx="${f1(x+(f.x0+f.x1)/2)}" cy="${f1(y+(f.y0+f.y1)/2)}" r="${f1((f.x1-f.x0)/2)}"/>`:`<rect class="pk${f.thr?' thr':''}" x="${f1(x+f.x0)}" y="${f1(y+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}" rx="${f1(f.rr||0)}"/>`,TxP(x+(f.x0+f.x1)/2,y+(f.y0+f.y1)/2+k*1.6,k*.8,f.thr?'вырез насквозь':f.depth>0?`выборка ${f1(f.depth)}${f.s<0?' (снизу)':''}`:f.depth<0?`выступ ${f1(-f.depth)}`:'разметка'))});
     (pt.cups||[]).forEach(c=>o.push(`<circle class="pk" cx="${f1(x+c.x)}" cy="${f1(y+c.y)}" r="${f1(c.dia/2)}"/>`));
     if(pt.mat!=='black'){const gy=y+pt.W/2,gl=Math.min(pt.L*0.5,k*12);o.push(`<line class="gr" x1="${f1(x+pt.L/2-gl/2)}" y1="${f1(gy)}" x2="${f1(x+pt.L/2+gl/2)}" y2="${f1(gy)}"/>`)}
     o.push(Tx(x+k*1.6,y+pt.W+k*2.6,k*1.05,pt.names.join(', '),'mh'),Tx(x+k*1.6,y+pt.W+k*4.1,k*.85,`${pt.L} × ${pt.W} × ${pt.T} мм · ${pt.qty} шт.`,'s'),Tx(x+k*1.6,y+pt.W+k*5.4,k*.8,`${MATS[pt.mat].short}${pt.cn?' · '+pt.cn:''}${pt.cr?' · углы R'+pt.cr:''}`,'s'),badge(x+k*.2,y+pt.W+k*2.25,'Д'+pt.no));
@@ -1687,7 +1695,7 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
         o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · ${f.s>0?'лицевая пласть':'обратная пласть'}${f.jn?' · ответная часть соединения с «'+f.jn+'» (скрыта стыком)':''}`,'mh'));
         const cx0=x+(f.x0+f.x1)/2,cy0=top+(f.y0+f.y1)/2,rr=(f.x1-f.x0)/2;o.push(R(x,top,L,W),f.c?`<circle class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" cx="${f1(cx0)}" cy="${f1(cy0)}" r="${f1(rr)}"/><line class="sep" x1="${f1(cx0-rr*1.3)}" y1="${f1(cy0)}" x2="${f1(cx0+rr*1.3)}" y2="${f1(cy0)}"/><line class="sep" x1="${f1(cx0)}" y1="${f1(cy0-rr*1.3)}" x2="${f1(cx0)}" y2="${f1(cy0+rr*1.3)}"/>`:`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}" rx="${f1(f.rr||0)}"/>`);
         o.push(dH(x,x+L,top-k*1.4,top,f1(L)),dV(top,top+W,x-k*2.2,x,f1(W)));
-        if(f.c){const cxm=(f.x0+f.x1)/2,cym=(f.y0+f.y1)/2;o.push(dH(x,x+cxm,top+W+k*2.4,top+W,f1(cxm)),dH(x+cxm,x+L,top+W+k*2.4,top+W,f1(L-cxm)),dV(top,top+cym,x+L+k*2.4,x+L,f1(cym)),dV(top+cym,top+W,x+L+k*2.4,x+L,f1(W-cym)),Tx(cx0+rr*0.75+k*.4,cy0-rr*0.75-k*.3,k*.95,'Ø'+f1(rr*2),'mh'))}
+        if(f.c){const cxm=(f.x0+f.x1)/2,cym=(f.y0+f.y1)/2;o.push(dH(x,x+cxm,top+W+k*2.4,top+W,f1(cxm)),dH(x+cxm,x+L,top+W+k*2.4,top+W,f1(L-cxm)),dV(top,top+cym,x+L+k*2.4,x+L,f1(cym)),dV(top+cym,top+W,x+L+k*2.4,x+L,f1(W-cym)),TxP(cx0+rr*0.75+k*.4,cy0-rr*0.75-k*.3,k*.95,'Ø'+f1(rr*2),'mh'))}
         else o.push(chainH(x,L,f.x0,f.x1,top+W+k*2.4,top+W),chainV(top,W,f.y0,f.y1,x+L+k*2.4,x+L));
         const sx=x+L+k*9,dr=Math.min(Math.abs(f.depth),T),dv=dr*ve,sy=top+(f.depth<0&&f.s>0?dv:0)+k*1.5;
         o.push(Tx(sx,top-k*.2,k*.85,'Разрез'+(ve>1?' · толщина показана ×'+ve:''),'s'),sect(sx,sy,L,TV,f,ve));
@@ -1695,7 +1703,7 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
         o.push(chainH(sx,L,f.x0,f.x1,sy+TV+(f.s<0&&f.depth<0?dv:0)+k*2.4,sy+TV),dV(sy,sy+TV,sx+L+k*2.4,sx+L,f1(T)));
         if(!f.thr){const y1=f.s>0?(f.depth>0?sy:sy-dv):(f.depth>0?sy+TV-dv:sy+TV);o.push(dV(y1,y1+dv,a+k*2.2,a,f1(dr)));if(f.depth>0)o.push(Tx(sx,sy+TV+k*5.2,k*.85,`глубина ${f1(dr)} мм · остаток толщины ${f1(T-dr)} мм`,'s'))}
         let zy=sy+TV+k*7;const pw=f.x1-f.x0,ph=f.y1-f.y0;if(Math.min(pw,ph)<Math.max(L,W)*0.04){const z=Math.max(2,Math.min(50,Math.round(k*10/Math.max(pw,ph)))),cx=x+(f.x0+f.x1)/2,cy=top+(f.y0+f.y1)/2,rr=Math.max(pw,ph)/2+k*1.2;
-          o.push(`<circle class="callout" cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(rr)}"/>`,Tx(cx+rr+k*.3,cy-rr,k*.9,'А'+n,'mh'));
+          o.push(`<circle class="callout" cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(rr)}"/>`,TxP(cx+rr+k*.3,cy-rr,k*.9,'А'+n,'mh'));
           const zx=sx,zt=zy+k*1.2;o.push(Tx(zx,zy,k*.85,`Узел А${n} · увеличено ×${z}`,'s'),(f.c?`<circle class="pk" cx="${f1(zx+pw*z/2)}" cy="${f1(zt+ph*z/2)}" r="${f1(pw*z/2)}"/>`:R(zx,zt,pw*z,ph*z,'pk')),dH(zx,zx+pw*z,zt+ph*z+k*2.2,zt+ph*z,f1(pw)),dV(zt,zt+ph*z,zx+pw*z+k*2.2,zx+pw*z,f1(ph)),Tx(zx,zt+ph*z+k*4.6,k*.85,`от левого края ${f1(f.x0)} · от верхнего края ${f1(f.y0)} мм`,'s'));zy=zt+ph*z+k*6.5}
         y=Math.max(top+W+k*5.5,zy)});
       if((pt.cups||[]).length){n++;const cs=pt.cups,top=y+k*3.4,d0=cs[0].dia;
@@ -1716,15 +1724,17 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
     secClose(oy-k*2);oy+=G*.3}
   if(nestOnly){o.length=0;oy=0;ex=0;SEC.length=0;secN=0}
   secOpen('Карта раскроя',nestOnly?`${state.name} · масштаб 1:1 · все размеры в мм · пропил 4 мм`:'Пропил 4 мм · отступ от края листа 10 мм · штриховка — обрезки');oy+=k*6;cx=fx;rowH=0;
-  nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
-    const x=cx,y=oy+k*2.4;o.push(Tx(x,oy+k,k*.95,`${g.T} мм · ${MATS[g.mat].short} · лист ${i+1}/${g.sheets.length} · ${g.SW} × ${g.SH} мм · использовано ${Math.round(s.util*100)}%`,'s'),R(x,y,g.SW,g.SH,'sh'));
+  const OV=[];nestAll().forEach(g=>{const mw=Math.max(maxW,fx+3*g.SW+2*G*.6);g.sheets.forEach((s,i)=>{if(cx+g.SW>mw&&cx>fx){cx=fx;oy+=rowH;rowH=0}
+    const x=cx,y=oy+k*3.2;{const l1=`Лист ${i+1}/${g.sheets.length} · ${g.T} мм · ${MATS[g.mat].short}`,l2=`${g.SW} × ${g.SH} мм · занято ${Math.round(s.util*100)}%`,fz=Math.min(k*1.05,g.SW/(Math.max(l1.length,l2.length)*0.62));o.push(Tx(x,oy+k*.2,fz,l1,'mh'),Tx(x,oy+k*.2+fz*1.35,fz*.85,l2,'s'),R(x,y,g.SW,g.SH,'sh'))}
     const st=s.stats||(s.stats=sheetStats(s,g.SW,g.SH));
     st.waste.forEach(r=>{o.push(`<rect class="ws" x="${f1(x+r.x)}" y="${f1(y+r.y)}" width="${f1(r.w)}" height="${f1(r.h)}" data-t="w|${r.w}|${r.h}|${Math.round(r.x)}|${Math.round(r.y)}|${i+1}|${g.T}"/>`);if(r.w>k*6&&r.h>k*1.6)o.push(`<text class="wt" x="${f1(x+r.x+k*.4)}" y="${f1(y+r.y+k*1.1)}" font-size="${f1(Math.min(k*.75,r.h*.5))}">отход ${r.w}×${r.h} мм</text>`)});
-    s.parts.forEach(p=>{const X=x+p.x,Y=y+p.y,fs=Math.min(k*.9,p.h*.28,p.w*.12);o.push(`<rect class="np" style="fill:${NPAL[(p.no-1)%NPAL.length]}" x="${f1(X)}" y="${f1(Y)}" width="${f1(p.w)}" height="${f1(p.h)}" data-t="p|${p.no}|${p.w}|${p.h}|${Math.round(p.x)}|${Math.round(p.y)}|${i+1}|${g.T}|${g.mat}"/>`);
-      if(fs>3){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h} мм</text>`,`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
-      const bs=Math.min(k*2.6,p.h*.45,p.w*.3);if(bs>3)o.push(`<text class="nn" x="${f1(X+p.w/2)}" y="${f1(Y+p.h/2+bs*.35)}" font-size="${f1(bs)}" text-anchor="middle">${p.no}</text>`)});
+    s.parts.forEach(p=>{const X=x+p.x,Y=y+p.y,fs=Math.min(k*.9,p.h*.22,p.w*.1);o.push(`<rect class="np" style="fill:${NPAL[(p.no-1)%NPAL.length]}" x="${f1(X)}" y="${f1(Y)}" width="${f1(p.w)}" height="${f1(p.h)}" data-t="p|${p.no}|${p.w}|${p.h}|${Math.round(p.x)}|${Math.round(p.y)}|${i+1}|${g.T}|${g.mat}"/>`);
+      if(fs>3&&p.h>fs*5.5&&p.w>(String(p.w).length+String(p.h).length+4)*fs*0.62+fs*2){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h} мм</text>`)}if(fs>3&&p.w>fs*5&&p.h>fs*3.2){o.push(`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
+      if(false){o.push(`<text class="nl" x="${f1(X+fs*.5)}" y="${f1(Y+fs*1.25)}" font-size="${f1(fs)}">${p.w}×${p.h} мм</text>`,`<text class="nd" x="${f1(X+p.w/2)}" y="${f1(Y+p.h-fs*.45)}" font-size="${f1(fs*.85)}" text-anchor="middle">${p.w}</text>`,`<text class="nd" x="${f1(X+p.w-fs*.45)}" y="${f1(Y+p.h/2)}" font-size="${f1(fs*.85)}" text-anchor="middle" transform="rotate(-90 ${f1(X+p.w-fs*.45)} ${f1(Y+p.h/2)})">${p.h}</text>`)}
+      const bs=Math.min(k*2.2,p.h*.36,p.w*.22);if(bs>3)o.push(`<text class="nn" x="${f1(X+p.w/2)}" y="${f1(Y+p.h/2+bs*.35)}" font-size="${f1(bs)}" text-anchor="middle">${p.no}</text>`)});
     cx+=g.SW+G*.6;rowH=Math.max(rowH,g.SH+k*5)});
-    g.over.forEach(it=>o.push(Tx(cx,oy+k,k*.9,`Д${it.no} больше листа ${g.SW}×${g.SH}`,'s')))});
+    g.over.forEach(it=>OV.push(`Д${it.no} больше листа ${g.SW}×${g.SH} мм — нужна сборка из частей или лист большего формата`))});
+  if(OV.length){oy+=rowH+k*1.5;rowH=0;OV.forEach(t=>{o.push(Tx(fx,oy,k*.9,'⚠ '+t,'s'));oy+=k*1.5})}
   secClose(oy+rowH-k*1.5);oy+=rowH+G*.4;
   if(nestOnly){o.push(Tx(fx,oy,k*1.1,'Детали','mh'));oy+=k*1.8;parts.forEach(pt=>{o.push(`<rect x="${f1(fx)}" y="${f1(oy-k*.9)}" width="${f1(k*1.1)}" height="${f1(k*1.1)}" style="fill:${NPAL[(pt.no-1)%NPAL.length]};stroke:#999"/>`,Tx(fx+k*1.7,oy,k*.9,`${pt.no} — ${pt.names.join(', ')} · ${pt.L} × ${pt.W} × ${pt.T} мм · ${MATS[pt.mat].short} · ${pt.qty} шт.`,'s'));oy+=k*1.5});oy+=k*2}
   const tw=k*26,th=k*8.4,tx=Math.max(ex-tw,fx),dt=new Date().toLocaleDateString('ru-RU');
