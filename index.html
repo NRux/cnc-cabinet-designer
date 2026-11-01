@@ -69,7 +69,7 @@ main{position:relative;overflow:hidden;min-height:0}
 .sw button{display:flex;align-items:center;gap:7px;background:none;border:1px solid var(--line);padding:5px 11px 5px 5px;font-size:12px;border-radius:980px}
 .sw button span{width:20px;height:20px;border:1px solid rgba(0,0,0,.12);border-radius:50%}
 .sw button[aria-pressed="true"]{border-color:var(--fg)}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{white-space:nowrap}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{white-space:nowrap;flex:1 1 auto!important}
 .insp .fld:has(>.seg){grid-template-columns:1fr}.insp .fld>.seg{grid-column:1/-1!important}
 .btn{background:var(--soft);border:0;padding:8px 15px;font-size:13px;border-radius:980px}
 .btn:hover{background:#E8E8EC}
@@ -400,7 +400,7 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
           <span class="fmt">SVG · DXF · масштаб 1:1</span>
           <h4>Карта раскроя</h4>
           <p>Только листы с разложенными деталями, номерами, размерами и отходами — отдельным векторным файлом в миллиметрах для распила и станка.</p>
-          <div class="row" style="flex-wrap:nowrap"><button class="btn pri" style="flex:1;white-space:nowrap" data-ex="nestsvg">Скачать SVG</button><button class="btn" style="flex:none;white-space:nowrap" data-ex="nestdxf">DXF</button></div>
+          <div class="row"><button class="btn pri" style="flex:1;white-space:nowrap" data-ex="nestsvg">Скачать SVG</button><button class="btn" style="flex:none;white-space:nowrap" data-ex="nestdxf">DXF</button></div>
         </div>
         <div class="ex">
           <span class="fmt">PDF · A4</span>
@@ -430,7 +430,7 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
           <span class="fmt">DAE · OBJ · FBX · GLB · STL</span>
           <h4>Импорт модели</h4>
           <p>Из SketchUp (Файл → Экспорт → 3D-модель → COLLADA .dae), Blender, 3ds Max, Rhino, Базис и PRO100 через OBJ/FBX. Каждая деталь становится фанерной доской по её габаритам.</p>
-          <div class="row" style="flex-wrap:nowrap"><select id="impUnit" class="txt" style="flex:1" title="Единицы файла"><option value="auto">Единицы: авто</option><option value="1">мм</option><option value="10">см</option><option value="1000">м</option><option value="25.4">дюймы</option></select><select id="impUp" class="txt" style="flex:1" title="Какая ось смотрит вверх"><option value="auto">Верх: авто</option><option value="y">Верх: Y</option><option value="z">Верх: Z</option></select></div>
+          <div class="row"><select id="impUnit" class="txt" style="flex:1" title="Единицы файла"><option value="auto">Единицы: авто</option><option value="1">мм</option><option value="10">см</option><option value="1000">м</option><option value="25.4">дюймы</option></select><select id="impUp" class="txt" style="flex:1" title="Какая ось смотрит вверх"><option value="auto">Верх: авто</option><option value="y">Верх: Y</option><option value="z">Верх: Z</option></select></div>
           <label class="btn" for="impFile">Выбрать файл…</label><input type="file" id="impFile" accept=".dae,.obj,.fbx,.glb,.gltf,.stl,.skp,.json" hidden>
         </div>
       </div>
@@ -700,7 +700,7 @@ function hwInsp(p){const f=(k,l,u='мм',step='')=>`<label class="fld"><span>${l
   return `<div class="grp"><span class="lbl">Направляющая для ящика</span>${f('pL','Длина (закрытая)')}${f('pH','Высота')}${f('pT','Толщина (зазор)')}
     <div class="fld"><span>Выдвижение</span><div class="seg" style="grid-column:2/-1"><button data-act="hwsec" data-v="3" aria-pressed="${p.psec!==2}">Полное</button><button data-act="hwsec" data-v="2" aria-pressed="${p.psec===2}">Частичное</button></div></div>
     <label class="fld"><span>Показать открытой</span><input type="range" min="0" max="100" step="5" data-k="hwp" data-p="pext" data-scope="sel" value="${p.pext||0}"><i>${p.pext||0}%</i></label>
-    <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="sopen">Выдвинуть</button><button class="btn" style="flex:1" data-act="sclose">Задвинуть</button></div>
+    <div class="row"><button class="btn" style="flex:1" data-act="sopen">Выдвинуть</button><button class="btn" style="flex:1" data-act="sclose">Задвинуть</button></div>
     <p class="note">Ход: ${Math.round((p.psec===2?0.72:1)*p.pL)} мм · зазор между ящиком и боковиной = толщине направляющей (${p.pT} мм). Ставится парой — слева и справа.</p></div>`}
 const HWLIM={pD:[16,40],pa:[8,300],pb:[8,300],pw:[8,200],pt:[0.5,6],pn:[0,6],pd:[1,20],pL:[150,1200],pH:[20,80],pT:[8,20],pext:[0,100]};
 function hwSet(p,k,v){const [lo,hi]=HWLIM[k]||[0,1e4];v=Math.max(lo,Math.min(hi,v));if(k==='pn')v=Math.round(v);p[k]=r4(v);hwFix(p);
@@ -776,7 +776,7 @@ function drawerPlace(did){for(const q of drawerItems(did)){if(q.hw==='slide'){co
 function drawerStep(){let busy=false;for(const id in drawerSim){const S=drawerSim[id];if(!drawerItems(id).length){delete drawerSim[id];continue}if(S.mode!=='idle')busy=true;drawerPlace(id)}
   const sl=$('#drwAng');if(sl&&document.activeElement!==sl){const d=selP(),S=d&&drawerSim[d.drw];if(S){sl.value=S.a;const o=$('#drwAngV');if(o)o.textContent=Math.round(S.a)+' мм'}}return busy}
 function drawerHTML(p){if(!p.drw)return'';const S=drawerSim[p.drw],a=S?S.a:0,L=p.drl||400;return `<div class="grp"><span class="lbl">Ящик на направляющих · ход ${Math.round(L)} мм</span>
-  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="wopen">Выдвинуть</button><button class="btn" style="flex:1" data-act="wclose">Задвинуть</button><button class="btn" style="flex:1" data-act="wpush" title="Толкнуть — доводчик дотянет">Толкнуть</button></div>
+  <div class="row"><button class="btn" style="flex:1" data-act="wopen">Выдвинуть</button><button class="btn" style="flex:1" data-act="wclose">Задвинуть</button><button class="btn" style="flex:1" data-act="wpush" title="Толкнуть — доводчик дотянет">Толкнуть</button></div>
   <label class="fld"><span>Выдвинут на</span><input type="range" id="drwAng" min="0" max="${L}" step="1" value="${a}"><i id="drwAngV">${Math.round(a)} мм</i></label><p class="note">Направляющие полного выдвижения с доводчиком: в последних 60 мм ящик тормозит и мягко закрывается.</p></div>`}
 function doorDelta(d){const S=doorSim[d.id];if(!S||S.a<=0.001)return null;const {I,q}=doorQ(d,S.a);return{pivot:I.pivot,q}}
 function slideAnim(id,to){const p=panelById(id);if(!p||p.hw!=='slide')return;slideSim[id]={a:p.pext||0,v:0,to};animDoors=true}
@@ -859,8 +859,8 @@ function prodHTML(rec){const fs=PRODS[rec.type].f;return `<div class="grp"><span
   ${Array.isArray(rec.P.secs)?'<p class="note">Секции шкафа (ширина, полки, ящики, штанга) настраиваются в каталоге.</p>':''}${fs.filter(f=>!(Array.isArray(rec.P.secs)&&['W','sec','hang','sh','dr'].includes(f[0]))).map(([k,l,d,a,b,step])=>a==='sel'?`<div class="fld"><span>${l}</span><div class="seg" style="grid-column:2/-1">${b.map(([v,n])=>`<button data-act="prodsel" data-k="${k}" data-v="${v}" aria-pressed="${String(rec.P[k])===v}">${n}</button>`).join('')}</div></div>`
     :a==='col'?`<div class="fld" style="grid-template-columns:1fr"><span>${l}</span><div class="pal">${PAL.map(([c,n])=>`<button data-act="prodcol" data-k="${k}" data-c="${c}" title="${n}" aria-pressed="${(rec.P[k]||'')===c}"><span style="background:${c||'#e2cda4'}"></span></button>`).join('')}</div></div>`
     :`<label class="fld"><span>${l}</span><input data-k="prodp" data-p="${k}" inputmode="decimal" value="${rec.P[k]}"><i>${step?'шт':'мм'}</i></label>`).join('')}
-  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="prodopen">Открыть всё</button><button class="btn" style="flex:1" data-act="prodclose">Закрыть всё</button></div>
-  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="prodselall">Выделить изделие</button><button class="btn" style="flex:1" data-act="produngroup">Разгруппировать</button></div></div>`}
+  <div class="row"><button class="btn" style="flex:1" data-act="prodopen">Открыть всё</button><button class="btn" style="flex:1" data-act="prodclose">Закрыть всё</button></div>
+  <div class="row"><button class="btn" style="flex:1" data-act="prodselall">Выделить изделие</button><button class="btn" style="flex:1" data-act="produngroup">Разгруппировать</button></div></div>`}
 function prodSet(rec,k,v){const f=PRODS[rec.type].f.find(x=>x[0]===k);if(f&&typeof f[2]==='number'){v=num(v);if(!isFinite(v))return false;v=Math.max(f[3],Math.min(f[4],v));if(f[5])v=Math.round(v)}pushUndo();rec.P[k]=v;const sel=selP(),items=placeProduct(rec,true);rebuildAll();state.sel=(items.find(q=>sel&&q.name===sel.name)||items[0]).id;state.multi=null;save();renderInsp();return true}
 
 /* ---------- selection ---------- */
@@ -1364,10 +1364,10 @@ function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');i
   else if(Rl.side==='top')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
   else{const x=Math.max(0,Math.min(W-railEl.offsetWidth,Rl.x||g)),y=Math.max(0,Math.min(H-railEl.offsetHeight,Rl.y||g));S(railEl,{l:x,t:y})}
   const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px';railFade();
-  const ir=$('#inspRsz'),rz=$('#railRsz'),ib=ins.getBoundingClientRect();ir.style.display=I.side==='right'||I.side==='left'?'':'none';ir.style.top=(ib.top-sr0.top+18)+'px';ir.style.height=Math.max(40,ib.height-36)+'px';ir.style.left=(I.side==='right'?ib.left-sr0.left-6:ib.right-sr0.left-4)+'px';
+  const ir=$('#inspRsz'),rz=$('#railRsz'),ib=ins.getBoundingClientRect();ir.style.display=I.side==='top'||I.side==='bottom'?'none':'';ir.style.top=(ib.top-sr0.top+18)+'px';ir.style.height=Math.max(40,ib.height-36)+'px';ir.style.left=(I.side==='right'?ib.left-sr0.left-6:ib.right-sr0.left-4)+'px';ir.style.cursor='ew-resize';
   rz.style.display=horiz?'none':'';rz.style.top=(rr.top-sr0.top+18)+'px';rz.style.height=Math.max(40,rr.height-36)+'px';rz.style.left=(Rl.side==='right'?rr.left-sr0.left-6:rr.right-sr0.left-4)+'px'}
 ['#inspRsz','#railRsz'].forEach(id=>$(id).addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();const isI=id==='#inspRsz',el=$(id);el.setPointerCapture(e.pointerId);el.classList.add('on');
-  const mv=ev=>{const sr=stageEl.getBoundingClientRect();if(isI){const g=innerWidth<1100?10:16;DOCK.insp.w=DOCK.insp.side==='right'?sr.right-g-ev.clientX:ev.clientX-sr.left-g;layoutPanels()}else{const rr=$('#rail').getBoundingClientRect(),w=DOCK.rail.side==='right'?rr.right-ev.clientX:ev.clientX-rr.left,c=w>78?2:1;if(c!==(DOCK.rail.cols||1)){DOCK.rail.cols=c;layoutPanels()}}};
+  const mv=ev=>{const sr=stageEl.getBoundingClientRect();if(isI){const g=innerWidth<1100?10:16;const ib=$('#insp').getBoundingClientRect();DOCK.insp.w=DOCK.insp.side==='right'?sr.right-g-ev.clientX:DOCK.insp.side==='left'?ev.clientX-sr.left-g:ev.clientX-ib.left;layoutPanels()}else{const rr=$('#rail').getBoundingClientRect(),w=DOCK.rail.side==='right'?rr.right-ev.clientX:ev.clientX-rr.left,c=w>78?2:1;if(c!==(DOCK.rail.cols||1)){DOCK.rail.cols=c;layoutPanels()}}};
   const up=()=>{el.classList.remove('on');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);saveDock();resize()};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}));
 function railFade(){const sc=$('#railSc');if(!sc)return;const h=$('#rail').classList.contains('h')||innerWidth<=760,pos=h?sc.scrollLeft:sc.scrollTop,max=h?sc.scrollWidth-sc.clientWidth:sc.scrollHeight-sc.clientHeight;sc.style.setProperty('--ft',pos>1?'28px':'0px');sc.style.setProperty('--fb',max-pos>1?'28px':'0px')}
 {const sc=$('#railSc'),tip=document.createElement('div');tip.className='rtip';tip.hidden=true;document.body.appendChild(tip);sc.addEventListener('scroll',()=>{railFade();tip.hidden=true},{passive:true});new ResizeObserver(railFade).observe(sc);
@@ -1454,7 +1454,7 @@ function makeDowel(p,f,depth){const a=f.a,[u,v]=AX.filter(x=>x!==a),ai=AX.indexO
 
 function doorHTML(d){const hs=doorHinges(d.id);if(!hs.length)return '';const D=d.door||{},S=doorSim[d.id],a=S?S.a:0,mx=D.max||105;
   return `<div class="grp"><span class="lbl">Дверь на петлях · ${hs.length} шт.</span>
-  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="dopen">Открыть</button><button class="btn" style="flex:1" data-act="dclose">Закрыть</button><button class="btn" style="flex:1" data-act="dpush" title="Толкнуть и отпустить — дверь закроется сама">Толкнуть</button></div>
+  <div class="row"><button class="btn" style="flex:1" data-act="dopen">Открыть</button><button class="btn" style="flex:1" data-act="dclose">Закрыть</button><button class="btn" style="flex:1" data-act="dpush" title="Толкнуть и отпустить — дверь закроется сама">Толкнуть</button></div>
   <label class="fld"><span>Открыта на</span><input type="range" id="doorAng" min="0" max="${mx}" step="1" value="${a}"><i id="doorAngV">${Math.round(a)}°</i></label>
   <div class="fld"><span>Петли</span><div class="seg" style="grid-column:2/-1;display:grid;grid-template-columns:1fr 1fr">${['left','right','top','bottom'].map(v=>`<button data-act="dside" data-v="${v}" aria-pressed="${(D.side||'left')===v}">${{left:'Слева',right:'Справа',top:'Сверху',bottom:'Снизу'}[v]}</button>`).join('')}</div></div>
   <div class="fld"><span>Доводчик</span><div class="seg" style="grid-column:2/-1"><button data-act="dsoft" data-v="1" aria-pressed="${!!D.soft}">Есть</button><button data-act="dsoft" data-v="0" aria-pressed="${!D.soft}">Нет</button></div></div>
