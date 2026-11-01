@@ -69,7 +69,8 @@ main{position:relative;overflow:hidden;min-height:0}
 .sw button{display:flex;align-items:center;gap:7px;background:none;border:1px solid var(--line);padding:5px 11px 5px 5px;font-size:12px;border-radius:980px}
 .sw button span{width:20px;height:20px;border:1px solid rgba(0,0,0,.12);border-radius:50%}
 .sw button[aria-pressed="true"]{border-color:var(--fg)}
-.row{display:flex;gap:8px;flex-wrap:wrap}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{white-space:nowrap}
+.insp .fld:has(>.seg){grid-template-columns:1fr}.insp .fld>.seg{grid-column:1/-1!important}
 .btn{background:var(--soft);border:0;padding:8px 15px;font-size:13px;border-radius:980px}
 .btn:hover{background:#E8E8EC}
 .btn.pri{background:var(--acc);color:var(--acc-fg)}
@@ -83,6 +84,7 @@ main{position:relative;overflow:hidden;min-height:0}
 .note{font-size:12px;color:var(--mute);margin:0}
 .hint{display:none!important;position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;font:400 11px var(--f-mono);color:var(--mute);letter-spacing:.03em;pointer-events:none;text-shadow:0 0 6px var(--stage)}
 .rail,.insp,.status{z-index:4}
+.rsz{position:absolute;width:10px;cursor:ew-resize;z-index:5;touch-action:none}.rsz::after{content:"";position:absolute;left:4px;top:0;bottom:0;width:2px;border-radius:2px;background:transparent;transition:background .15s}.rsz:hover::after,.rsz.on::after{background:#111}
 .dl{position:absolute;left:0;top:0;z-index:2;font:500 11px var(--f-mono);background:var(--ink);color:var(--paper);padding:2px 6px;pointer-events:none;white-space:nowrap;font-variant-numeric:tabular-nums}
 .vizbar{position:absolute;left:max(16px,env(safe-area-inset-left,0px));bottom:16px;right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;pointer-events:none}
 .vizbar>*{pointer-events:auto}
@@ -136,7 +138,8 @@ td.n{font-family:var(--f-mono);text-align:right}
 .v3h{position:absolute;left:12px;bottom:12px;max-width:calc(100% - 24px);font:400 11px var(--f-mono);color:#6d6d72;background:rgba(255,255,255,.82);padding:4px 8px;border-radius:8px;pointer-events:none;transition:opacity .4s}.v3.used .v3h{opacity:0}.v3f{all:unset;cursor:pointer;position:absolute;right:10px;top:10px;width:34px;height:34px;display:grid;place-items:center;background:#fff;border-radius:50%;font-size:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .v3o{all:unset;cursor:pointer;position:absolute;right:52px;top:10px;height:34px;padding:0 14px;display:grid;place-items:center;background:#fff;border-radius:17px;font:500 12px var(--f-display);box-shadow:0 1px 4px rgba(0,0,0,.08)}.v3o:hover,.v3f:hover{background:#111;color:#fff}
 .v3l{position:absolute;inset:0;pointer-events:none}.v3l span{position:absolute;left:0;top:0;font:500 11px var(--f-mono);color:#111;background:rgba(255,255,255,.85);padding:2px 6px;border-radius:6px;white-space:nowrap}.v3l span.tot{background:#111;color:#fff}
-.secs{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}.secsh{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}.secsh b{font:500 12px var(--f-mono)}
+.secs{display:flex;flex-direction:column;gap:10px}.secsh{margin-top:-28px;min-height:18px}
+.cfgg{display:flex;flex-direction:column;gap:10px;padding:18px 0;border-top:1px solid var(--line)}.cfgg:first-child{border-top:0;padding-top:4px}.cfgh{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}.cf.col{grid-template-columns:1fr;gap:8px}.secsh{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}.secsh b{font:500 12px var(--f-mono)}
 .sec{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}.sech{display:flex;align-items:center;gap:8px;font-size:13px}.sech span{font:400 12px var(--f-mono);color:var(--mute);margin-right:auto}
 .sech button{all:unset;cursor:pointer;width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--soft);font-size:15px}.sech button:hover{background:#111;color:#fff}.sadd{align-self:flex-start}
 .cdt button[data-c3]{background:#111;color:#fff;font:500 12px var(--f-display);display:grid;place-items:center}
@@ -229,6 +232,7 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
 .insp{scrollbar-width:none}.insp::-webkit-scrollbar{display:none}
 .multi.sub{background:#eaf0fd;color:#1a3f8f}
 @media (max-width:760px){
+  .rsz{display:none!important}
   .grip{display:none}.insp .grip{display:block;width:44px;height:16px;margin:-8px auto 2px;background:none;position:relative;cursor:pointer}.insp .grip::after{content:"";position:absolute;left:8px;right:8px;top:6px;height:4px;border-radius:2px;background:#c7c7cc}
   .insp.min{max-height:56px!important;overflow:hidden}
   .exp h1,#exp h1{font-size:32px;line-height:1.05}.exg{grid-template-columns:1fr}
@@ -333,6 +337,7 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
     <div class="tplpop viewpop" id="viewpop" hidden><span class="lbl">Вид</span><div class="vgrid"><button class="btn" data-view="iso">Изометрия<i>0</i></button><button class="btn" data-view="front">Спереди<i>1</i></button><button class="btn" data-view="top">Сверху<i>2</i></button><button class="btn" data-view="right">Справа<i>3</i></button><button class="btn" data-view="left">Слева<i>4</i></button><button class="btn" data-view="back">Сзади<i>5</i></button><button class="btn" data-view="bottom">Снизу<i>6</i></button></div></div>
     <div class="tplpop" id="hwpop" hidden><span class="lbl">Фурнитура</span><button class="btn" data-hw="hinge">Петли для двери</button><button class="btn" data-hw="slide">Направляющая для ящика</button><button class="btn" data-hw="angle">Металлический уголок</button><p class="note" style="margin:0">Петли: выделите доску-дверь — петли встанут на её край, дверь можно открыть. Уголок и направляющая появятся рядом с выделенной доской.</p></div>
     <div class="tplpop" id="tplpop" hidden><span class="lbl">Готовые изделия · по параметрам</span><div class="row" id="tplRow"></div><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>
+    <div class="rsz" id="inspRsz" title="Потяните, чтобы изменить ширину"></div><div class="rsz" id="railRsz" title="Потяните — 1 или 2 колонки инструментов"></div>
     <aside class="insp" id="insp" aria-label="Параметры" data-dock="right"></aside><datalist id="thkL"><option value="3"><option value="4"><option value="6"><option value="9"><option value="12"><option value="15"><option value="18"><option value="21"><option value="24"><option value="27"><option value="30"></datalist>
     <div class="status" id="status">
       <span id="hint"></span>
@@ -1346,7 +1351,7 @@ $('#keys').addEventListener('click',e=>{if(e.target.closest('[data-act="help"]')
 /* ---------- dockable toolbar & inspector ---------- */
 const DOCK={rail:{side:'left'},insp:{side:'right'}};try{Object.assign(DOCK,JSON.parse(localStorage.getItem('bat_dock2')||'{}'))}catch(e){}
 function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');if(innerWidth<=760){[railEl,ins,st].forEach(el=>el.removeAttribute('style'));railEl.classList.remove('h');return}
-  const W=stageEl.clientWidth,H=stageEl.clientHeight,g=innerWidth<1100?10:16,IW=innerWidth<1100?260:300,IH=Math.min(300,H*.42);const free={l:g,t:g,r:W-g,b:H-g};const I=DOCK.insp,Rl=DOCK.rail;if(I.side==='top'||I.side==='bottom')I.side='right';
+  const W=stageEl.clientWidth,H=stageEl.clientHeight,g=innerWidth<1100?10:16,IW=Math.round(Math.max(240,Math.min(Math.min(560,W*0.5),DOCK.insp.w||(innerWidth<1100?260:300)))),IH=Math.min(300,H*.42);const free={l:g,t:g,r:W-g,b:H-g};const I=DOCK.insp,Rl=DOCK.rail;if(I.side==='top'||I.side==='bottom')I.side='right';
   const S=(el,o)=>{el.style.left=o.l!=null?o.l+'px':'auto';el.style.top=o.t!=null?o.t+'px':'auto';el.style.right=o.r!=null?o.r+'px':'auto';el.style.bottom=o.b!=null?o.b+'px':'auto';el.style.width=o.w!=null?o.w+'px':'';el.style.height=o.h!=null?o.h+'px':''};
   ins.dataset.dock=I.side;
   if(I.side==='right'){S(ins,{r:g,t:g,b:g,w:IW});free.r=W-g-IW-12}else if(I.side==='left'){S(ins,{l:g,t:g,b:g,w:IW});free.l=g+IW+12}
@@ -1358,7 +1363,12 @@ function layoutPanels(){const railEl=$('#rail'),ins=$('#insp'),st=$('#status');i
   if(Rl.side==='left')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='right')S(railEl,{r:W-free.r,t:free.t});
   else if(Rl.side==='top')S(railEl,{l:free.l,t:free.t});else if(Rl.side==='bottom'){S(railEl,{l:free.l,b:H-free.b});stB=H-free.b+railEl.offsetHeight+10}
   else{const x=Math.max(0,Math.min(W-railEl.offsetWidth,Rl.x||g)),y=Math.max(0,Math.min(H-railEl.offsetHeight,Rl.y||g));S(railEl,{l:x,t:y})}
-  const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px';railFade()}
+  const rr=railEl.getBoundingClientRect(),sr0=stageEl.getBoundingClientRect();let sl=free.l,sR=W-free.r;if(Rl.side==='left')sl=rr.right-sr0.left+12;else if(Rl.side==='right')sR=sr0.right-rr.left+12;st.style.left=sl+'px';st.style.right=sR+'px';st.style.bottom=stB+'px';railFade();
+  const ir=$('#inspRsz'),rz=$('#railRsz'),ib=ins.getBoundingClientRect();ir.style.display=I.side==='right'||I.side==='left'?'':'none';ir.style.top=(ib.top-sr0.top+18)+'px';ir.style.height=Math.max(40,ib.height-36)+'px';ir.style.left=(I.side==='right'?ib.left-sr0.left-6:ib.right-sr0.left-4)+'px';
+  rz.style.display=horiz?'none':'';rz.style.top=(rr.top-sr0.top+18)+'px';rz.style.height=Math.max(40,rr.height-36)+'px';rz.style.left=(Rl.side==='right'?rr.left-sr0.left-6:rr.right-sr0.left-4)+'px'}
+['#inspRsz','#railRsz'].forEach(id=>$(id).addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();const isI=id==='#inspRsz',el=$(id);el.setPointerCapture(e.pointerId);el.classList.add('on');
+  const mv=ev=>{const sr=stageEl.getBoundingClientRect();if(isI){const g=innerWidth<1100?10:16;DOCK.insp.w=DOCK.insp.side==='right'?sr.right-g-ev.clientX:ev.clientX-sr.left-g;layoutPanels()}else{const rr=$('#rail').getBoundingClientRect(),w=DOCK.rail.side==='right'?rr.right-ev.clientX:ev.clientX-rr.left,c=w>78?2:1;if(c!==(DOCK.rail.cols||1)){DOCK.rail.cols=c;layoutPanels()}}};
+  const up=()=>{el.classList.remove('on');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);saveDock();resize()};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}));
 function railFade(){const sc=$('#railSc');if(!sc)return;const h=$('#rail').classList.contains('h')||innerWidth<=760,pos=h?sc.scrollLeft:sc.scrollTop,max=h?sc.scrollWidth-sc.clientWidth:sc.scrollHeight-sc.clientHeight;sc.style.setProperty('--ft',pos>1?'28px':'0px');sc.style.setProperty('--fb',max-pos>1?'28px':'0px')}
 {const sc=$('#railSc'),tip=document.createElement('div');tip.className='rtip';tip.hidden=true;document.body.appendChild(tip);sc.addEventListener('scroll',()=>{railFade();tip.hidden=true},{passive:true});new ResizeObserver(railFade).observe(sc);
   sc.addEventListener('wheel',e=>{if($('#rail').classList.contains('h')&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){sc.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
@@ -1453,10 +1463,10 @@ function doorHTML(d){const hs=doorHinges(d.id);if(!hs.length)return '';const D=d
   <button class="btn" data-act="dunhinge">Снять петли</button></div>`}
 function hingeHTML(h){const d=panelById(h.door),D=(d&&d.door)||{};const f=(k,l,u='мм')=>`<label class="fld"><span>${l}</span><input data-k="hgp" data-p="${k}" data-scope="sel" inputmode="decimal" value="${String(h[k]).replace('.',',')}"><i>${u}</i></label>`;
   return `<div class="grp"><span class="lbl">Мебельная петля · чашка Ø${h.cup}</span><p class="note">Стоит на двери «${d?esc(d.name):'—'}». Чашка врезается в дверь, планка — на боковину.</p>
-  <div class="fld"><span>Тип</span><div class="seg" style="grid-column:2/-1;display:grid;grid-template-columns:1fr">${Object.keys(HOVN).map(v=>`<button data-act="hov" data-v="${v}" aria-pressed="${(h.ov||'full')===v}">${HOVN[v]}</button>`).join('')}</div></div>
+  <div class="fld"><span>Тип</span><div class="seg" style="grid-template-columns:repeat(3,1fr)">${Object.keys(HOVN).map(v=>`<button data-act="hov" data-v="${v}" aria-pressed="${(h.ov||'full')===v}">${HOVN[v]}</button>`).join('')}</div></div>
   <div class="fld"><span>Чашка</span><div class="seg" style="grid-column:2/-1">${[35,26].map(v=>`<button data-act="hcup" data-v="${v}" aria-pressed="${h.cup===v}">Ø${v}</button>`).join('')}</div></div>
   ${f('pos','От края двери до центра')}
-  <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1" data-act="dopen">Открыть</button><button class="btn" style="flex:1" data-act="dclose">Закрыть</button><button class="btn" style="flex:1" data-act="dsel">К двери</button></div>
+  <div class="row"><button class="btn" style="flex:1" data-act="dopen">Открыть</button><button class="btn" style="flex:1" data-act="dclose">Закрыть</button><button class="btn" style="flex:1" data-act="dsel">К двери</button></div>
   <p class="note">Присадка: Ø${h.cup} мм, глубина 12 мм, центр в ${h.cup/2+5} мм от края двери. Доводчик: ${D.soft?'есть':'нет'} (меняется в настройках двери).</p></div>`}
 function renderInsp0(){const p=selP();
   if(state.tool==='board'){const nb=state.nb;insp.innerHTML=`<div class="grp"><h2>Инструмент · R</h2><h3>Доска</h3><p class="note">Кликните угол на полу или на грани детали, ведите мышь и кликните второй угол. Для точного размера наберите <b>600;300</b> и Enter. Один клик без движения ставит доску размером по умолчанию.</p></div>
@@ -1712,7 +1722,7 @@ let view='build',drawDirty=true,renderCamSet=false;
 function setView(v){if(!['build','render','drawings','export','catalog'].includes(v))v='build';if(op)opCancel();view=v;
   document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';$('#cat').hidden=v!=='catalog';if(v==='catalog')loadCat();
-  const b3=v==='build';['#rail','#insp','#status'].forEach(s=>$(s).hidden=!b3);if(!b3)Object.values(dls).forEach(d=>d.hidden=true);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
+  const b3=v==='build';['#rail','#insp','#status','#inspRsz','#railRsz'].forEach(s=>$(s).hidden=!b3);if(!b3)Object.values(dls).forEach(d=>d.hidden=true);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
   gridMinor.visible=gridMajor.visible=shadowPlane.visible=axesG.visible=guideG.visible=b3;room.visible=v==='render';Object.values(meshes).forEach(m=>m.children.forEach(c=>c.visible=b3));applyIso();
   if(v==='render'){controls.maxPolarAngle=Math.PI*0.495;buildRoom();renderer.shadowMap.type=THREE.PCFShadowMap;sun.shadow.mapSize.set(4096,4096);resetShadowMaps();renderer.setPixelRatio(baseDPR*state.q);resize();fitShadows();lastMove=performance.now();prevOK=false;syncSeg();ptSceneDirty=true;if(state.env==='wall'&&!capturing&&!renderCamSet){renderCam();renderCamSet=true}if(!capturing)loadPT();else ptExit()}
   else{controls.maxPolarAngle=Math.PI;ptExit();renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sun.shadow.mapSize.set(2048,2048);resetShadowMaps();hemi.intensity=0.5;fill.visible=false;setEnvI(1);sun.intensity=1.6;renderer.setPixelRatio(baseDPR);scene.background=stageColor();resize();fitShadows()}
@@ -1750,12 +1760,16 @@ const SECK=['W','sec','hang','sh','dr'];
 function secsInit(P){if(Array.isArray(P.secs)&&P.secs.length)return;const T=+P.T||18,n=Math.max(1,P.sec|0),w=Math.round(((+P.W)-2*T-(n-1)*T)/n);P.secs=Array.from({length:n},(_,i)=>({w,sh:i<(P.hang|0)?0:P.sh|0,dr:i===n-1?P.dr|0:0,hang:i<(P.hang|0)?1:0}))}
 function secsW(P){const T=+P.T||18;return P.secs.reduce((a,q)=>a+(+q.w),0)+(P.secs.length+1)*T}
 function secsHTML(P){const r=(i,k,l,a,b,st,u)=>`<label class="cf"><span>${l}</span><input type="range" min="${a}" max="${b}" step="${st}" value="${P.secs[i][k]}" data-si="${i}" data-sk="${k}"><input class="cfn sfn" inputmode="numeric" value="${P.secs[i][k]}" data-si="${i}" data-sk="${k}"><i>${u}</i></label>`;
-  return`<div class="secs"><div class="secsh"><span>Секции</span><b id="secW">Общая ширина ${secsW(P)} мм</b></div>${P.secs.map((q,i)=>`<div class="sec"><div class="sech"><b>Секция ${i+1}</b><span>${q.w} мм</span><button data-sdup="${i}" title="Добавить такую же секцию рядом" aria-label="Дублировать секцию">+</button>${P.secs.length>1?`<button data-sdel="${i}" title="Удалить секцию" aria-label="Удалить секцию">×</button>`:''}</div>
+  return`<div class="secs"><div class="secsh"><span></span><b id="secW">Общая ширина ${secsW(P)} мм</b></div>${P.secs.map((q,i)=>`<div class="sec"><div class="sech"><b>Секция ${i+1}</b><span>${q.w} мм</span><button data-sdup="${i}" title="Добавить такую же секцию рядом" aria-label="Дублировать секцию">+</button>${P.secs.length>1?`<button data-sdel="${i}" title="Удалить секцию" aria-label="Удалить секцию">×</button>`:''}</div>
     ${r(i,'w','Ширина',300,1200,10,'мм')}<div class="cf"><span>Штанга</span><div class="seg cseg"><button data-si="${i}" data-sk="hang" data-sv="0" aria-pressed="${!+q.hang}">Нет</button><button data-si="${i}" data-sk="hang" data-sv="1" aria-pressed="${!!+q.hang}">Есть</button></div></div>${r(i,'sh','Полок',0,10,1,'шт')}${r(i,'dr','Ящиков',0,5,1,'шт')}</div>`).join('')}${P.secs.length<6?'<button class="btn sadd" data-sadd>+ Добавить секцию</button>':''}</div>`}
-function cfgForm(type,P){if(type==='wardrobe')secsInit(P);return (type==='wardrobe'?secsHTML(P):'')+PRODS[type].f.filter(f=>!(type==='wardrobe'&&SECK.includes(f[0]))).map(([k,l,d,a,b,int])=>{const v=P[k];
+const CFGG=[['Габариты',['W','L','H','D','T','pl']],['Модули',['mw','sink','hob','drm','top']],['Верхние шкафы',['upper','uh','ud','uy']],['Фасады',['doors','pull']],['Цвет',['cc','fc']]];
+function cfgField([k,l,d,a,b,int],P){const v=P[k];
   if(a==='sel')return`<div class="cf"><span>${l}</span><div class="seg cseg">${b.map(([o,t])=>`<button data-cfk="${k}" data-cfv="${o}" aria-pressed="${String(v)===o}">${t}</button>`).join('')}</div></div>`;
-  if(a==='col')return`<div class="cf"><span>${l}</span><div class="csw">${PAL.map(([c,n])=>`<button data-cfk="${k}" data-cfv="${c}" title="${n}" aria-label="${n}" aria-pressed="${(v||'')===c}" style="background:${c||'linear-gradient(135deg,#efe3cb,#d9c4a0)'}"></button>`).join('')}</div></div>`;
-  return`<label class="cf"><span>${l}</span><input type="range" min="${a}" max="${b}" step="${int?1:10}" value="${v}" data-cfk="${k}"><input class="cfn" inputmode="numeric" value="${v}" data-cfk="${k}"><i>${int?'шт':'мм'}</i></label>`}).join('')}
+  if(a==='col')return`<div class="cf col"><span>${l}</span><div class="csw">${PAL.map(([c,n])=>`<button data-cfk="${k}" data-cfv="${c}" title="${n}" aria-label="${n}" aria-pressed="${(v||'')===c}" style="background:${c||'linear-gradient(135deg,#efe3cb,#d9c4a0)'}"></button>`).join('')}</div></div>`;
+  return`<label class="cf"><span>${l}</span><input type="range" min="${a}" max="${b}" step="${int?1:10}" value="${v}" data-cfk="${k}"><input class="cfn" inputmode="numeric" value="${v}" data-cfk="${k}"><i>${int?'шт':'мм'}</i></label>`}
+function cfgForm(type,P){if(type==='wardrobe')secsInit(P);const fs=PRODS[type].f.filter(f=>!(type==='wardrobe'&&SECK.includes(f[0]))),used=new Set();
+  const grp=(t,keys)=>{const g=fs.filter(f=>keys.includes(f[0]));g.forEach(f=>used.add(f[0]));const show=g.filter(f=>!(P.upper==='0'&&['uh','ud','uy'].includes(f[0])));return show.length?`<div class="cfgg"><div class="cfgh">${t}</div>${show.map(f=>cfgField(f,P)).join('')}</div>`:''};
+  let h=(type==='wardrobe'?`<div class="cfgg"><div class="cfgh">Секции</div>${secsHTML(P)}</div>`:'')+CFGG.map(([t,k])=>grp(t,k)).join('');const rest=fs.filter(f=>!used.has(f[0]));if(rest.length)h+=`<div class="cfgg"><div class="cfgh">Прочее</div>${rest.map(f=>cfgField(f,P)).join('')}</div>`;return h}
 function cfgOpen(i){const it=CAT[i];cfgI=i;cfgP=JSON.parse(JSON.stringify({...prodDef(it.product.type),...(it.product.P||{})}));$('#cfgBox').innerHTML=`<span class="lbl">Конфигуратор</span><h3>Настройте под себя</h3><div id="cfgF">${cfgForm(it.product.type,cfgP)}</div><div class="cfs" id="cfgS"></div><div class="cfa"><button class="btn pri" data-cfo>Заказать</button><button class="btn" data-copen="${i}">Открыть в конструкторе</button><button class="btn" data-cfr>Сбросить</button></div><pre class="cfo" id="cfgO" hidden></pre>`;
   const V=v3Init();V.el=$('#v3');V.el.prepend(V.r.domElement);V.el.querySelector('.v3l')?.remove();V.ctl.autoRotate=true;const w=V.el.clientWidth,h=V.el.clientHeight;if(w&&h){V.r.setSize(w,h,false);V.cam.aspect=w/h;V.cam.updateProjectionMatrix()}v3Build(it.product.type,cfgP,true);cfgStats()}
 function cfgStats(){const t=CAT[cfgI].product.type,sv=nextId,ps=genProduct({id:-1,type:t,P:cfgP,x:0,y:0,z:0});nextId=sv;const brd=ps.filter(q=>!q.hw),area=brd.reduce((s,q)=>{const d=AX.filter(a=>a!==q.t).map(a=>q[SZ[a]]);return s+d[0]*d[1]},0)/1e6,bb=bbox(brd);
@@ -1777,7 +1791,7 @@ $('#cat').addEventListener('click',e=>{const c=e.target.closest('[data-ci]');if(
   const t=e.target.closest('[data-cp],[data-c3]');if(t){const im=$('#cdPh');if(t.hasAttribute('data-c3'))im.hidden=true;else{im.src=catImg(CAT[+$('#catD').dataset.i].photos[+t.dataset.cp]);im.hidden=false}document.querySelectorAll('.cdt button').forEach(b=>b.setAttribute('aria-pressed',b===t));return}
   if(e.target.closest('[data-v3fit]')){v3Fit();return}
   const va=e.target.closest('[data-v3all]');if(va&&V3){const op=!V3.mov.some(o=>o.to);V3.mov.forEach(o=>o.to=op?1:0);va.textContent=op?'Закрыть всё':'Открыть всё';V3.ctl.autoRotate=false;return}
-  const sb=e.target.closest('[data-cfk][data-cfv]');if(sb&&cfgP){const k=sb.dataset.cfk,f=PRODS[CAT[cfgI].product.type].f.find(x=>x[0]===k);cfgP[k]=f[3]==='col'?sb.dataset.cfv:sb.dataset.cfv;sb.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===sb));cfgUpd();return}
+  const sb=e.target.closest('[data-cfk][data-cfv]');if(sb&&cfgP){const k=sb.dataset.cfk,f=PRODS[CAT[cfgI].product.type].f.find(x=>x[0]===k);cfgP[k]=sb.dataset.cfv;if(f[3]==='sel'){$('#cfgF').innerHTML=cfgForm(CAT[cfgI].product.type,cfgP)}else sb.parentNode.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===sb));cfgUpd();return}
   if(e.target.closest('[data-cfr]')){cfgOpen(cfgI);return}
   const sv=e.target.closest('[data-sk][data-sv]');if(sv&&cfgP){cfgP.secs[+sv.dataset.si][sv.dataset.sk]=+sv.dataset.sv;secsRe();return}
   const sd=e.target.closest('[data-sdup]');if(sd&&cfgP){const i=+sd.dataset.sdup;cfgP.secs.splice(i+1,0,{...cfgP.secs[i]});secsRe();return}
