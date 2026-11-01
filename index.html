@@ -36,7 +36,7 @@ header{display:flex;align-items:center;gap:24px;padding-block:12px;padding-left:
 .brand .mark{width:54px;height:31px}
 .wm{font:700 23px/1 var(--f-display);letter-spacing:-.045em;white-space:nowrap}
 .wm sup{font:400 9px var(--f-body);letter-spacing:0;margin-left:5px;vertical-align:-2px}
-nav{display:flex;gap:2px;margin-left:auto;margin-right:auto;flex-wrap:wrap}
+header{position:relative}nav{display:flex;gap:2px;flex-wrap:wrap;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}.hstat{margin-left:auto}
 nav a{font:400 13px var(--f-body);color:var(--mute);text-decoration:none;padding:7px 14px;border-radius:980px}
 nav a[aria-current="page"]{color:var(--acc-fg);background:var(--acc)}
 nav a:hover{color:var(--fg)}
@@ -75,11 +75,12 @@ main{position:relative;overflow:hidden;min-height:0}
 .btn.pri{background:var(--acc);color:var(--acc-fg)}
 .btn.pri:hover{background:#333}
 .btn.warn{color:#A2452F}
-.kv{display:grid;grid-template-columns:1fr auto;font-size:13px}
+.fl{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}.fl span{overflow-wrap:anywhere}.fl .btn{padding:4px 9px;font-size:12px}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;font-size:13px}.kv>*{min-width:0}
 .kv>*{padding:8px 0;border-bottom:1px solid var(--line)}
-.kv b{font:400 13px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.kv b{font:400 13px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
 .note{font-size:12px;color:var(--mute);margin:0}
-.hint{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;font:400 11px var(--f-mono);color:var(--mute);letter-spacing:.03em;pointer-events:none;text-shadow:0 0 6px var(--stage)}
+.hint{display:none!important;position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;font:400 11px var(--f-mono);color:var(--mute);letter-spacing:.03em;pointer-events:none;text-shadow:0 0 6px var(--stage)}
 .dl{position:absolute;left:0;top:0;font:500 11px var(--f-mono);background:var(--ink);color:var(--paper);padding:2px 6px;pointer-events:none;white-space:nowrap;font-variant-numeric:tabular-nums}
 .vizbar{position:absolute;left:max(16px,env(safe-area-inset-left,0px));bottom:16px;right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;pointer-events:none}
 .vizbar>*{pointer-events:auto}
@@ -145,7 +146,7 @@ td.n{font-family:var(--f-mono);text-align:right}
 .btn:hover{border-color:#111;background:#fff}
 .btn.pri{background:#111;border-color:#111;color:#fff}
 .btn.pri:hover{background:#2b2b2b}
-.status{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;display:flex;align-items:center;gap:12px;pointer-events:none}
+#hint{display:none!important}.status{justify-content:flex-end;position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;display:flex;align-items:center;gap:12px;pointer-events:none}
 #hint{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:400 12px/1.35 var(--f-body);color:var(--mute);text-shadow:0 0 8px var(--stage)}
 .vcb{pointer-events:auto;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #D9D9DE;border-radius:12px;padding:4px 4px 4px 12px;box-shadow:var(--shadow)}
 .vcb span{font:500 11px var(--f-body);color:var(--mute);white-space:nowrap}
@@ -197,7 +198,7 @@ td.n{font-family:var(--f-mono);text-align:right}
   .rail{right:max(8px,env(safe-area-inset-right,0px))}.rail-sc{grid-template-columns:none}
   .ib[data-tip]:hover::after{display:none}
   header{gap:10px}
-  nav{order:3;width:100%;margin:0}
+  nav{order:3;width:100%;margin:0;position:static;transform:none}
   nav a{padding:6px 9px;font-size:11px}
   .insp{top:auto;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:8px;width:auto;max-height:44%}
   .rail{flex-direction:row;top:8px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));padding:4px}.rail-sc{display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--ft),#000 calc(100% - var(--fb)),transparent 100%)}.rail-sc .ib{flex:none;width:40px;height:40px}
@@ -398,7 +399,9 @@ const r4=v=>Math.round(v*10000)/10000;
 const snapV=v=>state.snap?Math.round(v/10)*10:r4(v);
 function rnd(seed){let s=seed%2147483647||1;return()=>(s=s*16807%2147483647)/2147483647}
 const selP=()=>state.panels.find(p=>p.id===state.sel)||null;
-function save(){try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
+const nf=v=>String(+(+v).toFixed(2)).replace('.',',');
+function tidy(){for(const p of state.panels)for(const k of ['x','y','z','w','h','d'])if(typeof p[k]==='number')p[k]=Math.round(p[k]*1e4)/1e4}
+function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
 function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
 function pushUndo(){undoS.push(JSON.stringify(state.panels));if(undoS.length>120)undoS.shift();redoS.length=0}
 function undo(){if(!undoS.length)return;redoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(undoS.pop());if(!selP())state.sel=null;rebuildAll();save();renderInsp()}
@@ -1165,8 +1168,11 @@ function fldsHTML(o,scope){return AX.map(a=>{const lab={x:'Ширина',y:'Вы
   return `<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${lab}</span><input id="${scope}-${SZ[a]}" data-k="${SZ[a]}" data-scope="${scope}" inputmode="decimal" value="${o[SZ[a]]}"><i>мм</i></label>`}).join('')}
 const orientHTML=(o,scope)=>`<div class="seg">${[['y','Полка'],['z','Стенка'],['x','Боковина']].map(([t,n])=>`<button data-act="orient" data-t="${t}" data-scope="${scope}" aria-pressed="${o.t===t}">${n}</button>`).join('')}</div>`;
 const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>`;
-const dimsTxt=p=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${d[0]}×${d[1]}×${thick(p)}`};
+const dimsTxt=p=>{if(p.hw)return p.hw==='hinge'?'петля':p.hw==='slide'?'направл.':'уголок';const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${nf(d[0])}×${nf(d[1])}×${nf(thick(p))}`};
 function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>')}
+function featList(p){const fs=p.feat||[];if(!fs.length)return'';const T=a=>p[SZ[a]];
+  return `<div class="grp"><span class="lbl">Обработка детали · ${fs.length}</span>${fs.map((f,i)=>{const sz=f.c?'Ø'+nf(f.u1-f.u0):nf(f.u1-f.u0)+'×'+nf(f.v1-f.v0),kind=Math.abs(f.depth)<0.01?'разметка':f.depth>=T(f.a)-0.01?'насквозь':f.depth<0?'выступ '+nf(-f.depth):'глубина '+nf(f.depth),face=f.a===p.t?(f.s>0?'лицевая':'обратная'):'торец',jn=f.j&&panelById(f.j)?' · стык с «'+esc(panelById(f.j).name)+'»':'';
+    return `<div class="fl"><span>${i+1}. ${f.c?'Круг':'Прямоугольник'} ${sz} · ${kind} · ${face}${jn}</span><button class="btn" data-act="fsel" data-f="${f.id}" title="Показать">◎</button><button class="btn" data-act="fdel" data-f="${f.id}" title="Удалить">✕</button></div>`}).join('')}</div>`}
 function subInfo(p){const S=state.sub;if(!S||S.id!==p.id)return'';let t='';if(S.kind==='face')t=`Грань ${S.a.toUpperCase()}${S.s>0?'+':'−'}: Shift+клик по ребру — подтянуть к нему, M или P — сдвинуть, F — смещение`;else if(S.kind==='edge')t='Ребро: Shift+клик по другому ребру — подтянуть, M — сдвинуть';else{const f=featById(p,S.fid);if(!f)return'';t=S.kind==='region'?`Область ${fmtMM(f.u1-f.u0)} × ${fmtMM(f.v1-f.v0)}, ${f.depth>=p[SZ[f.a]]?'вырез насквозь':f.depth<0?'выступ '+fmtMM(-f.depth):'глубина '+fmtMM(f.depth)}. P — вдавить или выдавить, M — сдвинуть, Del — удалить`:'Ребро области: M — сдвинуть, Del — удалить область'}let extra='';if(S.kind==='region'){const f=featById(p,S.fid);if(f){const cu=(f.u0+f.u1)/2,cv=(f.v0+f.v1)/2,sec=secAt(behindSecs(p,f.a,f.s),cu,cv,Math.hypot(f.u1-f.u0,f.v1-f.v0)/2+20);
     extra=sec?`<div class="grp"><span class="lbl">${f.c?'Шкант':'Шип / паз'} · соединение с «${esc(sec.q.name)}»</span><p class="note">За этой доской вплотную стоит «${esc(sec.q.name)}»${sec.q.rot?' (под углом)':''}. Выровняйте ${f.c?'круг':'прямоугольник'} по её центру и продолжите ${f.c?'отверстие':'вырез'} в неё — получится соединение на ${f.c?'шкант':'шип'}.</p>
       <button class="btn" data-act="dalign">Поставить по центру «${esc(sec.q.name)}»</button>
@@ -1210,7 +1216,7 @@ function makeDowel(p,f,depth){const a=f.a,[u,v]=AX.filter(x=>x!==a),ai=AX.indexO
   const lw=w.clone().sub(qc).applyQuaternion(qi).add(qc),sq=-Math.sign(dl.getComponent(AX.indexOf(la))),[lu,lv]=AX.filter(x=>x!==la),L={x:lw.x-q.x,y:lw.y-q.y,z:lw.z-q.z};
   let hu,hv;if(f.c){hu=hv=(f.u1-f.u0)/2}else{const ru=AXV[u].clone().applyQuaternion(qi);const uOnLu=Math.abs(ru.getComponent(AX.indexOf(lu)))>0.5;hu=(uOnLu?f.u1-f.u0:f.v1-f.v0)/2;hv=(uOnLu?f.v1-f.v0:f.u1-f.u0)/2}
   const Su=q[SZ[lu]],Sv=q[SZ[lv]];if(L[lu]-hu<-0.05||L[lu]+hu>Su+0.05||L[lv]-hv<-0.05||L[lv]+hv>Sv+0.05)return toast(`${f.c?'Круг Ø'+f1(hu*2):'Прямоугольник'} шире торца «${q.name}» — уменьшите размер или нажмите «Поставить по центру»`);
-  pushUndo();f.depth=T;const qf={id:fidN++,a:la,s:sq,u0:r4(L[lu]-hu),u1:r4(L[lu]+hu),v0:r4(L[lv]-hv),v1:r4(L[lv]+hv),depth:r4(Math.min(depth,q[SZ[la]])),c:f.c?1:0};if(!qf.c)delete qf.c;q.feat=(q.feat||[]).concat(qf);buildMesh(p);buildMesh(q);save();renderInsp();
+  pushUndo();f.depth=T;const qf={id:fidN++,a:la,s:sq,u0:r4(L[lu]-hu),u1:r4(L[lu]+hu),v0:r4(L[lv]-hv),v1:r4(L[lv]+hv),depth:r4(Math.min(depth,q[SZ[la]])),c:f.c?1:0,j:p.id};if(!qf.c)delete qf.c;q.feat=(q.feat||[]).concat(qf);buildMesh(p);buildMesh(q);save();renderInsp();
   toast(`${f.c?'Сверление Ø'+f1(hu*2):'Вырез'}: насквозь через «${p.name}» + ${f1(qf.depth)} мм в «${q.name}»`,4000)}
 
 function doorHTML(d){const hs=doorHinges(d.id);if(!hs.length)return '';const D=d.door||{},S=doorSim[d.id],a=S?S.a:0,mx=D.max||105;
@@ -1241,7 +1247,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
   if(p){const T=thick(p),n=selIds().length;insp.innerHTML=`<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
-    ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
+    ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n<2?featList(p):''}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
     ${doorHTML(p)}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}</div>
@@ -1250,7 +1256,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
   const b=bbox(),parts=partsList(),area=BRD().reduce((s,p)=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]);return s+d[0]*d[1]},0)/1e6;const sh=nestAll().reduce((s,g)=>s+g.sheets.length,0);
   insp.innerHTML=`<div class="grp"><h2>Проект</h2><input class="txt" id="pname" data-k="pname" value="${esc(state.name)}" aria-label="Название проекта" style="font:600 18px var(--f-display)"></div>
-    ${(()=>{const hl=hwList();return hl.length?`<p class="note" style="margin:0 0 8px">Фурнитура (не входит в чертежи): ${hl.map(h=>esc(h.name)+' — '+h.qty+' шт.').join('; ')}</p>`:''})()}<label class="fld" style="grid-template-columns:1fr 150px"><span>Единицы рулетки и размеров</span><select id="punits" data-k="punits">${Object.entries(UNITS).map(([k,v])=>`<option value="${k}" ${(state.units||'mm')===k?'selected':''}>${{mm:'миллиметры',cm:'сантиметры',m:'метры'}[k]}</option>`).join('')}</select></label><div class="kv"><span>Деталей</span><b>${BRD().length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${b.x1-b.x0}×${b.y1-b.y0}×${b.z1-b.z0} мм`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${state.sheet.replace('x','×')}</span><b>${sh}</b></div>
+    ${(()=>{const hl=hwList();return hl.length?`<p class="note" style="margin:0 0 8px">Фурнитура (не входит в чертежи): ${hl.map(h=>esc(h.name)+' — '+h.qty+' шт.').join('; ')}</p>`:''})()}<label class="fld" style="grid-template-columns:1fr 150px"><span>Единицы</span><select id="punits" data-k="punits">${Object.entries(UNITS).map(([k,v])=>`<option value="${k}" ${(state.units||'mm')===k?'selected':''}>${{mm:'миллиметры',cm:'сантиметры',m:'метры'}[k]}</option>`).join('')}</select></label><div class="kv"><span>Деталей</span><b>${BRD().length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${nf(b.x1-b.x0)}×${nf(b.y1-b.y0)}×${nf(b.z1-b.z0)} мм`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${getSheet().join('×')}</span><b>${sh}</b></div>
     <div class="grp"><span class="lbl">Детали · дважды кликните имя, чтобы переименовать</span>${outliner()}</div>`}
 function outliner(){return `<div class="ol">${state.panels.map(p=>`<div class="olr${isSel(p.id)?' on':''}" data-id="${p.id}"><input id="ol-${p.id}" data-k="olname" data-id="${p.id}" value="${esc(p.name)}" readonly aria-label="Имя детали"><span>${dimsTxt(p)}</span></div>`).join('')||'<p class="note">Пока пусто — нажмите R и нарисуйте доску.</p>'}</div>`}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -1281,6 +1287,7 @@ insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e
   if(['dside','dsoft','dmax'].includes(a)){const d=panelById(did);if(!d)return;pushUndo();d.door=d.door||{};if(a==='dside')d.door.side=b.dataset.v;else if(a==='dsoft'){d.door.soft=+b.dataset.v;doorHinges(d.id).forEach(h=>h.soft=+b.dataset.v)}else{d.door.max=+b.dataset.v;doorHinges(d.id).forEach(h=>h.ang=+b.dataset.v);const S=doorSim[d.id];if(S&&S.a>d.door.max)S.a=d.door.max}relayHinges(d);placeMesh(d);save();renderInsp();return}
   if(a==='dunhinge'){const d=panelById(did);if(!d)return;pushUndo();delete doorSim[d.id];state.panels=state.panels.filter(q=>!(q.hw==='hinge'&&q.door===d.id));delete d.door;rebuildAll();save();renderInsp();toast('Петли сняты');return}
   if(a==='hov'||a==='hcup'){if(!o||o.hw!=='hinge')return;pushUndo();doorHinges(o.door).forEach(h=>{if(a==='hov')h.ov=b.dataset.v;else h.cup=+b.dataset.v;buildMesh(h)});save();renderInsp();return}}
+  if(a==='fsel'||a==='fdel'){const o=selP();if(!o)return;const fid=+b.dataset.f;if(a==='fsel'){setSub({kind:'region',id:o.id,fid});renderInsp();return}pushUndo();o.feat=(o.feat||[]).filter(f=>f.id!==fid);if(state.sub&&state.sub.fid===fid)subClear();buildMesh(o);save();renderInsp();toast('Обработка удалена');return}
   if(a==='dalign'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;alignToBehind(o,featById(o,S.fid));return}
   if(a==='dowel'){const o=selP(),S=state.sub;if(!o||!S||S.kind!=='region')return;const f=featById(o,S.fid);const v=num($('#dowelDepth').value);if(!isFinite(v)||v<=0)return toast('Введите глубину');state.dowelD=v;makeDowel(o,f,v);return}
   if(a==='hwrib'||a==='hwsec'){const o=selP();if(!o||!o.hw)return;pushUndo();selPanels().filter(q=>q.hw===o.hw).forEach(q=>{if(a==='hwrib')q.prib=+b.dataset.v;else q.psec=+b.dataset.v;buildMesh(q)});save();renderInsp();return}
@@ -1466,8 +1473,8 @@ let capturing=false;
 function loop(){requestAnimationFrame(loop);if(capturing)return;{const now=performance.now(),dt=Math.min(0.04,Math.max(0.001,(now-lastPhys)/1000));lastPhys=now;if(animDoors){let rem=Math.min(0.1,(performance.now()-lastPhys0)/1000)||dt;lastPhys0=performance.now();let busy=false;while(rem>1e-4){const h=Math.min(rem,1/120);rem-=h;physSub(h)}doorStep(0);if(slideStep(dt))animDoors=true}else lastPhys0=performance.now()}if(view==='build'){controls.update();renderer.setRenderTarget(null);{gzUpdate();if(prot.visible&&!(op&&op.gz))prot.scale.setScalar(camera.position.distanceTo(prot.position)*0.09);const below=camera.position.y<0;gridMinor.visible=gridMajor.visible=axesG.visible=!below}showSub();renderer.render(scene,camera);updateLabels();tapeLabel();if(!snapEl.hidden&&!op&&!['move','board','tape','circle'].includes(state.tool))snapEl.hidden=true}else if(view==='render'){controls.update();ptFrame()}}
 
 /* ---------- parts & nesting ---------- */
-function partsList(){const g=new Map();BRD().forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
-  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s,c:f.c?1:0}}),cups=doorHinges(p.id).map(h=>{const F=hingeFrame(h);if(!F)return null;const c={x:F.cup.x*1000,y:F.cup.y*1000,z:F.cup.z*1000};return{x:r4(c[ax[0]]-p[ax[0]]),y:r4(c[ax[1]]-p[ax[1]]),dia:h.cup,dep:12,s:F.I.s>0?-1:1}}).filter(Boolean),ed=(p.feat||[]).filter(f=>f.a!==p.t&&Math.abs(f.depth)>0.01).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];const e=AX.find(q=>q!==f.a&&q!==p.t);return{len:p[SZ[e]],long:e===ax[0],s:f.s,x0:r[e][0],x1:r[e][1],y0:r[p.t][0],y1:r[p.t][1],depth:f.depth,thr:f.depth>=p[SZ[f.a]]}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+JSON.stringify(fe)+JSON.stringify(ed)+JSON.stringify(cups);
+function partsList(){const g=new Map();BRD().forEach(p=>{const T=thick(p),dm=AX.filter(a=>a!==p.t).map(a=>Math.round(p[SZ[a]]*100)/100).sort((a,b)=>b-a),ax=AX.filter(a=>a!==p.t).sort((a,b)=>p[SZ[b]]-p[SZ[a]]);
+  const fe=(p.feat||[]).filter(f=>f.a===p.t).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];return{x0:r[ax[0]][0],x1:r[ax[0]][1],y0:r[ax[1]][0],y1:r[ax[1]][1],depth:Math.min(f.depth,T),thr:f.depth>=T,s:f.s,c:f.c?1:0,jn:f.j&&panelById(f.j)?panelById(f.j).name:''}}),cups=doorHinges(p.id).map(h=>{const F=hingeFrame(h);if(!F)return null;const c={x:F.cup.x*1000,y:F.cup.y*1000,z:F.cup.z*1000};return{x:r4(c[ax[0]]-p[ax[0]]),y:r4(c[ax[1]]-p[ax[1]]),dia:h.cup,dep:12,s:F.I.s>0?-1:1}}).filter(Boolean),ed=(p.feat||[]).filter(f=>f.a!==p.t&&Math.abs(f.depth)>0.01).map(f=>{const [u,v]=AX.filter(q=>q!==f.a),r={};r[u]=[f.u0,f.u1];r[v]=[f.v0,f.v1];const e=AX.find(q=>q!==f.a&&q!==p.t);return{jn:f.j&&panelById(f.j)?panelById(f.j).name:'',len:p[SZ[e]],long:e===ax[0],s:f.s,x0:r[e][0],x1:r[e][1],y0:r[p.t][0],y1:r[p.t][1],depth:f.depth,thr:f.depth>=p[SZ[f.a]]}}),key=dm[0]+'x'+dm[1]+'x'+T+'|'+p.mat+JSON.stringify(fe)+JSON.stringify(ed)+JSON.stringify(cups);
   if(!g.has(key))g.set(key,{L:dm[0],W:dm[1],T,mat:p.mat,names:[],qty:0,fe,ed,cups,edgeF:ed.length});const o=g.get(key);o.qty++;if(!o.names.includes(p.name))o.names.push(p.name)});
   const arr=[...g.values()].sort((a,b)=>b.T-a.T||b.L*b.W-a.L*a.W);arr.forEach((o,i)=>o.no=i+1);return arr}
 function pack(items,SW,SH,kerf=4,trim=10){const sheets=[],over=[];const W=SW-2*trim,H=SH-2*trim;
@@ -1534,7 +1541,7 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
       o.push(Tx(x,y,k*1.15,`Д${pt.no} · ${pt.names.join(', ')} · ${f1(L)} × ${f1(W)} × ${f1(T)} мм · ${pt.qty} шт.`,'mh'));y+=k*3;
       let n=0;
       ops.forEach(f=>{n++;const top=y+k*3.4;
-        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · ${f.s>0?'лицевая пласть':'обратная пласть'}`,'mh'));
+        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · ${f.s>0?'лицевая пласть':'обратная пласть'}${f.jn?' · ответная часть соединения с «'+f.jn+'» (скрыта стыком)':''}`,'mh'));
         const cx0=x+(f.x0+f.x1)/2,cy0=top+(f.y0+f.y1)/2,rr=(f.x1-f.x0)/2;o.push(R(x,top,L,W),f.c?`<circle class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" cx="${f1(cx0)}" cy="${f1(cy0)}" r="${f1(rr)}"/><line class="sep" x1="${f1(cx0-rr*1.3)}" y1="${f1(cy0)}" x2="${f1(cx0+rr*1.3)}" y2="${f1(cy0)}"/><line class="sep" x1="${f1(cx0)}" y1="${f1(cy0-rr*1.3)}" x2="${f1(cx0)}" y2="${f1(cy0+rr*1.3)}"/>`:`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0)}" width="${f1(f.x1-f.x0)}" height="${f1(f.y1-f.y0)}"/>`);
         o.push(dH(x,x+L,top-k*1.4,top,f1(L)),dV(top,top+W,x-k*2.2,x,f1(W)));
         if(f.c){const cxm=(f.x0+f.x1)/2,cym=(f.y0+f.y1)/2;o.push(dH(x,x+cxm,top+W+k*2.4,top+W,f1(cxm)),dH(x+cxm,x+L,top+W+k*2.4,top+W,f1(L-cxm)),dV(top,top+cym,x+L+k*2.4,x+L,f1(cym)),dV(top+cym,top+W,x+L+k*2.4,x+L,f1(W-cym)),Tx(cx0+rr*0.75+k*.4,cy0-rr*0.75-k*.3,k*.95,'Ø'+f1(rr*2),'mh'))}
@@ -1557,7 +1564,7 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
         ch(xs,L).forEach(([a,b2])=>o.push(dH(x+a,x+b2,top+W+k*2.4,top+W,f1(b2-a))));ch(ys,W).forEach(([a,b2])=>o.push(dV(top+a,top+b2,x+L+k*2.4,x+L,f1(b2-a))));
         o.push(Tx(x,top+W+k*5,k*.85,`центры: ${cs.map(c=>`X ${f1(c.x)} · Y ${f1(c.y)}`).join('  /  ')}`,'s'));y=top+W+k*7.5}
       (pt.ed||[]).forEach(f=>{n++;const top=y+k*1.6,EL=f.len;
-        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · торец ${f.long?'длинный':'короткий'} (${f.s>0?'сторона A':'сторона Б'})`,'mh'));
+        o.push(Tx(x,y,k*.95,`${n}. ${opN(f)} · торец ${f.long?'длинный':'короткий'} (${f.s>0?'сторона A':'сторона Б'})${f.jn?' · ответная часть соединения с «'+f.jn+'»':''}`,'mh'));
         o.push(R(x,top,EL,TV),`<rect class="pk${f.thr?' thr':''}${f.depth<0?' boss':''}" x="${f1(x+f.x0)}" y="${f1(top+f.y0*ve)}" width="${f1(f.x1-f.x0)}" height="${f1((f.y1-f.y0)*ve)}"/>`);
         o.push(chainH(x,EL,f.x0,f.x1,top+TV+k*2.4,top+TV),[[0,f.y0],[f.y0,f.y1],[f.y1,T]].filter(q=>q[1]-q[0]>0.05).map(q=>dV(top+q[0]*ve,top+q[1]*ve,x+EL+k*2.4,x+EL,f1(q[1]-q[0]))).join(''));
         o.push(Tx(x,top+TV+k*5,k*.85,`вид на торец${ve>1?' (толщина ×'+ve+')':''} · глубина ${f1(Math.abs(f.depth))} мм внутрь детали · от пласти ${f1(f.y0)} мм`,'s'));
@@ -1708,9 +1715,9 @@ function drawViews(g,x0,y0,wA,hA){const b=bbox(),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-
   const P=BRD();let x=x0;
   const dimB=(x1,x2,y,t)=>{g.save();g.strokeStyle='#999';g.lineWidth=0.35;g.beginPath();g.moveTo(x1,y);g.lineTo(x2,y);[x1,x2].forEach(v=>{g.moveTo(v,y-3);g.lineTo(v,y+3)});g.stroke();g.fillStyle='#555';g.font=PF(400,5.5);g.textAlign='center';g.fillText(t,(x1+x2)/2,y+9);g.restore()};
   const dimR=(y1,y2,x,t)=>{g.save();g.strokeStyle='#999';g.lineWidth=0.35;g.beginPath();g.moveTo(x,y1);g.lineTo(x,y2);[y1,y2].forEach(v=>{g.moveTo(x-3,v);g.lineTo(x+3,v)});g.stroke();g.translate(x+8,(y1+y2)/2);g.rotate(-Math.PI/2);g.fillStyle='#555';g.font=PF(400,5.5);g.textAlign='center';g.fillText(t,0,0);g.restore()};
-  [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(b.y1-p.y-p.h)*k,p.w*k,p.h*k));dimB(x,x+W*k,y0+H*k+8,W+' мм');dimR(y0,y0+H*k,x+W*k+7,H+' мм');x+=W*k+gap;
-  [...P].sort((a,c)=>(a.x+a.w)-(c.x+c.w)).forEach(p=>box(x+(b.z1-p.z-p.d)*k,y0+(b.y1-p.y-p.h)*k,p.d*k,p.h*k));dimB(x,x+D*k,y0+H*k+8,D+' мм');x+=D*k+gap;
-  [...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(p.z-b.z0)*k,p.w*k,p.d*k));dimB(x,x+W*k,y0+D*k+8,W+' мм');dimR(y0,y0+D*k,x+W*k+7,D+' мм')}
+  [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(b.y1-p.y-p.h)*k,p.w*k,p.h*k));dimB(x,x+W*k,y0+H*k+8,nf(W)+' мм');dimR(y0,y0+H*k,x+W*k+7,nf(H)+' мм');x+=W*k+gap;
+  [...P].sort((a,c)=>(a.x+a.w)-(c.x+c.w)).forEach(p=>box(x+(b.z1-p.z-p.d)*k,y0+(b.y1-p.y-p.h)*k,p.d*k,p.h*k));dimB(x,x+D*k,y0+H*k+8,nf(D)+' мм');x+=D*k+gap;
+  [...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(p.z-b.z0)*k,p.w*k,p.d*k));dimB(x,x+W*k,y0+D*k+8,nf(W)+' мм');dimR(y0,y0+D*k,x+W*k+7,nf(D)+' мм')}
 async function captureProduct(W,H,views){const pv=view,penv=state.env,pcam=camera.position.clone(),ptg=controls.target.clone();capturing=true;
   try{state.env='studio';setView('render');renderer.setPixelRatio(1);renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
     const c=center(),Rr=radius(),bx=bbox(),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3((i&1?bx.x1:bx.x0)*MM,(i&2?bx.y1:bx.y0)*MM,(i&4?bx.z1:bx.z0)*MM));const res=[];
@@ -1732,14 +1739,14 @@ function sheetPages(imgs){const PW=595.28,PH=841.89,S=2480/PW,M=45,pages=[];
   const thks=[...new Set(BRD().map(thick))].sort((a,c)=>c-a),mats=[...new Set(BRD().map(p=>p.mat))];
   let g=newPage();g.fillStyle='#111';
   g.font=PF(600,19);g.fillText(state.name,M,72);g.font=PF(300,14);g.fillText('Мебель из фанеры',M,90);g.font=PF(400,8);g.fillText(`Дизайн: Артём Терехов, ${new Date().getFullYear()}`,M,110);
-  wrap(g,`${state.name} собрана из ${BRD().length} деталей берёзовой фанеры толщиной ${thks.join(', ')} мм. Габариты ${W} × ${D} × ${H} мм. Детали раскраиваются из ${sheets} ${sheets===1?'листа':'листов'} ${state.sheet.replace('x','×')} мм, площадь фанеры ${area.toFixed(2)} м². Волокна лицевого шпона идут вдоль длинной стороны каждой детали.`,M,132,205,11.5,PF(400,8));
+  wrap(g,`${state.name} собрана из ${BRD().length} деталей берёзовой фанеры толщиной ${thks.join(', ')} мм. Габариты ${nf(W)} × ${nf(D)} × ${nf(H)} мм. Детали раскраиваются из ${sheets} ${sheets===1?'листа':'листов'} ${state.sheet.replace('x','×')} мм, площадь фанеры ${area.toFixed(2)} м². Волокна лицевого шпона идут вдоль длинной стороны каждой детали.`,M,132,205,11.5,PF(400,8));
   drawViews(g,285,58,PW-M-285,120);
   const gap=10,iw=(PW-2*M-2*gap)/3,ih=iw*imgs[0].height/imgs[0].width;g.font=PF(400,7);g.fillStyle='#111';
   ['Вид спереди','Вид сбоку','Вид сверху, 45°'].forEach((t,i)=>{const x=M+i*(iw+gap);g.drawImage(imgs[i],x,226,iw,ih);g.fillText(t,x,226+ih+12)});
   let y=226+ih+34;const C=[M,M+178,M+356],CW=160;
   C.forEach((x,i)=>{rule(g,y,1,'#111',x,x+CW);g.fillStyle='#111';g.font=PF(600,8);g.fillText(['Изделие','Фанера','Раскрой листов'][i],x,y+13);rule(g,y+20,0.4,'#cfcfcf',x,x+CW)});
   g.font=PF(400,7.5);g.fillStyle='#111';let y1=y+34;
-  [`Габариты: ${W} × ${D} × ${H} мм`,`Деталей: ${BRD().length}, типов: ${parts.length}`,`Площадь фанеры: ${area.toFixed(2)} м²`,'Берёзовая фанера ФК, сорт I/II','Покрытие: шлифовка, масло или плёнка'].forEach(t=>{g.fillText(t,C[0],y1);y1+=11.5});
+  [`Габариты: ${nf(W)} × ${nf(D)} × ${nf(H)} мм`,`Деталей: ${BRD().length}, типов: ${parts.length}`,`Площадь фанеры: ${area.toFixed(2)} м²`,'Берёзовая фанера ФК, сорт I/II','Покрытие: шлифовка, масло или плёнка'].forEach(t=>{g.fillText(t,C[0],y1);y1+=11.5});
   let y2=y+34;mats.forEach(m=>{const th=[...new Set(BRD().filter(p=>p.mat===m).map(thick))].sort((a,c)=>c-a);g.beginPath();g.arc(C[1]+3.5,y2-2.6,3.4,0,7);g.fillStyle=MATS[m].sw;g.fill();g.strokeStyle='#999';g.lineWidth=0.4;g.stroke();g.fillStyle='#111';g.font=PF(400,7.5);g.fillText(MATS[m].name,C[1]+12,y2);g.fillStyle='#888';g.font=PF(400,6.5);g.fillText(th.join(', ')+' мм',C[1]+12+g.measureText(MATS[m].name).width*7.5/6.5+6,y2);y2+=13});
   let y3=y+34;groups.forEach(gr=>{g.fillStyle='#111';g.font=PF(400,7.5);g.fillText(`${gr.T} мм · ${MATS[gr.mat].short}`,C[2],y3);g.textAlign='right';g.fillText(`${gr.sheets.length} л. · ${Math.round(gr.sheets.reduce((a,s)=>a+s.util,0)/Math.max(1,gr.sheets.length)*100)}%`,C[2]+CW,y3);g.textAlign='left';y3+=11.5});
   y=Math.max(y1,y2,y3)+14;
