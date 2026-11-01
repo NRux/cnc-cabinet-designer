@@ -164,6 +164,8 @@ td.n{font-family:var(--f-mono);text-align:right}
 .olr{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:3px 8px;border-radius:8px;cursor:pointer}
 .olr:hover{background:var(--soft)}
 .olr.on{background:#111;color:#fff}
+.olg{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:5px 8px;border-radius:8px;cursor:pointer;font-size:13px}.olg span{font:400 11px var(--f-mono);color:var(--mute)}.olg:hover{background:var(--soft)}.olg.on{background:#111;color:#fff}.olg.on span{color:#bbb}.olgi{margin-left:10px;padding-left:6px;border-left:1px solid var(--line)}
+.gbox{background:var(--soft);border-radius:12px;padding:12px}.gbox .txt{background:#fff}.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .olr input{border:0;background:transparent;font:500 13px var(--f-body);color:inherit;padding:4px 0;width:100%;min-width:0;cursor:text;border-radius:5px}
 .olr input:focus{background:#fff;color:#111;box-shadow:0 0 0 1px #111;padding:4px 6px;outline:none}
 .olr span{font:400 11px var(--f-mono);color:var(--mute);white-space:nowrap}
@@ -265,10 +267,12 @@ td.n{font-family:var(--f-mono);text-align:right}
       <button class="ib" data-tool="orbit" data-tip="Орбита" data-key="O" aria-pressed="false"><svg viewBox="0 0 20 20"><ellipse cx="10" cy="10" rx="8" ry="3.5"/><path d="M10 2a3.5 8 0 0 1 0 16"/></svg></button>
       <button class="ib" data-tool="pan" data-tip="Панорама" data-key="H" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M7 10V4.5a1.2 1.2 0 0 1 2.4 0V9M9.4 9V3.5a1.2 1.2 0 0 1 2.4 0V9M11.8 9V4.5a1.2 1.2 0 0 1 2.4 0V11c0 4-2 6-5 6s-4-1.5-5.5-4L2.5 10a1.2 1.2 0 0 1 2-1.3L7 11"/></svg></button>
       <button class="ib" data-act="viewpop" data-tip="Виды: спереди, сверху, сбоку, снизу" data-key="1–6, 0"><svg viewBox="0 0 20 20"><path d="M10 2.5l6.5 3.7v7.6L10 17.5l-6.5-3.7V6.2z"/><path d="M10 10v7.5M10 10l6.5-3.8M10 10L3.5 6.2"/></svg></button>
-      <button class="ib" data-act="fit" data-tip="Показать всё" data-key="Shift+Z"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
+      <button class="ib" data-act="fit" data-tip="Приблизить к выбранному · без выбора — показать всё" data-key="Shift+Z"><svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
       <hr>
       <button class="ib" data-act="dup" data-tip="Дублировать" data-key="Ctrl+D"><svg viewBox="0 0 20 20"><rect x="6" y="6" width="10" height="10"/><path d="M4 13V4h9"/></svg></button>
       <button class="ib" data-act="rot" data-tip="Повернуть на 90°" data-key="Shift+Q"><svg viewBox="0 0 20 20"><path d="M15 6a6 6 0 1 0 1.5 5"/><path d="M15 2v4h-4"/></svg></button>
+      <button class="ib" data-act="multi" data-tip="Выбор нескольких" data-key="Shift+клик" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3.5 3.5l7 4.9-3 .7-1.6 3z"/><rect x="11" y="11" width="6" height="6"/><path d="M14 12.5v3M12.5 14h3"/></svg></button>
+      <button class="ib" data-act="group" data-tip="Группа · создать или разобрать" data-key="Ctrl+G"><svg viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="15" height="15" stroke-dasharray="2 1.6"/><rect x="5.5" y="5.5" width="5" height="4"/><rect x="9.5" y="10.5" width="5" height="4"/></svg></button>
       <button class="ib" data-act="del" data-tip="Удалить" data-key="Del"><svg viewBox="0 0 20 20"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg></button>
       <button class="ib" data-act="snap" data-tip="Шаг 10 мм (по умолчанию выключен)" data-key="S" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14"/></svg></button>
       <button class="ib" data-act="undo" data-tip="Отменить" data-key="Ctrl+Z"><svg viewBox="0 0 20 20"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10H9"/></svg></button>
@@ -283,7 +287,7 @@ td.n{font-family:var(--f-mono);text-align:right}
       <div class="kg">
         <div><span class="lbl">Инструменты</span><dl><dt>Пробел</dt><dd>Выбор, Shift+клик — несколько</dd><dt>M</dt><dd>Перемещение: точка → точка</dd><dt>Ctrl</dt><dd>в Перемещении — копия</dd><dt>P</dt><dd>Выдавить / втянуть грань или область; Shift+клик по ребру — подтянуть к нему</dd><dt>R</dt><dd>Доска: два клика — прямоугольник</dd><dt>C</dt><dd>Круг на грани: центр → радиус или диаметр + Enter; затем P — отверстие</dd><dt>F</dt><dd>Смещение: рамка внутри грани</dd><dt>Клик</dt><dd>Грань или ребро; Shift — добавить ещё</dd><dt>2×клик</dt><dd>Ребро вместе с соседними гранями</dd><dt>3×клик</dt><dd>Вся деталь</dd><dt>G</dt><dd>Магнит: грань к грани</dd><dt>T</dt><dd>Рулетка: от ребра — направляющая</dd><dt>E</dt><dd>Ластик: деталь, область, направляющая</dd><dt>Q</dt><dd>Поворот: центр → начало → угол, шаг 15°, цифры — точный угол</dd></dl></div>
         <div><span class="lbl">Точность</span><dl><dt>Цифры + Enter</dt><dd>Точное значение во время действия</dd><dt>600;300</dt><dd>Размер доски</dd><dt>3x · /3</dt><dd>После копии — массив или деление</dd><dt>→</dt><dd>Фиксировать ось X (красная)</dd><dt>←</dt><dd>Ось Z, вглубь (зелёная)</dd><dt>↑</dt><dd>Ось Y, вверх (синяя)</dd><dt>↓</dt><dd>Снять фиксацию</dd><dt>Esc</dt><dd>Отменить действие</dd></dl></div>
-        <div><span class="lbl">Вид и правка</span><dl><dt>O · H</dt><dd>Орбита · панорама</dd><dt>Shift+Z</dt><dd>Показать всё</dd><dt>1 2 3 4 5 6 0</dt><dd>Спереди, сверху, справа, слева, сзади, снизу, изо</dd><dt>Мышь</dt><dd>Вращение во все стороны, в том числе снизу</dd><dt>Ctrl+Z / Y</dt><dd>Отменить / повторить</dd><dt>Ctrl+C / V</dt><dd>Копировать / вставить</dd><dt>Ctrl+D</dt><dd>Дублировать</dd><dt>Ctrl+A</dt><dd>Выделить всё</dd><dt>Del</dt><dd>Удалить</dd><dt>S</dt><dd>Шаг сетки 10 мм</dd></dl></div>
+        <div><span class="lbl">Вид и правка</span><dl><dt>O · H</dt><dd>Орбита · панорама</dd><dt>Shift+Z</dt><dd>Приблизить к выбранному · без выбора — всё</dd><dt>Ctrl+G · Ctrl+Shift+G</dt><dd>Сгруппировать · разгруппировать</dd><dt>[ ]</dt><dd>Скругление углов на 1 ед. проекта · Shift — ×10</dd><dt>1 2 3 4 5 6 0</dt><dd>Спереди, сверху, справа, слева, сзади, снизу, изо</dd><dt>Мышь</dt><dd>Вращение во все стороны, в том числе снизу</dd><dt>Ctrl+Z / Y</dt><dd>Отменить / повторить</dd><dt>Ctrl+C / V</dt><dd>Копировать / вставить</dd><dt>Ctrl+D</dt><dd>Дублировать</dd><dt>Ctrl+A</dt><dd>Выделить всё</dd><dt>Del</dt><dd>Удалить</dd><dt>S</dt><dd>Шаг сетки 10 мм</dd></dl></div>
       </div>
     </div>
     <div class="tplpop viewpop" id="viewpop" hidden><span class="lbl">Вид</span><div class="vgrid"><button class="btn" data-view="iso">Изометрия<i>0</i></button><button class="btn" data-view="front">Спереди<i>1</i></button><button class="btn" data-view="top">Сверху<i>2</i></button><button class="btn" data-view="right">Справа<i>3</i></button><button class="btn" data-view="left">Слева<i>4</i></button><button class="btn" data-view="back">Сзади<i>5</i></button><button class="btn" data-view="bottom">Снизу<i>6</i></button></div></div>
@@ -420,12 +424,17 @@ function rnd(seed){let s=seed%2147483647||1;return()=>(s=s*16807%2147483647)/214
 const selP=()=>state.panels.find(p=>p.id===state.sel)||null;
 const nf=v=>String(+(+v).toFixed(2)).replace('.',',');
 function tidy(){for(const p of state.panels)for(const k of ['x','y','z','w','h','d'])if(typeof p[k]==='number')p[k]=Math.round(p[k]*1e4)/1e4}
-function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,prods:state.prods||[],nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
-function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;state.prods=Array.isArray(j.prods)?j.prods:[];if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
-const snap=()=>JSON.stringify({p:state.panels,r:state.prods||[]});function unsnap(t){const j=JSON.parse(t);if(Array.isArray(j))state.panels=j;else{state.panels=j.p;state.prods=j.r}}
+function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,prods:state.prods||[],grpn:state.grpn||{},nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
+function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;state.prods=Array.isArray(j.prods)?j.prods:[];state.grpn=j.grpn||{};if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
+const snap=()=>JSON.stringify({p:state.panels,r:state.prods||[],g:state.grpn||{}});function unsnap(t){const j=JSON.parse(t);if(Array.isArray(j))state.panels=j;else{state.panels=j.p;state.prods=j.r;if(j.g)state.grpn=j.g}}
 function pushUndo(){undoS.push(snap());if(undoS.length>120)undoS.shift();redoS.length=0}
-function undo(){if(!undoS.length)return toast('Нечего отменять');toast('Отменено · Ctrl+Y — вернуть');redoS.push(snap());unsnap(undoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
-function redo(){if(!redoS.length)return toast('Нечего возвращать');toast('Возвращено');undoS.push(snap());unsnap(redoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
+let rsT=0;function roundStep(dir,big){const st=Math.min(10,(UNITS[state.units]||UNITS.mm)[0])*(big?10:1)*dir;if(op&&op.type==='offset'){const R0=offRect();if(R0.c)return;op.rr=Math.max(0,(R0.rr||0)+st);previewOffset();return toast('Скругление R '+fmtU(op.rr))}
+  const S=state.sub,now=performance.now(),undoOk=now-rsT>1200;rsT=now;
+  if(S&&S.kind==='region'){const p=panelById(S.id),f=featById(p,S.fid);if(!f)return;if(f.c)return toast('У круга нет углов');if(undoOk)pushUndo();f.rr=r4(Math.max(0,Math.min((f.rr||0)+st,Math.min(f.u1-f.u0,f.v1-f.v0)/2)));if(!f.rr)delete f.rr;buildMesh(p);showSub();save();renderInsp();return toast('Скругление углов области R '+fmtU(f.rr||0))}
+  const ps=selPanels().filter(q=>!q.hw&&!q.rot);if(!ps.length)return toast('Выберите доску или область (прямоугольник) — затем [ и ] меняют скругление');if(undoOk)pushUndo();let r=0;ps.forEach(q=>{const [u,v]=AX.filter(x=>x!==q.t);q.cr=r4(Math.max(0,Math.min((q.cr||0)+st,q[SZ[u]]/2-0.5,q[SZ[v]]/2-0.5)));r=q.cr;if(!q.cr)delete q.cr;buildMesh(q)});save();renderInsp();toast('Скругление углов детали R '+fmtU(r))}
+function fixSel(){if(state.multi){state.multi=new Set([...state.multi].filter(i=>panelById(i)));if(state.multi.size<2)state.multi=null}if(!selP())state.sel=state.multi?[...state.multi].pop():null}
+function undo(){if(!undoS.length)return toast('Нечего отменять');toast('Отменено · Ctrl+Y — вернуть');redoS.push(snap());unsnap(undoS.pop());fixSel();subClear();rebuildAll();showSub();save();renderInsp()}
+function redo(){if(!redoS.length)return toast('Нечего возвращать');toast('Возвращено');undoS.push(snap());unsnap(redoS.pop());fixSel();subClear();rebuildAll();showSub();save();renderInsp()}
 function bbox(list=state.panels){if(!list.length)return{x0:0,x1:800,y0:0,y1:800,z0:0,z1:400};const b={x0:1e9,x1:-1e9,y0:1e9,y1:-1e9,z0:1e9,z1:-1e9};list.forEach(p=>{b.x0=Math.min(b.x0,p.x);b.x1=Math.max(b.x1,p.x+p.w);b.y0=Math.min(b.y0,p.y);b.y1=Math.max(b.y1,p.y+p.h);b.z0=Math.min(b.z0,p.z);b.z1=Math.max(b.z1,p.z+p.d)});return b}
 
 /* ---------- three setup ---------- */
@@ -439,14 +448,14 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const maxAniso=renderer.capabilities.getMaxAnisotropy();
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(34,1,0.02,80);
+const camera=new THREE.PerspectiveCamera(34,1,0.005,80);
 camera.position.set(2.0,1.45,2.4);
 
 /* pointer handlers registered before OrbitControls so tool drags can disable orbit */
 const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
-cv.addEventListener('pointerdown',onDown);
+cv.addEventListener('pointerdown',e=>{if(state.addMode&&view==='build'&&state.tool==='select')Object.defineProperty(e,'shiftKey',{value:true});onDown(e)});
 const controls=new OrbitControls(camera,cv);
-controls.enableDamping=true;controls.dampingFactor=0.12;controls.maxPolarAngle=Math.PI;controls.minDistance=0.3;controls.maxDistance=14;
+controls.enableDamping=true;controls.dampingFactor=0.12;controls.maxPolarAngle=Math.PI;controls.minDistance=0.02;controls.maxDistance=40;controls.zoomToCursor=true;
 controls.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.ROTATE,RIGHT:THREE.MOUSE.PAN};
 controls.addEventListener('change',()=>{lastMove=performance.now();camDirty=true});
 
@@ -804,7 +813,16 @@ function prodSet(rec,k,v){const f=PRODS[rec.type].f.find(x=>x[0]===k);if(f&&type
 let hoverId=null;
 function selIds(){const a=state.multi&&state.multi.size?[...state.multi]:state.sel!=null?[state.sel]:[];return isoId!=null?a.filter(id=>id===isoId):a}
 const selPanels=()=>selIds().map(id=>state.panels.find(p=>p.id===id)).filter(Boolean);
-function setSel(id,add){if(isoId!=null&&id!=null&&id!==isoId){toast('Деталь заблокирована · клик в пустое место — выйти из режима');return}if(add&&id!=null){state.multi=new Set(selIds());if(state.multi.has(id)){state.multi.delete(id);state.sel=state.multi.size?[...state.multi].pop():null}else{state.multi.add(id);state.sel=id}if(state.multi.size<2)state.multi=null}
+function grpName(g){return (state.grpn||{})[g]||'Группа '+g}
+function grpMembers(g){return state.panels.filter(q=>q.grp===g).map(q=>q.id)}
+function selGrp(){const ids=selIds();if(ids.length<2)return null;const g=panelById(ids[0])?.grp;if(!g||!ids.every(i=>panelById(i)?.grp===g))return null;return grpMembers(g).length===ids.length?g:null}
+function regrp(list){const byG={};list.forEach(p=>{if(p.grp)(byG[p.grp]=byG[p.grp]||[]).push(p)});
+  Object.entries(byG).forEach(([g,ps])=>{g=+g;const orig=state.panels.filter(q=>q.grp===g&&!ps.includes(q)).length;if(ps.length>=orig){const ng=newGrp();state.grpn[ng]=grpName(g)+' копия';ps.forEach(p=>p.grp=ng)}})}
+function newGrp(){state.grpn=state.grpn||{};return Math.max(0,...state.panels.map(q=>q.grp||0),...Object.keys(state.grpn).map(Number))+1}
+function setSel(id,add,raw){if(isoId!=null&&id!=null&&id!==isoId){toast('Деталь заблокирована · клик в пустое место — выйти из режима');return}
+  if(id==null)state.openGrp=null;else if(state.openGrp&&panelById(id)?.grp!==state.openGrp)state.openGrp=null;
+  if(id!=null&&!raw){const p=panelById(id),g=p&&p.grp&&state.openGrp!==p.grp?grpMembers(p.grp):null;if(g&&g.length>1){if(add){const cur=new Set(selIds()),all=g.every(i=>cur.has(i));g.forEach(i=>all?cur.delete(i):cur.add(i));state.multi=cur.size>1?cur:null;state.sel=cur.size?(all?[...cur].pop():id):null}else{state.multi=new Set(g);state.sel=id}
+    if(innerWidth<=760)$('#insp').classList.remove('min');refreshEdges();placeHandles();renderInsp();return}}if(add&&id!=null){state.multi=new Set(selIds());if(state.multi.has(id)){state.multi.delete(id);state.sel=state.multi.size?[...state.multi].pop():null}else{state.multi.add(id);state.sel=id}if(state.multi.size<2)state.multi=null}
   else{state.sel=id;state.multi=null}if(innerWidth<=760)$('#insp').classList.toggle('min',id==null);refreshEdges();placeHandles();renderInsp()}
 function setHover(id){if(id===hoverId)return;hoverId=id;refreshEdges()}
 
@@ -911,11 +929,14 @@ function segDistPx(mx,my,a,b){const A=scr(a),B=scr(b);if(A.z>1||B.z>1)return 1e9
 function lineDistPx(mx,my,a,b){const A=scr(a),B=scr(b),dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy);if(L<1e-3)return 1e9;return Math.abs((mx-A.x)*dy-(my-A.y)*dx)/L}
 const AXV={x:new THREE.Vector3(1,0,0),y:new THREE.Vector3(0,1,0),z:new THREE.Vector3(0,0,1)};
 const domAxis=n=>AX[[0,1,2].reduce((m,i)=>Math.abs(n.getComponent(i))>Math.abs(n.getComponent(m))?i:m,0)];
+function guideX(){const out=[],gs=state.guides;for(let i=0;i<gs.length;i++)for(let j=i+1;j<gs.length;j++){const P1=new THREE.Vector3(...gs[i].p),d1=new THREE.Vector3(...gs[i].d),P2=new THREE.Vector3(...gs[j].p),d2=new THREE.Vector3(...gs[j].d),w=P1.clone().sub(P2),a=d1.dot(d1),b=d1.dot(d2),c=d2.dot(d2),d=d1.dot(w),e=d2.dot(w),den=a*c-b*b;if(Math.abs(den)<1e-12)continue;const t1=(b*e-c*d)/den,t2=(a*e-b*d)/den,A=P1.clone().addScaledVector(d1,t1),B=P2.clone().addScaledVector(d2,t2);if(A.distanceTo(B)>2e-4)continue;const pt=A.add(B).multiplyScalar(.5);
+  const own=state.panels.find(p=>!p.rot&&!p.hw&&AX.every((ax,k)=>{const v=pt.getComponent(k)/MM;return v>=p[ax]-0.6&&v<=p[ax]+p[SZ[ax]]+0.6}));out.push({pt,id:own?own.id:null})}return out}
 function infer(mx,my,o={}){const ex=o.exclude||new Set(),list=state.panels.filter(p=>!ex.has(p.id));
   const hits=ray.intersectObjects(list.map(p=>meshes[p.id]).filter(Boolean),false),h=hits[0],occl=h?h.distance+0.004:Infinity;
   const vis=v=>camera.position.distanceTo(v)<=occl;let best=null,bd=SNAP_PX;
   const G=new Map(list.map(p=>[p.id,snapGeo(p)]));
   for(const p of list)for(const v of G.get(p.id).pts){if(!vis(v))continue;const s=scr(v),d=Math.hypot(s.x-mx,s.y-my);if(d<bd){bd=d;best={pt:v.clone(),type:'end',id:p.id}}}
+  if(!o.noGuides&&state.guides.length>1){let xd=best?bd:SNAP_PX;for(const q of guideX()){if(camera.position.distanceTo(q.pt)>occl+0.03)continue;const s=scr(q.pt),d=Math.hypot(s.x-mx,s.y-my);if(s.z<1&&d<xd){xd=d;best={pt:q.pt,type:'gx',id:q.id}}}}
   if(!best){bd=SNAP_PX*.9;for(const p of list)for(const [A,B] of G.get(p.id).segs){const m=A.clone().add(B).multiplyScalar(.5);if(!vis(m))continue;const s=scr(m),d=Math.hypot(s.x-mx,s.y-my);if(d<bd){bd=d;best={pt:m,type:'mid',id:p.id,seg:[A,B]}}}}
   if(!best){let ed=SNAP_PX*.6;for(const p of list)for(const [A,B] of G.get(p.id).segs){const d=segDistPx(mx,my,A,B);if(d<ed){const pt=rayLine(A,B.clone().sub(A),true);if(!vis(pt))continue;ed=d;best={pt,type:'edge',id:p.id,seg:[A,B]}}}}
   if(!best&&!o.noGuides){let gd=9;for(const g of state.guides){const P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d),pt=rayLine(P,D);const s=scr(pt),q=rayHit2D(mx,my);const d=Math.hypot(s.x-mx,s.y-my);if(d<gd&&s.z<1){gd=d;best={pt,type:'guide',guide:g}}}}
@@ -926,7 +947,7 @@ function infer(mx,my,o={}){const ex=o.exclude||new Set(),list=state.panels.filte
   if(h){const n=h.face.normal.clone();return{pt:h.point.clone(),type:'face',id:h.object.userData.id,n,a:domAxis(n),sign:Math.sign(n.getComponent(AX.indexOf(domAxis(n))))}}
   const pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),pt))return null;
   if(state.snap){pt.x=Math.round(pt.x*100)/100;pt.z=Math.round(pt.z*100)/100}return{pt,type:'ground',a:'y',sign:1}}
-const SNAPN={guide:['На направляющей','#5b5b60'],end:['Конечная точка','#1aa34a'],mid:['Середина','#11a3c8'],edge:['На ребре','#d2342c'],face:['На грани','#1f5fe0'],ground:['На полу','#8a8a8e']};
+const SNAPN={gx:['Пересечение направляющих','#7a3fd0'],guide:['На направляющей','#5b5b60'],end:['Конечная точка','#1aa34a'],mid:['Середина','#11a3c8'],edge:['На ребре','#d2342c'],face:['На грани','#1f5fe0'],ground:['На полу','#8a8a8e']};
 const snapEl=$('#snapmk');
 function showSnap(s){if(!s||view!=='build'){snapEl.hidden=true;axisGuide.visible=false;return}const P=scr(s.pt);
   let [txt,col]=SNAPN[s.type]||['',''];if(s.type==='axis'||s.type==='lock'){txt=(s.type==='lock'?'Зафиксировано: ':'')+{x:'по оси X',y:'по оси Y — вверх',z:'по оси Z — вглубь'}[s.axis];col=AXCSS[s.axis]}
@@ -989,16 +1010,16 @@ function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#hwpop')
   if(t==='move'&&!op&&state.sub&&isSel(state.sub.id)){const s=infer(mx,my,{exclude:new Set([state.sub.id])})||infer(mx,my);if(!s)return;startSubMove(s.pt);grab();return}
   if(t==='move'&&op&&['push','emove','rmove','redge','rpush'].includes(op.type)){finishSub();grab();return}
   if(t==='move'){if(!op){const s=infer(mx,my);if(!s)return;if(s.id!=null&&!isSel(s.id))setSel(s.id,e.shiftKey);if(!selIds().length){toast('Выберите деталь или наведите на неё');return}
-      pushUndo();let ids=selIds();copyMode=e.ctrlKey||e.metaKey;if(copyMode){const cl=selPanels().map(p=>({...p,id:nextId++}));state.panels.push(...cl);cl.forEach(buildMesh);ids=cl.map(p=>p.id);state.sel=ids[ids.length-1];state.multi=ids.length>1?new Set(ids):null;refreshEdges()}
+      pushUndo();let ids=selIds();copyMode=e.ctrlKey||e.metaKey;if(copyMode){const cl=selPanels().map(p=>({...p,id:nextId++}));regrp(cl);state.panels.push(...cl);cl.forEach(buildMesh);ids=cl.map(p=>p.id);state.sel=ids[ids.length-1];state.multi=ids.length>1?new Set(ids):null;refreshEdges()}
       op={type:'move',from:s.pt.clone(),ids,copy:copyMode,start:Object.fromEntries(ids.map(id=>{const p=panelById(id);return[id,{x:p.x,y:p.y,z:p.z}]})),d:new THREE.Vector3()};placeHandles();renderHint();grab()}
     else{finishMove();grab()}return}
   if(t==='push'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot||panelById(h.object.userData.id).hw){toast('Повёрнутую деталь нельзя выдавливать — сначала верните поворот кратным 90°');return}const pf=pickFace(h);if(!isSel(pf.p.id))setSel(pf.p.id);pushUndo();
       op=pf.f?{type:'rpush',p:pf.p,f:pf.f,a:pf.a,sign:pf.s,from:h.point.clone(),start:pf.f.depth}:{type:'push',p:pf.p,a:pf.a,sign:pf.s,from:h.point.clone(),start:{...pf.p}};placeHandles();renderHint();grab()}
     else{finishSub();grab()}return}
-  if(t==='offset'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot||panelById(h.object.userData.id).hw){toast('На повёрнутой детали смещение недоступно');return}const pf=pickFace(h);if(pf.f){toast('Смещение строится на целой грани детали');return}startOffset(pf.p,pf.a,pf.s)}else finishOffset();grab();return}
+  if(t==='offset'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return;if(panelById(h.object.userData.id).rot||panelById(h.object.userData.id).hw){toast('На повёрнутой детали смещение недоступно');return}const pf=pickFace(h);startOffset(pf.p,pf.a,pf.s,pf.f)}else finishOffset();grab();return}
   if(t==='rotate'){rotClick(mx,my,e);grab();return}
   if(t==='circle'){if(!op){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return toast('Круг рисуется на грани детали');const pp=panelById(h.object.userData.id);if(pp.hw||pp.rot)return toast('Круг можно нарисовать только на доске без поворота');
-      const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a)));const sn=infer(mx,my);let pt=h.point.clone();if(sn&&sn.id===pp.id&&sn.type!=='face')pt=sn.pt.clone();const L=loc(pp,pt),[u,v]=AX.filter(q=>q!==a);{const b=behindSnap(pp,a,sg,L[u],L[v]);if(b&&!(sn&&sn.id===pp.id&&sn.type!=='face')){L[u]=b.u;L[v]=b.v}}
+      const n=h.face.normal.clone().transformDirection(h.object.matrixWorld),a=domAxis(n),sg=Math.sign(n.getComponent(AX.indexOf(a)));const sn=infer(mx,my);const okS=sn&&sn.type!=='face'&&(sn.id===pp.id||sn.type==='gx');let pt=h.point.clone();if(okS)pt=sn.pt.clone();const L=loc(pp,pt),[u,v]=AX.filter(q=>q!==a);{const b=behindSnap(pp,a,sg,L[u],L[v]);if(b&&!okS){L[u]=b.u;L[v]=b.v}}
       op={type:'circle',p:pp,a,s:sg,cu:r4(Math.max(0,Math.min(pp[SZ[u]],L[u]))),cv:r4(Math.max(0,Math.min(pp[SZ[v]],L[v]))),r:0};if(!isSel(pp.id))setSel(pp.id);renderHint();grab()}else{finishCircle(op.r);grab()}return}
   if(t==='board'){const s=infer(mx,my,op?{from:op.from,lock:state.lock}:{});if(!s)return;
     if(!op){let a='y',sign=1,pid=s.id;const hh=ray.intersectObjects(panelMeshes(),false)[0];if(hh){const nn=hh.face.normal.clone().transformDirection(hh.object.matrixWorld);a=domAxis(nn);sign=Math.sign(nn.getComponent(AX.indexOf(a)));pid=hh.object.userData.id}else if(s.type==='face'){a=s.a;sign=s.sign}
@@ -1048,7 +1069,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [m
     if(s.type==='face'||s.type==='ground'){pt=new THREE.Vector3();const n=AXV[op.a];if(!ray.ray.intersectPlane(new THREE.Plane(n.clone(),-pl),pt))return}else pt=s.pt.clone();pt.setComponent(ai,pl);op.cur=pt;previewRect();return}
   if(op&&op.type==='tape'){if(op.line){tapeParallel(mx,my);return}const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);tapeShow(op.from,s.pt);return}
   if(op&&op.type==='mag'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&h.object.userData.id!==op.p.id){const n=h.face.normal,a=domAxis(n);showFace(faceHL,panelById(h.object.userData.id),a,Math.sign(n.getComponent(AX.indexOf(a))))}else faceHL.visible=false;return}
-  if(t==='board'||t==='tape'||t==='move'){const s=infer(mx,my);showSnap(s);setHover(s&&s.id!=null&&t==='move'?s.id:null);return}
+  if(t==='board'||t==='tape'||t==='move'||t==='circle'){const s=infer(mx,my);showSnap(s);setHover(s&&s.id!=null&&t==='move'?s.id:null);return}
   if(t==='push'&&state.sub&&e.shiftKey){const s=infer(mx,my,{exclude:new Set([state.sub.id])});showSnap(s&&s.type!=='face'&&s.type!=='ground'?s:null);faceHL.visible=false;cv.style.cursor='crosshair';return}
   if(t==='push'||t==='magnet'||t==='offset'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&panelById(h.object.userData.id).rot){faceHL.visible=false;return}if(h){const pf=pickFace(h);if(pf.f&&t!=='magnet')showRegion(faceHL,pf.p,pf.a,pf.s,pf.f,Math.min(pf.f.depth,pf.p[SZ[pf.a]]-0.6));else showFace(faceHL,pf.p,pf.a,pf.s);cv.style.cursor='pointer'}else{faceHL.visible=false;cv.style.cursor='default'}return}
   if(t==='orbit'||t==='pan')return;
@@ -1056,7 +1077,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [m
   const hv=ray.intersectObjects(handles.filter(h=>h.visible),false)[0];handles.forEach(h=>h.material=h===(hv&&hv.object)?gripHot:gripMat);
   const over=ray.intersectObjects(panelMeshes(),false)[0];setHover(over?over.object.userData.id:null);
   if(t==='erase'){cv.style.cursor=over?'pointer':'default';if(over){const pf=pickFace(over);if(pf.f)showRegion(faceHL,pf.p,pf.a,pf.s,pf.f,Math.min(pf.f.depth,pf.p[SZ[pf.a]]-0.6));else faceHL.visible=false}return}cv.style.cursor=hv?'grab':over?(isSel(over.object.userData.id)?'move':'pointer'):'default'});
-window.addEventListener('pointerup',e=>{if(view!=='build')return;
+window.addEventListener('pointerup',e=>{if(view!=='build')return;if(state.addMode&&state.tool==='select'&&e.target===cv)Object.defineProperty(e,'shiftKey',{value:true});
   if(drag){const moved=drag.moved;drag=null;controls.enabled=true;if(moved){save();fitShadows();renderInsp()}return}
   const dx=downXY?e.clientX-downXY[0]:0,dy=downXY?e.clientY-downXY[1]:0,dragged=dx*dx+dy*dy>36;
   if(op&&dragged&&downTool){if(op.type==='move')finishMove();else if(['push','rpush','emove','rmove','redge'].includes(op.type))finishSub();else if(op.type==='rot'&&op.gz){if(op.ang)finishRot();else opCancel()}else if(op.type==='offset')finishOffset();else if(op.type==='rect')finishRect();else if(op.type==='tape'){if(op.line&&op.w&&op.w.lengthSq()>1e-10){state.guides.push({p:op.line.P.clone().add(op.w).toArray(),d:op.line.D.toArray()});buildGuides();save();opEnd();tapeClear()}else opEnd()}}
@@ -1124,12 +1145,14 @@ function bakeRot(p){if(!p.rot||p.hw)return;const e=new THREE.Matrix4().makeRotat
   p.w=ns.x;p.h=ns.y;p.d=ns.z;p.t=map[p.t];p.x=r4(c.x*1000-p.w/2);p.y=r4(c.y*1000-p.h/2);p.z=r4(c.z*1000-p.d/2)}
 function finishRot(){const ids=op.ids;ids.forEach(id=>{const p=panelById(id);bakeRot(p);if(p.y<0)p.y=0;buildMesh(p)});prot.visible=rotLine1.visible=rotLine2.visible=false;opEnd();save();fitShadows();renderInsp();toast('Повёрнуто')}
 /* offset: inset rectangle on a face */
-function startOffset(p,a,s){if(!isSel(p.id))setSel(p.id);const {Su,Sv}=faceRect(p,a);if(Math.min(Su,Sv)<4){toast('Грань слишком узкая для смещения');return}op={type:'offset',p,a,s,d:Math.round(Math.min(Su,Sv)/6)};renderHint();previewOffset()}
+function offBase(p,a){const {Su,Sv}=faceRect(p,a),f=op&&op.f;return f?{u0:f.u0,v0:f.v0,u1:f.u1,v1:f.v1,W:f.u1-f.u0,H:f.v1-f.v0,c:f.c,rr:f.rr||0}:{u0:0,v0:0,u1:Su,v1:Sv,W:Su,H:Sv,c:0,rr:p.cr||0}}
+function startOffset(p,a,s,f){if(!isSel(p.id))setSel(p.id);if(f&&f.a!==a)f=null;op={type:'offset',p,a,s,f:f||null};const B=offBase(p,a);if(Math.min(B.W,B.H)<4){op=null;toast('Слишком узко для смещения');return}op.d=Math.round(Math.min(B.W,B.H)/6);renderHint();previewOffset();if(f)toast((f.c?'Круг':'Область')+': смещение внутрь по её контуру · [ ] — скругление углов')}
 function moveOffset(){const p=op.p,a=op.a,{u,v,Su,Sv}=faceRect(p,a),k=SZ[a],pl=(op.s>0?p[a]+p[k]:p[a])*MM,pt=new THREE.Vector3();if(!ray.ray.intersectPlane(new THREE.Plane(AXV[a].clone(),-pl),pt))return;const L=loc(p,pt);
-  let d=Math.min(L[u],Su-L[u],L[v],Sv-L[v]);d=Math.max(1,Math.min(d,Math.min(Su,Sv)/2-1));d=state.snap?Math.max(5,Math.round(d/5)*5):r4(d);op.d=d;previewOffset()}
-function previewOffset(){const p=op.p,{Su,Sv}=faceRect(p,op.a),d=op.d;const pts=rectPts(p,op.a,op.s,{u0:d,u1:Su-d,v0:d,v1:Sv-d});offLine.geometry.setFromPoints(pts);offLine.visible=true;setVCB('Смещение',fmtMM(d),false)}
-function finishOffset(dd){if(!op||op.type!=='offset')return;const p=op.p,a=op.a,s=op.s,{Su,Sv}=faceRect(p,a),d=dd!=null?dd:op.d;if(d<=0||d*2>=Math.min(Su,Sv)){toast('Смещение больше половины грани');return}
-  pushUndo();const f={id:fidN++,a,s,u0:d,u1:Su-d,v0:d,v1:Sv-d,depth:0};p.feat=(p.feat||[]).concat(f);opEnd();buildMesh(p);setSub({kind:'region',id:p.id,fid:f.id});save();toast('Область создана — P: внутрь — выборка или вырез, наружу — выступ')}
+  const B=offBase(p,a);let d=B.c?B.W/2-Math.hypot(L[u]-(B.u0+B.u1)/2,L[v]-(B.v0+B.v1)/2):Math.min(L[u]-B.u0,B.u1-L[u],L[v]-B.v0,B.v1-L[v]);d=Math.max(1,Math.min(d,Math.min(B.W,B.H)/2-1));d=state.snap?Math.max(5,Math.round(d/5)*5):r4(d);op.d=d;previewOffset()}
+function offRect(){const B=offBase(op.p,op.a),d=op.d,o={u0:B.u0+d,u1:B.u1-d,v0:B.v0+d,v1:B.v1-d};if(B.c)o.c=1;const rr=op.rr!=null?op.rr:Math.max(0,B.rr-d);if(!B.c&&rr>0)o.rr=r4(Math.min(rr,(o.u1-o.u0)/2,(o.v1-o.v0)/2));return o}
+function previewOffset(){const p=op.p,d=op.d,R0=offRect();const pts=R0.c||R0.rr?shapePts(p,{a:op.a,s:op.s,...R0},true):rectPts(p,op.a,op.s,R0);offLine.geometry.setFromPoints(pts);offLine.visible=true;setVCB('Смещение',fmtMM(d),false)}
+function finishOffset(dd){if(!op||op.type!=='offset')return;const p=op.p,a=op.a,s=op.s,B=offBase(p,a),d=dd!=null?dd:op.d;if(d<=0||d*2>=Math.min(B.W,B.H)){toast('Смещение больше половины контура');return}op.d=d;
+  pushUndo();const f={id:fidN++,a,s,...offRect(),depth:0};p.feat=(p.feat||[]).concat(f);opEnd();buildMesh(p);setSub({kind:'region',id:p.id,fid:f.id});save();toast('Область создана — P: внутрь — выборка или вырез, наружу — выступ')}
 /* tape from an edge or guide: perpendicular distance + new guide line */
 function tapeParallel(mx,my){const {P,D}=op.line;const s=infer(mx,my);let Q;if(s&&s.type!=='ground'&&s.type!=='face')Q=s.pt;else{const n=camera.getWorldDirection(new THREE.Vector3());const pl=new THREE.Plane().setFromNormalAndCoplanarPoint(n,P);Q=new THREE.Vector3();if(!ray.ray.intersectPlane(pl,Q))return}
   showSnap(s&&s.type!=='face'&&s.type!=='ground'?s:null);let w=Q.clone().sub(P);w.addScaledVector(D,-w.dot(D));let axn=null;
@@ -1210,18 +1233,23 @@ function setTool(t){behindG.visible=false;if(op)opCancel();prot.visible=false;st
   controls.mouseButtons.LEFT=t==='pan'?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;cv.style.cursor={orbit:'grab',pan:'grab',tape:'crosshair',board:'crosshair',move:'crosshair',rotate:'crosshair'}[t]||'default';lastCopy=null;setVCB('Значение','',false);placeHandles();renderInsp();renderHint()}
 let clip=null;
 function copyP(){const ps=selPanels();if(!ps.length)return;clip=ps.map(p=>({...p}));toast('Скопировано — Ctrl+V')}
-function pasteP(){if(!clip)return toast('Буфер пуст');if(isoId!=null)setIso(null);pushUndo();const b=bbox(clip),dx=b.x1-b.x0+50;const n=clip.map(p=>({...p,id:nextId++,x:p.x+dx}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();save();setTool('move');renderInsp();toast('Вставлено справа — переместите (M)')}
+function pasteP(){if(!clip)return toast('Буфер пуст');if(isoId!=null)setIso(null);pushUndo();const b=bbox(clip),dx=b.x1-b.x0+50;const n=clip.map(p=>({...p,id:nextId++,x:p.x+dx}));regrp(n);state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();save();setTool('move');renderInsp();toast('Вставлено справа — переместите (M)')}
 const CAMV={front:[0,0,1],back:[0,0,-1],right:[1,0,0],left:[-1,0,0],top:[0,1,0.0001],bottom:[0,-1,0.0001],iso:[0.62,0.42,0.78]};
 function setCamView(v){const c=center(),R=radius(),d=R/Math.sin(camera.fov*Math.PI/360)*1.15;controls.target.copy(c);camera.position.copy(c).addScaledVector(new THREE.Vector3(...CAMV[v]).normalize(),d);controls.update();lastMove=performance.now()}
 function toggleHelp(on){const k=$('#keys');k.hidden=on===undefined?!k.hidden:!on}
 function act(a){
   if(a==='undo')return undo();if(a==='redo')return redo();
-  if(a==='fit')return fitView();if(a==='help')return toggleHelp();
+  if(a==='fit')return selIds().length?focusSel():fitView();if(a==='help')return toggleHelp();
   if(a==='cols'){DOCK.rail.cols=DOCK.rail.cols===2?1:2;saveDock();layoutPanels();return}
   if(a==='hwpop'){const pp=$('#hwpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;$('#viewpop').hidden=true;placePop(pp,$('[data-act=hwpop]'));return}
   if(a==='viewpop'){const pp=$('#viewpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;placePop(pp,$('[data-act=viewpop]'));return}
   if(a==='tplpop'){$('#viewpop').hidden=true;const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.entries(PRODS).map(([k,v])=>`<button class="btn" data-act="prodadd" data-n="${k}">${v.name}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
     const rr=$('#rail').getBoundingClientRect(),br=$('[data-act=tplpop]').getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?rr.top-sr.top-pp.offsetHeight-8:rr.bottom-sr.top+8)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?rr.left-sr.left-pp.offsetWidth-8:rr.right-sr.left+8)+'px'}return}
+  if(a==='multi'){state.addMode=!state.addMode;$('[data-act="multi"]').setAttribute('aria-pressed',state.addMode);return toast(state.addMode?'Выбор нескольких: нажимайте на детали по очереди':'Выбор нескольких выключен')}
+  if(a==='group'){const ids=selIds();if(selGrp())return act('ungroup');if(ids.length<2)return toast('Выберите 2 и больше деталей: Shift+клик или кнопка «Выбор нескольких»');pushUndo();const g=newGrp();state.grpn[g]='Группа '+g;ids.forEach(i=>panelById(i).grp=g);state.openGrp=null;save();renderInsp();return toast(`«${state.grpn[g]}» создана · ${ids.length} дет. Клик по любой детали выделяет всю группу`)}
+  if(a==='ungroup'){const ps=selPanels().filter(p=>p.grp);if(!ps.length)return toast('В выделении нет групп');pushUndo();ps.forEach(p=>delete p.grp);state.openGrp=null;save();renderInsp();return toast('Группа разобрана')}
+  if(a==='grpopen'){const g=selGrp();if(!g)return;state.openGrp=g;setSel(state.sel,false,true);return toast('Группа открыта — детали выбираются по одной · клик в пустое место — закрыть')}
+  if(a==='grpclose'){const g=state.openGrp;state.openGrp=null;if(g){state.multi=new Set(grpMembers(g));state.sel=[...state.multi][0];if(state.multi.size<2)state.multi=null;refreshEdges();placeHandles()}renderInsp();return}
   if(a==='snap'){state.snap=!state.snap;$('[data-act="snap"]').setAttribute('aria-pressed',state.snap);return toast(state.snap?'Шаг 10 мм включён':'Шаг выключен — точность 0,0001 мм')}
   if(a==='del'&&selGuide>=0){state.guides.splice(selGuide,1);selGuide=-1;buildGuides();save();toast('Направляющая удалена');return}
   if(a==='del'&&state.sub){const S=state.sub,p=panelById(S.id);if(S.kind==='region'||S.kind==='redge'){pushUndo();p.feat=p.feat.filter(f=>f.id!==S.fid);subClear();buildMesh(p);showSub();save();renderInsp();toast('Область удалена');return}
@@ -1229,7 +1257,7 @@ function act(a){
   const ps=selPanels();if(!ps.length)return toast('Сначала выберите деталь');
   pushUndo();if(a==='rot')ps.forEach(p=>{if(p.feat&&p.feat.length){p.feat=[];toast('Области на повёрнутых деталях сброшены')}});
   if(a==='del'){const ids=new Set(ps.map(p=>p.id));state.panels=state.panels.filter(q=>!ids.has(q.id));state.sel=null;state.multi=null;rebuildAll()}
-  else if(a==='dup'){if(isoId!=null)setIso(null);const b=bbox(ps),n=ps.map(p=>({...p,id:nextId++,x:p.x+(b.x1-b.x0)+50}));state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();placeHandles()}
+  else if(a==='dup'){if(isoId!=null)setIso(null);const b=bbox(ps),n=ps.map(p=>({...p,id:nextId++,x:p.x+(b.x1-b.x0)+50}));regrp(n);state.panels.push(...n);n.forEach(buildMesh);state.sel=n[n.length-1].id;state.multi=n.length>1?new Set(n.map(p=>p.id)):null;refreshEdges();placeHandles()}
   else if(a==='rot'){ps.forEach(p=>{if(p.hw){const q=new THREE.Quaternion().setFromAxisAngle(AXV.y,Math.PI/2);const c=pCenter(p);p.rot=quatToRot(q.clone().multiply(p.rot?rotQ(p):new THREE.Quaternion()));if(!p.rot)delete p.rot;setRTot(p,q.multiply(rTot(p)));buildMesh(p);return}setRTot(p,new THREE.Quaternion().setFromAxisAngle(AXV.y,Math.PI/2).multiply(rTot(p)));const cx=p.x+p.w/2,cz=p.z+p.d/2;[p.w,p.d]=[p.d,p.w];if(p.t==='x')p.t='z';else if(p.t==='z')p.t='x';p.x=Math.round(cx-p.w/2);p.z=Math.round(cz-p.d/2);buildMesh(p)});placeHandles()}
   save();renderInsp()}
 function orient(o,t){if(o.t===t)return;const A=o.t,cA=o[A]+o[SZ[A]]/2,cB=o[t]+o[SZ[t]]/2;[o[SZ[A]],o[SZ[t]]]=[o[SZ[t]],o[SZ[A]]];o.t=t;if('x' in o&&o.x!==undefined){o[A]=Math.round(cA-o[SZ[A]]/2);o[t]=Math.round(cB-o[SZ[t]]/2);if(o.y<0)o.y=0}}
@@ -1242,7 +1270,7 @@ window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.altKey&&(e.c
 window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;const k=e.key.toLowerCase(),c=e.ctrlKey||e.metaKey,code=e.code;
   if(op&&op.from&&!c&&!vcbEl.value&&['KeyX','KeyY','KeyZ'].includes(code)){e.preventDefault();if(!e.repeat){holdAx=code[3].toLowerCase();state.lock=holdAx;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}return}
   if((op||lastCopy)&&!c&&e.key.length===1&&VCBKEY.test(e.key)&&!(e.key===' '&&!vcbEl.value)){vcbEl.focus();if(!vcbBox.classList.contains('on'))vcbEl.value='';vcbEl.value+=e.key;vcbBox.classList.add('on');e.preventDefault();return}
-  if(c){if(code==='KeyZ'){e.preventDefault();if(op)opCancel();e.shiftKey?redo():undo()}else if(code==='KeyY'){e.preventDefault();redo()}else if(code==='KeyD'){e.preventDefault();act('dup')}else if(code==='KeyC')copyP();else if(code==='KeyV'){e.preventDefault();pasteP()}else if(code==='KeyA'){e.preventDefault();state.multi=new Set(state.panels.map(p=>p.id));state.sel=state.panels.length?state.panels[state.panels.length-1].id:null;if(state.multi.size<2)state.multi=null;refreshEdges();placeHandles();renderInsp()}return}
+  if(c){if(code==='KeyZ'){e.preventDefault();if(op)opCancel();e.shiftKey?redo():undo()}else if(code==='KeyY'){e.preventDefault();redo()}else if(code==='KeyD'){e.preventDefault();act('dup')}else if(code==='KeyG'){e.preventDefault();act(e.shiftKey?'ungroup':'group')}else if(code==='KeyC')copyP();else if(code==='KeyV'){e.preventDefault();pasteP()}else if(code==='KeyA'){e.preventDefault();state.multi=new Set(state.panels.map(p=>p.id));state.sel=state.panels.length?state.panels[state.panels.length-1].id:null;if(state.multi.size<2)state.multi=null;refreshEdges();placeHandles();renderInsp()}return}
   if(state.tool==='rotate'&&!op&&['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();state.lock={ArrowRight:'x',ArrowLeft:'z',ArrowUp:'y',ArrowDown:null}[e.key];toast(state.lock?'Ось вращения '+state.lock.toUpperCase():'Ось по грани под курсором');return}
   if(op&&['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key)&&op.from){e.preventDefault();state.lock={ArrowRight:'x',ArrowLeft:'z',ArrowUp:'y',ArrowDown:null}[e.key];if(state.lock===op.lockPrev)state.lock=null;op.lockPrev=state.lock;toast(state.lock?'Ось '+state.lock.toUpperCase()+' зафиксирована':'Фиксация снята');return}
   if(k==='delete'||k==='backspace'){e.preventDefault();act('del');return}
@@ -1250,7 +1278,8 @@ window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/
   if(code==='Space'){e.preventDefault();setTool('select');return}
   if(code==='KeyQ'&&e.shiftKey){act('rot');return}
   if(code==='Slash'||k==='?'){toggleHelp();return}
-  if(code==='KeyZ'){fitView();return}
+  if(code==='KeyZ'){selIds().length?focusSel():fitView();return}
+  if((code==='BracketLeft'||code==='BracketRight')&&!c){e.preventDefault();roundStep(code==='BracketRight'?1:-1,e.shiftKey);return}
   if(code==='KeyK'){const el=$('#frrIn')||$('#pcrIn');if(el){e.preventDefault();el.focus();el.select();toast('Введите радиус скругления в мм и Enter')}else toast('Выберите доску или прямоугольную область');return}
   const tools={KeyC:'circle',KeyQ:'rotate',KeyM:'move',KeyP:'push',KeyR:'board',KeyB:'board',KeyG:'magnet',KeyE:'erase',KeyT:'tape',KeyO:'orbit',KeyH:'pan',KeyF:'offset'};if(tools[code]){const keep=state.sub,keepAll=state.subs.slice();setTool(tools[code]);if(keep){subSet(keepAll,keep);showSub();if(code==='KeyF'&&keep.kind==='face'){startOffset(panelById(keep.id),keep.a,keep.s)}}return}
 if(code==='KeyS'){act('snap');return}
@@ -1307,7 +1336,10 @@ function fldsHTML(o,scope){return AX.map(a=>{const lab={x:'Ширина',y:'Вы
 const orientHTML=(o,scope)=>`<div class="seg">${[['y','Полка'],['z','Стенка'],['x','Боковина']].map(([t,n])=>`<button data-act="orient" data-t="${t}" data-scope="${scope}" aria-pressed="${o.t===t}">${n}</button>`).join('')}</div>`;
 const matHTML=(o,scope)=>`<div class="sw">${Object.entries(MATS).map(([k,m])=>`<button data-act="mat" data-m="${k}" data-scope="${scope}" aria-pressed="${o.mat===k}"><span style="background:${m.sw}"></span>${m.short}</button>`).join('')}</div>${o.mat==='black'?'':`<span class="lbl" style="margin-top:10px">Цвет · морилка или краска</span><div class="pal">${PAL.map(([c,n,f])=>`<button data-act="col" data-c="${c}" data-fin="${f}" data-scope="${scope}" title="${n}${f==='paint'?' · краска':f==='stain'?' · морилка, видна текстура':''}" aria-pressed="${(o.col||'')===c}"><span style="background:${c||'#e2cda4'}${f==='stain'?';box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)':''}"></span></button>`).join('')}<label title="Свой цвет"><input type="color" data-k="pcol" data-scope="${scope}" value="${o.col||'#d8cbb8'}"></label></div><p class="note" style="margin:4px 0 0">${o.col?colName(o)+(o.fin==='paint'?' · краска':' · морилка'):'Натуральный цвет фанеры'}</p>`}`;
 const dimsTxt=p=>{if(p.hw)return p.hw==='hinge'?'петля':p.hw==='slide'?'направл.':'уголок';const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);return `${nf(d[0])}×${nf(d[1])}×${nf(thick(p))}`};
-function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>')}
+function grpHTML(){const g=selGrp(),og=state.openGrp,n=selIds().length;if(g)return`<div class="grp gbox"><h2>Группа · ${grpMembers(g).length} дет.</h2><input class="txt" data-k="grpname" data-g="${g}" value="${esc(grpName(g))}" aria-label="Название группы" style="font:600 17px var(--f-display)"><p class="note" style="margin:0">Материал, цвет, скругление, перемещение, поворот, копия и удаление применяются ко всей группе.</p><div class="row2"><button class="btn" data-act="grpopen">Открыть группу</button><button class="btn" data-act="ungroup">Разгруппировать</button></div><button class="btn warn" data-act="del">Удалить группу</button></div>`;
+  if(og)return`<div class="grp gbox"><h2>Внутри группы</h2><b>${esc(grpName(og))}</b><button class="btn" data-act="grpclose">Закрыть группу</button></div>`;
+  if(n>1)return`<div class="grp gbox"><h2>Выбрано деталей: ${n}</h2><button class="btn pri" data-act="group">Сгруппировать · Ctrl+G</button></div>`;return''}
+function renderInsp(){renderInsp0();insp.insertAdjacentHTML('afterbegin','<div class="grip" data-drag="insp" title="Перетащите панель к любому краю"></div>'+(state.tool==='board'?'':grpHTML()))}
 function featList(p){const fs=p.feat||[];if(!fs.length)return'';const T=a=>p[SZ[a]];
   return `<div class="grp"><span class="lbl">Обработка детали · ${fs.length}</span>${fs.map((f,i)=>{const sz=f.c?'Ø'+nf(f.u1-f.u0):nf(f.u1-f.u0)+'×'+nf(f.v1-f.v0),kind=Math.abs(f.depth)<0.01?'разметка':f.depth>=T(f.a)-0.01?'насквозь':f.depth<0?'выступ '+nf(-f.depth):'глубина '+nf(f.depth),face=f.a===p.t?(f.s>0?'лицевая':'обратная'):'торец',jn=f.j&&panelById(f.j)?' · стык с «'+esc(panelById(f.j).name)+'»':'';
     return `<div class="fl"><span>${i+1}. ${f.c?'Круг':'Прямоугольник'} ${sz} · ${kind} · ${face}${jn}</span><button class="btn" data-act="fsel" data-f="${f.id}" title="Показать">◎</button><button class="btn" data-act="fdel" data-f="${f.id}" title="Удалить">✕</button></div>`}).join('')}</div>`}
@@ -1389,7 +1421,7 @@ function renderInsp0(){const p=selP();
     <div class="grp"><span class="lbl">Положение от угла</span>${AX.map(a=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[a]}">${a.toUpperCase()}</span>${{x:'Слева',y:'От пола',z:'От стены'}[a]}</span><input id="sel-${a}" data-k="${a}" data-scope="sel" inputmode="decimal" value="${p[a]}"><i>мм</i></label>`).join('')}</div>
     <div class="grp"><span class="lbl">Все детали</span>${outliner()}</div>`;return}
   if(p){const T=thick(p),n=selIds().length,pr=prodOf(p);insp.innerHTML=`${pr?prodHTML(pr):''}<div class="grp"><h2>Деталь</h2><label class="lbl" for="sel-name">Название детали</label><input class="txt" id="sel-name" data-k="name" data-scope="sel" value="${esc(p.name)}" style="font:600 17px var(--f-display);letter-spacing:-.01em"></div>
-    ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n<2?featList(p):''}${n>1?`<p class="multi">Выбрано деталей: ${n}. Перемещение, копия, поворот и удаление применяются ко всем.</p>`:''}
+    ${n<2?`<div class="grp"><span class="lbl">Поворот · 0 — исходное положение</span>${rotEuler(p).map((v,i)=>`<label class="fld"><span><span class="ax" style="color:${AXCSS[AX[i]]}">${AX[i].toUpperCase()}</span>Вокруг ${AX[i].toUpperCase()}</span><input id="sel-rot${i}" data-k="rot" data-i="${i}" data-scope="sel" inputmode="decimal" value="${String(v).replace('.',',')}"><i>°</i></label>`).join('')}${p.rot||p.rtot?'<button class="btn" data-act="unrot">Вернуть исходное положение</button>':''}</div>`:''}${subInfo(p)}${n<2?featList(p):''}
     ${doorHTML(p)}${drawerHTML(p)}
     <div class="grp"><span class="lbl">Ориентация</span>${orientHTML(p,'sel')}</div>
     <div class="grp"><span class="lbl">Размеры · можно вводить 600/2</span>${fldsHTML(p,'sel')}<label class="fld"><span>Скругление углов · K</span><input id="pcrIn" data-k="pcr" data-scope="sel" inputmode="decimal" value="${p.cr||0}"><i>мм</i></label></div>
@@ -1400,12 +1432,13 @@ function renderInsp0(){const p=selP();
   insp.innerHTML=`<div class="grp"><h2>Проект</h2><input class="txt" id="pname" data-k="pname" value="${esc(state.name)}" aria-label="Название проекта" style="font:600 18px var(--f-display)"></div>
     ${(()=>{const hl=hwList();return hl.length?`<p class="note" style="margin:0 0 8px">Фурнитура (не входит в чертежи): ${hl.map(h=>esc(h.name)+' — '+h.qty+' шт.').join('; ')}</p>`:''})()}<label class="fld" style="grid-template-columns:1fr 150px"><span>Единицы</span><select id="punits" data-k="punits">${Object.entries(UNITS).map(([k,v])=>`<option value="${k}" ${(state.units||'mm')===k?'selected':''}>${{mm:'миллиметры',cm:'сантиметры',m:'метры'}[k]}</option>`).join('')}</select></label><div class="kv"><span>Деталей</span><b>${BRD().length} · ${parts.length} типов</b><span>Габариты, Ш×В×Г</span><b>${state.panels.length?`${nf(b.x1-b.x0)}×${nf(b.y1-b.y0)}×${nf(b.z1-b.z0)} мм`:'—'}</b><span>Площадь фанеры</span><b>${area.toFixed(2)} м²</b><span>Листов ${getSheet().join('×')}</span><b>${sh}</b></div>
     <div class="grp"><span class="lbl">Детали · дважды кликните имя, чтобы переименовать</span>${outliner()}</div>`}
-function outliner(){return `<div class="ol">${state.panels.map(p=>`<div class="olr${isSel(p.id)?' on':''}" data-id="${p.id}"><input id="ol-${p.id}" data-k="olname" data-id="${p.id}" value="${esc(p.name)}" readonly aria-label="Имя детали"><span>${dimsTxt(p)}</span></div>`).join('')||'<p class="note">Пока пусто — нажмите R и нарисуйте доску.</p>'}</div>`}
+function outliner(){const gs=[...new Set(state.panels.filter(p=>p.grp).map(p=>p.grp))],row=p=>`<div class="olr${isSel(p.id)?' on':''}" data-id="${p.id}"><input id="ol-${p.id}" data-k="olname" data-id="${p.id}" value="${esc(p.name)}" readonly aria-label="Имя детали"><span>${dimsTxt(p)}</span></div>`;return `<div class="ol">${gs.map(g=>`<div class="olg${selGrp()===g?' on':''}" data-g="${g}"><b>${esc(grpName(g))}</b><span>${grpMembers(g).length} дет.</span></div><div class="olgi">${state.panels.filter(p=>p.grp===g).map(row).join('')}</div>`).join('')}${state.panels.filter(p=>!p.grp).map(row).join('')||(gs.length?'':'<p class="note">Пока пусто — нажмите R и нарисуйте доску.</p>')}</div>`}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function updateInspVals(){const p=selP();if(!p)return;['w','h','d','x','y','z'].forEach(k=>{const el=$('#sel-'+k);if(el&&document.activeElement!==el)el.value=p[k]})}
 insp.addEventListener('change',e=>{const el=e.target,k=el.dataset.k;if(!k)return;
   if(k==='pname'){state.name=el.value.trim()||'Без названия';save();return}
   if(k==='punits'){state.units=el.value;save();toast('Рулетка и размеры на модели — в '+{mm:'миллиметрах',cm:'сантиметрах',m:'метрах'}[el.value]);return}
+  if(k==='grpname'){pushUndo();state.grpn[+el.dataset.g]=el.value.trim()||'Группа';save();renderInsp();return}
   if(k==='olname'){const p=panelById(+el.dataset.id);if(!p)return;pushUndo();p.name=el.value.trim()||'Деталь';el.readOnly=true;save();renderInsp();return}
   const o=el.dataset.scope==='nb'?state.nb:selP();if(!o)return;
   if(k==='name'){pushUndo();o.name=el.value.trim()||'Деталь';save();renderInsp();return}
@@ -1429,7 +1462,7 @@ insp.addEventListener('input',e=>{if(e.target.id==='drwAng'){const o=selP();if(o
 insp.addEventListener('focusout',e=>{if(e.target.dataset&&e.target.dataset.k==='olname')e.target.readOnly=true});
 insp.addEventListener('dblclick',e=>{const el=e.target.closest('input[data-k="olname"]');if(el){el.readOnly=false;el.focus();el.select()}});
 insp.addEventListener('keydown',e=>{const el=e.target;if(el.dataset&&el.dataset.k==='olname'&&e.key==='Enter')el.blur();if(e.key==='Escape')el.blur()});
-insp.addEventListener('click',e=>{const row=e.target.closest('.olr');if(row&&!(e.target.matches('input')&&!e.target.readOnly)){setSel(+row.dataset.id,e.shiftKey);return}
+insp.addEventListener('click',e=>{const og=e.target.closest('.olg');if(og){const id=grpMembers(+og.dataset.g)[0];if(id!=null){state.openGrp=null;setSel(id,e.shiftKey)}return}const row=e.target.closest('.olr');if(row&&!(e.target.matches('input')&&!e.target.readOnly)){const p=panelById(+row.dataset.id);if(p&&p.grp&&!e.shiftKey)state.openGrp=p.grp;setSel(+row.dataset.id,e.shiftKey,true);return}
   const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
   if(a==='col'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels().filter(q=>!q.hw);tgt.forEach(q=>{if(b.dataset.c){q.col=b.dataset.c;q.fin=b.dataset.fin}else{delete q.col;delete q.fin}if(q!==state.nb)buildMesh(q)});if(o!==state.nb)save();renderInsp();return}
   if(a==='orient'||a==='mat'){const o=b.dataset.scope==='nb'?state.nb:selP();if(!o)return;if(o!==state.nb)pushUndo();const tgt=o===state.nb?[o]:selPanels();tgt.forEach(q=>{if(a==='orient')orient(q,b.dataset.t);else q.mat=b.dataset.m;if(q!==state.nb)buildMesh(q)});if(o!==state.nb){placeHandles();save();fitShadows()}renderInsp();return}
@@ -1475,6 +1508,7 @@ function updateLabels(){const p0=selP(),p=p0&&!(doorSim[p0.id]&&doorSim[p0.id].a
 /* ---------- camera / shadows ---------- */
 function center(){const b=bbox();return new THREE.Vector3((b.x0+b.x1)/2*MM,(b.y0+b.y1)/2*MM,(b.z0+b.z1)/2*MM)}
 function radius(){const b=bbox();return Math.max(0.4,Math.hypot(b.x1-b.x0,b.y1-b.y0,b.z1-b.z0)*MM/2)}
+function focusSel(){const b=bbox(selPanels()),c=new THREE.Vector3((b.x0+b.x1)/2*MM,(b.y0+b.y1)/2*MM,(b.z0+b.z1)/2*MM),R=Math.max(0.05,Math.hypot(b.x1-b.x0,b.y1-b.y0,b.z1-b.z0)*MM/2),hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect)),d=R/Math.sin(hf)*1.25,dir=camera.position.clone().sub(controls.target).normalize();controls.target.copy(c);camera.position.copy(c).addScaledVector(dir,d);controls.update();lastMove=performance.now()}
 function fitView(){const c=center(),R=radius(),hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect)),d=R/Math.sin(hf)*(innerWidth<=760?1.05:1.15);const dir=new THREE.Vector3(0.62,0.42,0.78).normalize();controls.target.copy(c);camera.position.copy(c).addScaledVector(dir,d);controls.update();lastMove=performance.now()}
 function lightDir(az,el){az*=Math.PI/180;el*=Math.PI/180;return new THREE.Vector3(Math.sin(az)*Math.cos(el),Math.sin(el),Math.cos(az)*Math.cos(el))}
 function aimLight(l,dir){const c=center(),R=radius()+0.9;l.target.position.copy(c);l.position.copy(c).addScaledVector(dir,R*3);const sc=l.shadow.camera;sc.left=sc.bottom=-R;sc.right=sc.top=R;sc.near=0.1;sc.far=R*6;sc.updateProjectionMatrix();l.target.updateMatrixWorld()}
