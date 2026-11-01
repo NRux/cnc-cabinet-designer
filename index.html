@@ -2116,6 +2116,15 @@ function drawViews(g,x0,y0,wA,hA){const b=bbox(),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-
   [...P].sort((a,c)=>(a.z+a.d)-(c.z+c.d)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(b.y1-p.y-p.h)*k,p.w*k,p.h*k));dimB(x,x+W*k,y0+H*k+8,nf(W)+' мм');dimR(y0,y0+H*k,x+W*k+7,nf(H)+' мм');x+=W*k+gap;
   [...P].sort((a,c)=>(a.x+a.w)-(c.x+c.w)).forEach(p=>box(x+(b.z1-p.z-p.d)*k,y0+(b.y1-p.y-p.h)*k,p.d*k,p.h*k));dimB(x,x+D*k,y0+H*k+8,nf(D)+' мм');x+=D*k+gap;
   [...P].sort((a,c)=>(a.y+a.h)-(c.y+c.h)).forEach(p=>box(x+(p.x-b.x0)*k,y0+(p.z-b.z0)*k,p.w*k,p.d*k));dimB(x,x+W*k,y0+D*k+8,nf(W)+' мм');dimR(y0,y0+D*k,x+W*k+7,nf(D)+' мм')}
+/* product sheet photos: same clean renderer as the catalog viewer */
+function passShots(W,H,dirs){const V=v3Init(),g=V.g,fov0=V.cam.fov,el0=V.el;V.el=null;g.children.slice().forEach(m=>{g.remove(m);m.traverse(o=>{if(o.geometry)o.geometry.dispose()})});V.mov=[];V.labs=[];
+  BRD().concat(state.panels.filter(q=>q.hw==='rod')).forEach(q=>{const {geo,mat}=q.hw?{geo:hwGeo(q),mat:hwMats}:meshParts(q),m=new THREE.Mesh(geo,mat);m.castShadow=m.receiveShadow=true;placeMesh(q,m);if(!q.hw)m.add(new THREE.LineSegments(panelLines(q),V3E));g.add(m)});fixtureMeshes(state.panels).forEach(m=>g.add(m));
+  const b=new THREE.Box3().setFromObject(g),c=b.getCenter(new THREE.Vector3()),R=Math.max(1,b.getSize(new THREE.Vector3()).length()),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3(i&1?b.max.x:b.min.x,i&2?b.max.y:b.min.y,i&4?b.max.z:b.min.z));
+  const bg=V.s.background;V.s.background=new THREE.Color(0xffffff);V.r.setSize(W,H,false);V.cam.aspect=W/H;V.cam.fov=22;V.cam.updateProjectionMatrix();const out=[];
+  dirs.forEach(dv=>{const dir=new THREE.Vector3(...dv).normalize();V.sun.position.copy(c).add(new THREE.Vector3(dir.x-dir.z*0.75,1.5,dir.z+dir.x*0.75).normalize().multiplyScalar(R*2.5));V.sun.target.position.copy(c);const sc=V.sun.shadow.camera;sc.left=sc.bottom=-R;sc.right=sc.top=R;sc.near=0.1;sc.far=R*8;sc.updateProjectionMatrix();
+    let d=R*3;for(let it=0;it<4;it++){V.cam.position.copy(c).addScaledVector(dir,d);V.cam.lookAt(c);V.cam.updateMatrixWorld();let m=0;cs.forEach(v=>{const q=v.clone().project(V.cam);m=Math.max(m,Math.abs(q.x),Math.abs(q.y))});d*=m/0.86}
+    V.cam.position.copy(c).addScaledVector(dir,d);V.cam.lookAt(c);V.r.render(V.s,V.cam);const cv2=document.createElement('canvas');cv2.width=W;cv2.height=H;cv2.getContext('2d').drawImage(V.r.domElement,0,0);out.push(cv2)});
+  V.s.background=bg;V.cam.fov=fov0;V.cam.updateProjectionMatrix();V.el=el0;g.children.slice().forEach(m=>{g.remove(m);m.traverse(o=>{if(o.geometry)o.geometry.dispose()})});if(cfgI>=0&&CAT&&CAT[cfgI])v3Build(CAT[cfgI].product.type,cfgP,true);return out}
 async function captureProduct(W,H,views,env){const pv=view,penv=state.env,pcam=camera.position.clone(),ptg=controls.target.clone();capturing=true;
   try{state.env=env||'studio';setView('render');buildRoom();renderer.setPixelRatio(1);renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
     const c=center(),Rr=radius(),bx=bbox(),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3((i&1?bx.x1:bx.x0)*MM,(i&2?bx.y1:bx.y0)*MM,(i&4?bx.z1:bx.z0)*MM));const res=[];
@@ -2140,7 +2149,7 @@ function sheetPages(imgs){const PW=595.28,PH=841.89,S=2480/PW,M=45,pages=[];
   wrap(g,`${state.name} собрана из ${BRD().length} деталей берёзовой фанеры толщиной ${thks.join(', ')} мм. Габариты ${nf(W)} × ${nf(D)} × ${nf(H)} мм. Детали раскраиваются из ${sheets} ${sheets===1?'листа':'листов'} ${state.sheet.replace('x','×')} мм, площадь фанеры ${area.toFixed(2)} м². Волокна лицевого шпона идут вдоль длинной стороны каждой детали.`,M,132,205,11.5,PF(400,8));
   drawViews(g,285,58,PW-M-285,120);
   const gap=10,iw=(PW-2*M-2*gap)/3,ih=iw*imgs[0].height/imgs[0].width;g.font=PF(400,7);g.fillStyle='#111';
-  ['Вид спереди','Вид сбоку','Вид сверху, 45°'].forEach((t,i)=>{const x=M+i*(iw+gap);g.drawImage(imgs[i],x,226,iw,ih);g.fillText(t,x,226+ih+12)});
+  ['Вид спереди','Вид сбоку','Вид сзади'].forEach((t,i)=>{const x=M+i*(iw+gap);g.drawImage(imgs[i],x,226,iw,ih);g.fillText(t,x,226+ih+12)});
   let y=226+ih+34;const C=[M,M+178,M+356],CW=160;
   C.forEach((x,i)=>{rule(g,y,1,'#111',x,x+CW);g.fillStyle='#111';g.font=PF(600,8);g.fillText(['Изделие','Фанера','Раскрой листов'][i],x,y+13);rule(g,y+20,0.4,'#cfcfcf',x,x+CW)});
   g.font=PF(400,7.5);g.fillStyle='#111';let y1=y+34;
@@ -2164,7 +2173,7 @@ function pdfBlob(imgs,wpx,hpx){const enc=new TextEncoder(),chunks=[],offs=[];let
 let pdfBusy=false;
 async function makePDF(){if(!state.panels.length)return toast('В проекте нет деталей');if(pdfBusy)return;pdfBusy=true;toast('Готовлю PDF — рендер изделия…');
   try{try{await Promise.all(['400 12px Questrial','300 14px Onest','400 8px Onest','600 19px Onest','700 12px Onest'].map(f=>document.fonts.load(f)))}catch(e){}
-    const imgs=await captureProduct(1100,1100,[{dir:[0,0.04,1],fill:0.97,n:64},{dir:[1,0.04,0],fill:0.9,n:64},{dir:[-0.6,1,0.8],fill:0.9,n:64}]),pages=sheetPages(imgs);
+    const imgs=passShots(1100,1300,[[0,0.06,1],[1,0.06,0],[0,0.06,-1]]),pages=sheetPages(imgs);
     const jpgs=pages.map(c=>{const b=atob(c.toDataURL('image/jpeg',0.92).split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u});
     window.__lastPDF=pdfBlob(jpgs,2480,3508);await saveFile(fname('sheet.pdf'),window.__lastPDF)}catch(e){console.error(e);toast('Не удалось собрать PDF')}finally{pdfBusy=false}}
 
