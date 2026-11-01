@@ -404,8 +404,8 @@ function tidy(){for(const p of state.panels)for(const k of ['x','y','z','w','h',
 function save(){tidy();try{localStorage.setItem('bat_project_v1',JSON.stringify({name:state.name,panels:state.panels,guides:state.guides,sheet:state.sheet,sheetW:state.sheetW,sheetH:state.sheetH,units:state.units,nextId}))}catch(e){}$('#hstat').textContent='сохранено';drawDirty=true}
 function load(){try{const j=JSON.parse(localStorage.getItem('bat_project_v1'));if(j&&Array.isArray(j.panels)){state.panels=j.panels;state.guides=Array.isArray(j.guides)?j.guides:[];if(j.sheet)state.sheet=j.sheet;if(j.units)state.units=j.units;if(j.sheetW)state.sheetW=j.sheetW;if(j.sheetH)state.sheetH=j.sheetH;state.name=j.name||state.name;nextId=j.nextId||(Math.max(0,...j.panels.map(p=>p.id))+1);return true}}catch(e){}return false}
 function pushUndo(){undoS.push(JSON.stringify(state.panels));if(undoS.length>120)undoS.shift();redoS.length=0}
-function undo(){if(!undoS.length)return;redoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(undoS.pop());if(!selP())state.sel=null;rebuildAll();save();renderInsp()}
-function redo(){if(!redoS.length)return;undoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(redoS.pop());if(!selP())state.sel=null;rebuildAll();save();renderInsp()}
+function undo(){if(!undoS.length)return toast('Нечего отменять');toast('Отменено · Ctrl+Y — вернуть');redoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(undoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
+function redo(){if(!redoS.length)return toast('Нечего возвращать');toast('Возвращено');undoS.push(JSON.stringify(state.panels));state.panels=JSON.parse(redoS.pop());if(!selP())state.sel=null;subClear();rebuildAll();showSub();save();renderInsp()}
 function bbox(list=state.panels){if(!list.length)return{x0:0,x1:800,y0:0,y1:800,z0:0,z1:400};const b={x0:1e9,x1:-1e9,y0:1e9,y1:-1e9,z0:1e9,z1:-1e9};list.forEach(p=>{b.x0=Math.min(b.x0,p.x);b.x1=Math.max(b.x1,p.x+p.w);b.y0=Math.min(b.y0,p.y);b.y1=Math.max(b.y1,p.y+p.h);b.z0=Math.min(b.z0,p.z);b.z1=Math.max(b.z1,p.z+p.d)});return b}
 
 /* ---------- three setup ---------- */
@@ -1106,6 +1106,7 @@ $('#rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b
 let holdAx=null;
 window.addEventListener('keyup',e=>{if(holdAx&&e.code==='Key'+holdAx.toUpperCase()){holdAx=null;if(op){state.lock=null;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}}});
 const VCBKEY=/^[0-9.,;/*xх\-+ ]$/i;
+window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.altKey&&(e.code==='KeyZ'||e.code==='KeyY')&&view!=='export'){const ae=document.activeElement;if(ae&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName))ae.blur();e.preventDefault();if(op){opCancel();toast('Действие отменено');e.stopPropagation();return}(e.code==='KeyY'||e.shiftKey)?redo():undo();if(view==='drawings'){drawDirty=true;renderDrawing();renderSpec()}e.stopPropagation();return}},true);
 window.addEventListener('keydown',e=>{if(view!=='build'||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;const k=e.key.toLowerCase(),c=e.ctrlKey||e.metaKey,code=e.code;
   if(op&&op.from&&!c&&!vcbEl.value&&['KeyX','KeyY','KeyZ'].includes(code)){e.preventDefault();if(!e.repeat){holdAx=code[3].toLowerCase();state.lock=holdAx;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}return}
   if((op||lastCopy)&&!c&&e.key.length===1&&VCBKEY.test(e.key)&&!(e.key===' '&&!vcbEl.value)){vcbEl.focus();if(!vcbBox.classList.contains('on'))vcbEl.value='';vcbEl.value+=e.key;vcbBox.classList.add('on');e.preventDefault();return}
