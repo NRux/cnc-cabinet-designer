@@ -84,7 +84,7 @@ main{position:relative;overflow:hidden;min-height:0}
 .note{font-size:12px;color:var(--mute);margin:0}
 .hint{display:none!important;position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:326px;bottom:16px;font:400 11px var(--f-mono);color:var(--mute);letter-spacing:.03em;pointer-events:none;text-shadow:0 0 6px var(--stage)}
 .rail,.insp,.status{z-index:4}
-.asmbar{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);max-width:calc(100% - 32px)}.asmbar button{all:unset;cursor:pointer;min-width:30px;height:30px;padding:0 6px;display:grid;place-items:center;border-radius:15px;font-size:12px}.asmbar button:hover{background:var(--soft)}.asmbar .pdf{padding:0 12px;background:#111;color:#fff;font-weight:500}.asmbar .pdf:hover{background:#333}.asmbar input{width:220px;accent-color:#111}.asmbar span{font-size:12px;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+.asmbar{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);max-width:calc(100% - 32px)}.asmbar button{all:unset;cursor:pointer;min-width:30px;height:30px;padding:0 6px;display:grid;place-items:center;border-radius:15px;font-size:12px}.asmbar button:hover{background:var(--soft)}.asmbar .pdf{padding:0 12px;background:#111;color:#fff;font-weight:500}.asmbar .pdf:hover{background:#333}.asmbar input{width:220px;accent-color:#111}.asmbar span{font-size:12px;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px;min-width:0;flex:1 1 auto}.asmbar input{flex:0 1 220px;min-width:80px}
 @media (max-width:760px){.asmbar{bottom:auto;top:62px;flex-wrap:wrap;border-radius:16px;justify-content:center}.asmbar input{width:100%}.asmbar span{max-width:100%}}
 #noteL{position:absolute;inset:0;pointer-events:none;z-index:3}.nt{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;gap:5px;align-items:center;font:500 11px var(--f-body);background:#fff7d6;border:1px solid #e3c96b;border-radius:8px 8px 8px 0;padding:2px 7px 2px 3px;white-space:nowrap;margin-top:-22px}.nt b{background:#111;color:#fff;border-radius:6px;padding:0 5px;font:600 10px var(--f-mono)}
 .eye{all:unset;cursor:pointer;width:16px;text-align:center;color:var(--mute);font-size:10px}.olr{grid-template-columns:16px 1fr auto!important}.olr.hid,.lyr.hid{opacity:.45}.lyr{grid-template-columns:16px 1fr auto 14px!important}.lyr i{display:none}
@@ -163,7 +163,6 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
 .exw h1{font:600 44px/1.08 var(--f-display);letter-spacing:-.03em;margin:6px 0 0;text-wrap:balance}
 .exw>p{color:var(--mute);max-width:62ch;margin:0}
 .exg .ex .btn{background:#fff;border:1.5px solid #111;color:#111;box-shadow:none;font-weight:500;text-align:center;justify-content:center;padding:10px 18px}.exg .ex .btn:hover{background:#111;color:#fff;border-color:#111}
-.asx{background:var(--soft);padding:28px;border-radius:20px;display:flex;flex-direction:column;gap:14px}.asx h2{font:600 28px/1.1 var(--f-display);letter-spacing:-.02em;margin:6px 0 0}.asx p{margin:0;color:var(--mute);max-width:640px}.asxo{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}.asxo .seg{display:flex}.asxc{display:flex;gap:6px;align-items:center;font-size:13px}.asxs{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px;max-height:340px;overflow:auto}.asxs li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:7px 10px;background:#fff;border-radius:10px;font-size:13px}.asxs b{width:22px;height:22px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-size:11px}.asxs em{font-style:normal;color:var(--mute);font-size:12px}
 .exg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
 .ex{background:var(--soft);padding:24px;display:flex;flex-direction:column;gap:10px;border-radius:20px}
 .ex h4{font:600 19px var(--f-display);margin:0;letter-spacing:-.01em}
@@ -338,7 +337,6 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
       <button class="ib" data-act="snap" data-tip="Шаг 10 мм (по умолчанию выключен)" data-key="S" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M3 7h14M3 13h14M7 3v14M13 3v14"/></svg></button>
       <button class="ib" data-act="undo" data-tip="Отменить" data-key="Ctrl+Z"><svg viewBox="0 0 20 20"><path d="M7 5L3 9l4 4"/><path d="M3 9h9a5 5 0 0 1 0 10H9"/></svg></button>
       <button class="ib" data-act="redo" data-tip="Повторить" data-key="Ctrl+Y"><svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4"/><path d="M17 9H8a5 5 0 0 0 0 10h3"/></svg></button>
-      <button class="ib" data-act="hwpop" data-tip="Фурнитура: уголки, направляющие" data-key=""><svg viewBox="0 0 20 20"><path d="M4 3v13h13"/><path d="M4 16l4-4"/><circle cx="4" cy="7" r=".9"/><circle cx="12" cy="16" r=".9"/></svg></button>
       <button class="ib" data-act="tplpop" data-tip="Готовые изделия: шкаф, кухня, комод…" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><path d="M14 11v6M11 14h6"/></svg></button>
       <button class="ib" data-act="cols" data-tip="Один или два ряда кнопок" data-key=""><svg viewBox="0 0 20 20"><rect x="3" y="3" width="5.5" height="14" rx="1"/><rect x="11.5" y="3" width="5.5" height="14" rx="1"/></svg></button>
       <button class="ib" data-act="help" data-tip="Все клавиши" data-key="?"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6M10 14.6v.2"/></svg></button></div>
@@ -352,7 +350,6 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
       </div>
     </div>
     <div class="tplpop viewpop" id="viewpop" hidden><span class="lbl">Вид</span><div class="vgrid"><button class="btn" data-view="iso">Изометрия<i>0</i></button><button class="btn" data-view="front">Спереди<i>1</i></button><button class="btn" data-view="top">Сверху<i>2</i></button><button class="btn" data-view="right">Справа<i>3</i></button><button class="btn" data-view="left">Слева<i>4</i></button><button class="btn" data-view="back">Сзади<i>5</i></button><button class="btn" data-view="bottom">Снизу<i>6</i></button></div><span class="lbl">Сечение</span><div class="seg" id="secSeg" style="grid-template-columns:repeat(4,1fr)"><button data-sec="" aria-pressed="true">Нет</button><button data-sec="x">X</button><button data-sec="y">Y</button><button data-sec="z">Z</button></div><input type="range" id="secR" min="0" max="100" value="50" aria-label="Положение сечения"></div>
-    <div class="tplpop" id="hwpop" hidden><span class="lbl">Фурнитура</span><button class="btn" data-hw="angle">Металлический уголок</button><p class="note" style="margin:0">Уголок появится рядом с выделенной доской. Дверь или ящик — отметьте в настройках самой доски.</p></div>
     <div class="tplpop" id="tplpop" hidden><span class="lbl">Готовые изделия · по параметрам</span><div class="row" id="tplRow"></div><button class="btn warn" data-act="clear" id="clearBtn">Очистить сцену</button></div>
     <div class="rsz" id="inspRsz" title="Потяните, чтобы изменить ширину"></div><div class="rsz" id="railRsz" title="Потяните — 1 или 2 колонки инструментов"></div>
     <aside class="insp" id="insp" aria-label="Параметры" data-dock="right"></aside><datalist id="thkL"><option value="3"><option value="4"><option value="6"><option value="9"><option value="12"><option value="15"><option value="18"><option value="21"><option value="24"><option value="27"><option value="30"></datalist>
@@ -426,6 +423,12 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
           <button class="btn pri" data-ex="pdf">Скачать PDF</button>
         </div>
         <div class="ex">
+          <span class="fmt">PDF · ВИДЕО</span>
+          <h4>Инструкция по сборке</h4>
+          <p>Подробная PDF-инструкция: подготовка, комплектация, каждый шаг с рисунком, крепежом и пояснениями — и видео сборки.</p>
+          <button class="btn pri" data-ex="asm">Скачать</button>
+        </div>
+        <div class="ex">
           <span class="fmt">CSV</span>
           <h4>Спецификация для распила</h4>
           <p>Таблица деталей: размеры, толщина, количество, материал, площадь. Открывается в Excel и программах раскроя.</p>
@@ -450,17 +453,6 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
           <div class="row"><select id="impUnit" class="txt" style="flex:1" title="Единицы файла"><option value="auto">Единицы: авто</option><option value="1">мм</option><option value="10">см</option><option value="1000">м</option><option value="25.4">дюймы</option></select><select id="impUp" class="txt" style="flex:1" title="Какая ось смотрит вверх"><option value="auto">Верх: авто</option><option value="y">Верх: Y</option><option value="z">Верх: Z</option></select></div>
           <label class="btn" for="impFile">Выбрать файл…</label><input type="file" id="impFile" accept=".dae,.obj,.fbx,.glb,.gltf,.stl,.skp,.json" hidden>
         </div>
-      </div>
-      <div class="asx" id="asx">
-        <div><span class="lbl">Инструкция по сборке</span><h2>Пошаговая сборка, как у LEGO</h2></div>
-        <p>Обложка с содержанием, подготовка и техника крепежа, комплектация с номерами деталей, затем шаги: рисунок, что ставим, к чему крепим, сколько крепежа и как. В конце — регулировка и проверка.</p>
-        <div class="asxo">
-          <div class="seg" id="asxL"><button data-al="1" aria-pressed="true">1 шаг на странице</button><button data-al="2" aria-pressed="false">2 шага · компактно</button></div>
-          <label class="asxc"><input type="checkbox" id="asxT" checked> Пояснения к шагам</label>
-          <label class="asxc"><input type="checkbox" id="asxP" checked> Страница «Перед началом»</label>
-        </div>
-        <ol class="asxs" id="asxS"></ol>
-        <div class="row"><button class="btn pri" data-ex="asm">Скачать инструкцию PDF</button><button class="btn" data-ex="asm3d">Смотреть сборку в 3D</button></div>
       </div>
       <p class="note" id="dlnote" hidden>Скачивание файлов работает при открытии страницы в claude.ai.</p>
     </div>
@@ -1183,21 +1175,40 @@ const ASMTX=[
  'Соберите короб ящика: боковины к передней и задней стенкам, затем вставьте дно. Проверьте диагонали короба. Направляющие ставьте на корпус по одной линии, отступ от лицевой кромки — по толщине фасада.',
  'Фасады навешивайте последними. Выставьте зазоры 2–3 мм между фасадами и по краям, проверьте, что двери открываются свободно и не задевают друг друга.',
  'Установите фурнитуру: кронштейны штанги по одной высоте, проверьте уровнем. Ручки крепите по шаблону, чтобы они стояли на одной линии.'];
-function asxList(){const ol=$('#asxS');if(!ol)return;if(!state.panels.length){ol.innerHTML='<li><span></span><span>Добавьте детали — здесь появятся шаги</span><span></span></li>';return}
-  const st=asmSteps(),prev=new Map();ol.innerHTML=st.map((s,i)=>{const pv=prev.get(s.key)||[],cur=s.ids.map(panelById).filter(Boolean),pp=pv.map(panelById).filter(Boolean),fb=fasteners(pp),fa=fasteners(pp.concat(cur));prev.set(s.key,pv.concat(s.ids));const f=[fa.conf-fb.conf>0?`${fa.conf-fb.conf} конф.`:'',fa.scr-fb.scr>0?`${fa.scr-fb.scr} шур.`:''].filter(Boolean).join(' · ');
-    return`<li><b>${i+1}</b><span>${esc(s.title)}${s.sub?' · '+s.sub:''} <em>${esc(s.obj)} · ${cur.length} дет.</em></span><em>${f}</em></li>`}).join('')}
+
+async function asmVideo(){const st=asmSteps(),all=state.panels.filter(p=>!p.hid),bx=ps=>{const b=new THREE.Box3();ps.forEach(p=>b.expandByPoint(new THREE.Vector3(p.x*MM,p.y*MM,p.z*MM)).expandByPoint(new THREE.Vector3((p.x+p.w)*MM,(p.y+p.h)*MM,(p.z+p.d)*MM)));return b};
+  const mime=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));if(!mime)return null;
+  const VW=1280,VH=720,cv=document.createElement('canvas');cv.width=VW;cv.height=VH;const g=cv.getContext('2d'),stream=cv.captureStream(0),tr=stream.getVideoTracks()[0],rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:6e6}),ch=[];
+  rec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);rec.start();
+  const B3=bx(all),bbK=new Map();st.forEach(s=>bbK.set(s.key,bx(all.filter(p=>(p.prod?'p'+p.prod:p.grp?'g'+p.grp:'l')===s.key))));
+  const dirAt=a=>{const c=Math.cos(a),s=Math.sin(a),x=-0.3,z=0.9;return[x*c+z*s,0.34,-x*s+z*c]};
+  const frame=async(prev,cur,box,ang,dy,h1,h2,num)=>{const img=asmRender(VW,VH-90,prev,cur,dirAt(ang),box,dy,!num);g.fillStyle='#fff';g.fillRect(0,0,VW,VH);g.drawImage(img,0,70);
+    g.textBaseline='alphabetic';let x=40;if(num){g.fillStyle='#111';g.beginPath();g.arc(62,48,22,0,Math.PI*2);g.fill();g.font=PF(700,20);g.fillStyle='#fff';g.textAlign='center';g.fillText(String(num),62,55);g.textAlign='left';x=98}
+    g.font=PF(600,24);g.fillStyle='#111';g.fillText(h1,x,46);g.font=PF(400,15);g.fillStyle='#888';g.fillText(h2,x,68);drawLogo(g,40,VH-22,14);tr.requestFrame&&tr.requestFrame();await new Promise(r=>setTimeout(r,1000/30))};
+  let ang=0;const nb=all.filter(p=>!p.hw).length;
+  for(let f=0;f<60;f++){await frame([],all,B3,ang,0,state.name,`Инструкция по сборке · ${st.length} шагов · ${nb} деталей`,0);ang+=0.004}
+  const prevK=new Map();let n=0;for(const s of st){const pv=prevK.get(s.key)||[];prevK.set(s.key,pv);const cur=s.ids.map(panelById).filter(Boolean),prev=pv.map(panelById).filter(Boolean),box=bbK.get(s.key);n++;
+    for(let f=0;f<66;f++){const a=Math.min(1,f/20);await frame(prev,cur,box,ang,0.35*(1-a)*(1-a),s.title+(s.sub?' · '+s.sub:''),`${s.obj} · шаг ${n} из ${st.length} · ${cur.length} дет.`,n);ang+=0.004}pv.push(...s.ids)}
+  for(let f=0;f<120;f++){await frame([],all,B3,ang,0,'Готово',state.name,0);ang+=Math.PI*2/120}
+  rec.stop();await done;return{blob:new Blob(ch,{type:mime.split(';')[0]}),ext:mime.startsWith('video/mp4')?'mp4':'webm'}}
+async function asmDoc(){if(pdfBusy)return;if(!asmSteps().length)return toast('Сцена пустая');const pdf=await asmPDF(true);if(!pdf)return;pdfBusy=true;
+  try{toast('Записываю видео сборки…',60000);const v=await asmVideo();const files=[{name:'instrukciya-po-sborke.pdf',data:new Uint8Array(await pdf.arrayBuffer())}];if(v)files.push({name:'video-sborki.'+v.ext,data:new Uint8Array(await v.blob.arrayBuffer())});
+    window.__lastASM=files.map(f=>f.name+':'+f.data.length);await saveFile(fname('assembly.zip'),zip(files))}catch(e){console.error(e);toast('Не удалось собрать инструкцию')}finally{pdfBusy=false;if(cfgI>=0&&CAT&&CAT[cfgI])v3Build(CAT[cfgI].product.type,cfgP,true)}}
 let ASM=null;
-function asmOpen(){if(!state.panels.length)return toast('Сцена пустая');const st=asmSteps();ASM={st,i:st.length,play:0,t:0};$('#asmBar').hidden=false;const r=$('#asmR');r.max=st.length;r.value=st.length;asmSet(st.length,false)}
+function asmOpen(){if(!state.panels.length)return toast('Сцена пустая');const st=asmSteps();ASM={st,i:st.length,play:0,t:0};$('#asmBar').hidden=false;asmPos();const r=$('#asmR');r.max=st.length;r.value=st.length;asmSet(st.length,false)}
+function asmPos(){const b=$('#asmBar');if(!b||b.hidden)return;b.style.left='';b.style.maxWidth='';if(innerWidth<=760)return;const par=b.offsetParent;if(!par)return;const pr=par.getBoundingClientRect();let L=16,Rr=pr.width-16;
+  ['#insp','#rail'].forEach(q=>{const i=$(q);if(!i||i.hidden||!i.offsetWidth)return;const ir=i.getBoundingClientRect();if(ir.bottom<pr.bottom-70)return;const a=ir.left-pr.left,z=ir.right-pr.left;if(a-L>Rr-z)Rr=Math.min(Rr,a-12);else L=Math.max(L,z+12)});b.style.left=((L+Rr)/2)+'px';b.style.maxWidth=Math.max(200,Rr-L)+'px'}
 function asmClose(){if(!ASM)return;ASM=null;$('#asmBar').hidden=true;state.panels.forEach(p=>{const m=meshes[p.id];if(m){placeMesh(p,m)}});applyHid()}
 function asmSet(i,anim){if(!ASM)return;ASM.i=Math.max(0,Math.min(ASM.st.length,i));const cur=ASM.st[ASM.i-1],vis=new Set(ASM.st.slice(0,ASM.i).flatMap(s=>s.ids)),now=new Set(cur?cur.ids:[]);
   state.panels.forEach(p=>{const m=meshes[p.id];if(!m)return;m.visible=vis.has(p.id)&&!p.hid;placeMesh(p,m)});$('#asmR').value=ASM.i;
   $('#asmT').innerHTML=ASM.i?`<b>Шаг ${ASM.i} из ${ASM.st.length}</b> · ${esc(cur.obj)} — ${esc(cur.title)}${cur.sub?' · '+cur.sub:''} · ${cur.ids.length} дет.`:'<b>Шаг 0</b> · пусто — нажмите ▶';
   if(anim&&cur){const t0=performance.now(),ids=cur.ids;const f=()=>{const a=Math.min(1,(performance.now()-t0)/380);ids.forEach(id=>{const p=panelById(id),m=meshes[id];if(!p||!m)return;placeMesh(p,m);m.position.y+=0.3*(1-a)*(1-a)});if(a<1&&ASM)requestAnimationFrame(f)};f()}}
+addEventListener('resize',()=>asmPos());addEventListener('pointerup',()=>setTimeout(asmPos,0));
 function asmTick(){if(!ASM||!ASM.play)return;if(ASM.i>=ASM.st.length){ASM.play=0;$('#asmP').textContent='▶';return}asmSet(ASM.i+1,true);ASM.t=setTimeout(asmTick,1100)}
 /* PDF: cover, inventory, steps (2 per page), finish */
-function asmRender(W,H,prev,cur,dir,allB){const V=v3Init(),g=V.g,fov0=V.cam.fov,el0=V.el;V.el=null;g.children.slice().forEach(m=>{g.remove(m);m.traverse(o=>{if(o.geometry)o.geometry.dispose()})});V.mov=[];V.labs=[];
+function asmRender(W,H,prev,cur,dir,allB,dy=0,nh=0){const V=v3Init(),g=V.g,fov0=V.cam.fov,el0=V.el;V.el=null;g.children.slice().forEach(m=>{g.remove(m);m.traverse(o=>{if(o.geometry)o.geometry.dispose()})});V.mov=[];V.labs=[];
   const ghost=m=>{const f=x=>{const c=x.clone();c.transparent=true;c.opacity=0.32;c.depthWrite=false;return c};return Array.isArray(m)?m.map(f):f(m)},hi=new THREE.LineBasicMaterial({color:0xd2342c});
-  const add=(q,isCur)=>{const {geo,mat}=q.hw?{geo:hwGeo(q),mat:hwMats}:meshParts(q),m=new THREE.Mesh(geo,isCur?mat:ghost(mat));m.castShadow=isCur;m.receiveShadow=true;placeMesh(q,m);if(!q.hw)m.add(new THREE.LineSegments(panelLines(q),isCur?hi:V3E));g.add(m)};
+  const add=(q,isCur)=>{const {geo,mat}=q.hw?{geo:hwGeo(q),mat:hwMats}:meshParts(q),m=new THREE.Mesh(geo,isCur?mat:ghost(mat));m.castShadow=isCur;m.receiveShadow=true;placeMesh(q,m);if(isCur&&dy)m.position.y+=dy;if(!q.hw)m.add(new THREE.LineSegments(panelLines(q),isCur&&!nh?hi:V3E));g.add(m)};
   prev.forEach(q=>add(q,false));cur.forEach(q=>add(q,true));
   const b=allB,c=b.getCenter(new THREE.Vector3()),R=Math.max(1,b.getSize(new THREE.Vector3()).length()),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3(i&1?b.max.x:b.min.x,i&2?b.max.y:b.min.y,i&4?b.max.z:b.min.z));
   const bg=V.s.background;V.s.background=new THREE.Color(0xffffff);V.r.setSize(W,H,false);V.cam.aspect=W/H;V.cam.fov=26;V.cam.updateProjectionMatrix();const d0=new THREE.Vector3(...dir).normalize();
@@ -1205,11 +1216,11 @@ function asmRender(W,H,prev,cur,dir,allB){const V=v3Init(),g=V.g,fov0=V.cam.fov,
   let d=R*3;for(let it=0;it<4;it++){V.cam.position.copy(c).addScaledVector(d0,d);V.cam.lookAt(c);V.cam.updateMatrixWorld();let m=0;cs.forEach(v=>{const q=v.clone().project(V.cam);m=Math.max(m,Math.abs(q.x),Math.abs(q.y))});d*=m/0.88}
   V.cam.position.copy(c).addScaledVector(d0,d);V.cam.lookAt(c);V.r.render(V.s,V.cam);const cv2=document.createElement('canvas');cv2.width=W;cv2.height=H;cv2.getContext('2d').drawImage(V.r.domElement,0,0);
   V.s.background=bg;V.cam.fov=fov0;V.cam.updateProjectionMatrix();V.el=el0;g.children.slice().forEach(m=>{g.remove(m);m.traverse(o=>{if(o.geometry)o.geometry.dispose()})});return cv2}
-async function asmPDF(){if(pdfBusy)return;const st=asmSteps();if(!st.length)return toast('Сцена пустая');pdfBusy=true;toast('Собираю инструкцию…');
-  const L1=!document.querySelector('#asxL [data-al="2"][aria-pressed="true"]'),TX=!$('#asxT')||$('#asxT').checked,PRE=!$('#asxP')||$('#asxP').checked;
+async function asmPDF(ret){if(pdfBusy)return;const st=asmSteps();if(!st.length)return toast('Сцена пустая');pdfBusy=true;toast('Собираю инструкцию…');
+  const L1=true,TX=true,PRE=true;
   try{try{await Promise.all(['300 14px Onest','400 8px Onest','600 19px Onest','700 12px Onest'].map(f=>document.fonts.load(f)))}catch(e){}
     const PW=595.28,PH=841.89,S=2480/PW,M=40,pages=[],all=state.panels.filter(p=>!p.hid),parts=partsList(),noOf=new Map();parts.forEach(pt=>(pt.ids||[]).forEach(id=>noOf.set(id,pt.no)));
-    const B3=new THREE.Box3();all.forEach(p=>B3.expandByPoint(new THREE.Vector3(p.x*MM,p.y*MM,p.z*MM)).expandByPoint(new THREE.Vector3((p.x+p.w)*MM,(p.y+p.h)*MM,(p.z+p.d)*MM)));const dir=[-0.62,0.42,0.78];
+    const B3=new THREE.Box3();all.forEach(p=>B3.expandByPoint(new THREE.Vector3(p.x*MM,p.y*MM,p.z*MM)).expandByPoint(new THREE.Vector3((p.x+p.w)*MM,(p.y+p.h)*MM,(p.z+p.d)*MM)));const dir=[-0.3,0.34,0.9];
     const np=()=>{const c=document.createElement('canvas');c.width=2480;c.height=3508;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.scale(S,S);pages.push(c);g.textBaseline='alphabetic';return g};
     const foot=g=>{drawLogo(g,M,PH-28,10);g.font=PF(400,7);g.fillStyle='#999';g.textAlign='right';g.fillText(`Инструкция по сборке · ${state.name} · стр. ${pages.length}`,PW-M,PH-28);g.textAlign='left'};
     const T=(g,t,x,y,w,sz,col='#111')=>{g.font=PF(w,sz);g.fillStyle=col;g.fillText(t,x,y)};
@@ -1218,7 +1229,7 @@ async function asmPDF(){if(pdfBusy)return;const st=asmSteps();if(!st.length)retu
     const F0=fasteners(all),hH=Math.round((B3.max.y-B3.min.y)/MM),nb=all.filter(p=>!p.hw).length;
     /* cover */
     let g=np();T(g,'Инструкция по сборке',M,70,300,13,'#888');T(g,state.name,M,100,600,26);T(g,`${nb} деталей · ${st.length} шагов · ${F0.conf} конфирматов · ${F0.scr} шурупов`,M,120,400,10,'#666');
-    g.drawImage(asmRender(1600,1500,[],all,dir,B3),M,150,PW-2*M,(PW-2*M)*1500/1600);
+    g.drawImage(asmRender(1600,1500,[],all,dir,B3,0,1),M,150,PW-2*M,(PW-2*M)*1500/1600);
     let y=150+(PW-2*M)*1500/1600+30;T(g,'Время сборки',M,y,600,10);T(g,`≈ ${Math.max(1,Math.round((nb*4+F0.conf*1.5+F0.scr*0.5)/60*2)/2)} ч вдвоём`,M+110,y,400,10,'#555');y+=16;T(g,'Сложность',M,y,600,10);T(g,hH>1500||nb>40?'средняя · нужен помощник':'простая',M+110,y,400,10,'#555');foot(g);
     /* contents */
     g=np();T(g,'Содержание',M,70,600,18);y=100;let lastO='';st.forEach((s,i)=>{if(y>PH-70){foot(g);g=np();y=70}if(s.obj!==lastO){y+=6;T(g,s.obj,M,y,600,10,'#888');y+=15;lastO=s.obj}dot(g,M+8,y-3.5,7,i+1);T(g,s.title+(s.sub?' · '+s.sub:''),M+24,y,400,9.5);T(g,`${s.ids.length} дет.`,PW-M-40,y,400,8.5,'#888');y+=16});foot(g);
@@ -1260,10 +1271,10 @@ async function asmPDF(){if(pdfBusy)return;const st=asmSteps();if(!st.length)retu
         if(n%2===1||n===st.length-1)foot(g)}
       prevIds.push(...s.ids);n++}
     /* finish */
-    g=np();T(g,'Готово',M,80,600,26);const iw2=PW-2*M;g.drawImage(asmRender(1600,1100,[],all,[0.55,0.35,0.8],B3),M,100,iw2,iw2*1100/1600);y=100+iw2*1100/1600+28;T(g,'Проверьте перед использованием',M,y,600,12);y+=18;
+    g=np();T(g,'Готово',M,80,600,26);const iw2=PW-2*M;g.drawImage(asmRender(1600,1100,[],all,[-0.3,0.34,0.9],B3,0,1),M,100,iw2,iw2*1100/1600);y=100+iw2*1100/1600+28;T(g,'Проверьте перед использованием',M,y,600,12);y+=18;
     ['Все конфирматы затянуты, шурупы задней стенки на месте.','Корпус стоит ровно по уровню — при необходимости подложите регулировочные опоры.','Двери открываются свободно, зазоры между фасадами одинаковые (2–3 мм).','Ящики выдвигаются до конца и закрываются без удара.',...(hH>1200?[`Высота ${hH} мм — закрепите изделие к стене анкерным уголком.`]:[]),'Уберите стружку из отверстий и протрите поверхности.'].forEach(t=>{g.strokeStyle='#111';g.lineWidth=0.8;g.strokeRect(M,y-8,9,9);y=W(g,t,M+18,y,iw2-18,9.5,'#333')+3});foot(g);
     const jpgs=pages.map(c=>{const b=atob(c.toDataURL('image/jpeg',0.9).split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u});
-    window.__lastPDF=pdfBlob(jpgs,2480,3508);await saveFile(fname('assembly.pdf'),window.__lastPDF);toast('Инструкция готова · '+pages.length+' стр.')}catch(e){console.error(e);toast('Не удалось собрать инструкцию')}finally{pdfBusy=false;if(cfgI>=0&&CAT&&CAT[cfgI])v3Build(CAT[cfgI].product.type,cfgP,true)}}
+    window.__lastPDF=pdfBlob(jpgs,2480,3508);if(ret)return window.__lastPDF;await saveFile(fname('assembly.pdf'),window.__lastPDF);toast('Инструкция готова · '+pages.length+' стр.')}catch(e){console.error(e);toast('Не удалось собрать инструкцию')}finally{pdfBusy=false;if(cfgI>=0&&CAT&&CAT[cfgI])v3Build(CAT[cfgI].product.type,cfgP,true)}}
 /* ---------- auto dimensions inside niches ---------- */
 const dimG=new THREE.Group(),dimLive=new THREE.Group();scene.add(dimG,dimLive);const DIMM=new THREE.LineBasicMaterial({color:0x1f5fe0,depthTest:false,transparent:true}),DIMF=new THREE.LineBasicMaterial({color:0x111111,depthTest:false,transparent:true,opacity:.75});
 let dimCur=[];state.dims=state.dims||[];
@@ -1285,7 +1296,7 @@ function alignPt(pt,ex,lock){const tol=2*camera.position.distanceTo(pt)*Math.tan
   best.forEach((b,k)=>{if(!b)return;pos.push(...b.v.toArray(),...pt.toArray());col.push(...C[k],...C[k])});alignG.geometry.dispose();alignG.geometry=new THREE.BufferGeometry();alignG.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));alignG.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));alignG.computeLineDistances();alignG.visible=true;return pt}
 $('#asmBar').addEventListener('click',e=>{const b=e.target.closest('[data-asm]');if(!b||!ASM)return;const a=b.dataset.asm;if(a==='x')return asmClose();if(a==='prev')return asmSet(ASM.i-1,false);if(a==='next')return asmSet(ASM.i+1,true);if(a==='play'){ASM.play=!ASM.play;b.textContent=ASM.play?'❚❚':'▶';if(ASM.play){if(ASM.i>=ASM.st.length)asmSet(0,false);clearTimeout(ASM.t);ASM.t=setTimeout(asmTick,300)}}});
 $('#asmR').addEventListener('input',e=>{if(ASM){ASM.play=0;$('#asmP').textContent='▶';asmSet(+e.target.value,true)}});
-function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#hwpop').hidden=true;$('#viewpop').hidden=true;const [mx,my]=setRay(e);if(e.button!==0)return;downXY=[e.clientX,e.clientY];downTool=false;const t=state.tool;if(t==='dim'){dimFix();return}if(t==='niche'){nicheInsert(e);return}if(t==='note'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return toast('Кликните по детали');state.notes.push({p:h.point.toArray().map(v=>+(v/MM).toFixed(1)),t:'Примечание '+(state.notes.length+1)});noteLabels();save();renderInsp();setTimeout(()=>{const el=document.querySelectorAll('[data-k=note]');el[el.length-1]?.select()},30);return}
+function onDown(e){if(view!=='build')return;$('#tplpop').hidden=true;$('#viewpop').hidden=true;const [mx,my]=setRay(e);if(e.button!==0)return;downXY=[e.clientX,e.clientY];downTool=false;const t=state.tool;if(t==='dim'){dimFix();return}if(t==='niche'){nicheInsert(e);return}if(t==='note'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(!h)return toast('Кликните по детали');state.notes.push({p:h.point.toArray().map(v=>+(v/MM).toFixed(1)),t:'Примечание '+(state.notes.length+1)});noteLabels();save();renderInsp();setTimeout(()=>{const el=document.querySelectorAll('[data-k=note]');el[el.length-1]?.select()},30);return}
   if(t==='orbit'||t==='pan')return;
   const grab=()=>{controls.enabled=false;downTool=true};
   if(e.shiftKey&&!op&&state.sub&&(t==='push'||t==='move')){const s=infer(mx,my,{exclude:new Set([state.sub.id])});if(s){pullSubTo(s.pt);grab();drag={type:'none'}}return}
@@ -1525,7 +1536,6 @@ function act(a){
   if(a==='undo')return undo();if(a==='redo')return redo();
   if(a==='fit')return selIds().length?focusSel():fitView();if(a==='help')return toggleHelp();
   if(a==='cols'){DOCK.rail.cols=DOCK.rail.cols===2?1:2;saveDock();layoutPanels();return}
-  if(a==='hwpop'){const pp=$('#hwpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;$('#viewpop').hidden=true;placePop(pp,$('[data-act=hwpop]'));return}
   if(a==='viewpop'){const pp=$('#viewpop');if(!pp.hidden){pp.hidden=true;return}$('#tplpop').hidden=true;placePop(pp,$('[data-act=viewpop]'));return}
   if(a==='tplpop'){$('#viewpop').hidden=true;const pp=$('#tplpop');if(!pp.hidden){pp.hidden=true;return}$('#tplRow').innerHTML=Object.entries(PRODS).map(([k,v])=>`<button class="btn" data-act="prodadd" data-n="${k}">${v.name}</button>`).join('');const cb=$('#clearBtn');cb.dataset.armed='';cb.textContent='Очистить сцену';
     const rr=$('#rail').getBoundingClientRect(),br=$('[data-act=tplpop]').getBoundingClientRect(),sr=stageEl.getBoundingClientRect();pp.hidden=false;if($('#rail').classList.contains('h')){pp.style.left=Math.min(sr.width-pp.offsetWidth-16,br.left-sr.left)+'px';pp.style.top=(DOCK.rail.side==='bottom'?rr.top-sr.top-pp.offsetHeight-8:rr.bottom-sr.top+8)+'px'}else{pp.style.top=Math.max(16,Math.min(sr.height-pp.offsetHeight-16,br.top-sr.top-8))+'px';pp.style.left=(DOCK.rail.side==='right'?rr.left-sr.left-pp.offsetWidth-8:rr.right-sr.left+8)+'px'}return}
@@ -1546,7 +1556,6 @@ function act(a){
   else if(a==='rot'){ps.forEach(p=>{if(p.hw){const q=new THREE.Quaternion().setFromAxisAngle(AXV.y,Math.PI/2);const c=pCenter(p);p.rot=quatToRot(q.clone().multiply(p.rot?rotQ(p):new THREE.Quaternion()));if(!p.rot)delete p.rot;setRTot(p,q.multiply(rTot(p)));buildMesh(p);return}setRTot(p,new THREE.Quaternion().setFromAxisAngle(AXV.y,Math.PI/2).multiply(rTot(p)));const cx=p.x+p.w/2,cz=p.z+p.d/2;[p.w,p.d]=[p.d,p.w];if(p.t==='x')p.t='z';else if(p.t==='z')p.t='x';p.x=Math.round(cx-p.w/2);p.z=Math.round(cz-p.d/2);buildMesh(p)});placeHandles()}
   save();renderInsp()}
 function orient(o,t){if(o.t===t)return;const A=o.t,cA=o[A]+o[SZ[A]]/2,cB=o[t]+o[SZ[t]]/2;[o[SZ[A]],o[SZ[t]]]=[o[SZ[t]],o[SZ[A]]];o.t=t;if('x' in o&&o.x!==undefined){o[A]=Math.round(cA-o[SZ[A]]/2);o[t]=Math.round(cB-o[SZ[t]]/2);if(o.y<0)o.y=0}}
-$('#hwpop').addEventListener('click',e=>{const b=e.target.closest('[data-hw]');if(!b)return;$('#hwpop').hidden=true;b.dataset.hw==='hinge'?addHinges():addHW(b.dataset.hw)});
 $('#rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tool)setTool(b.dataset.tool);else if(b.dataset.act)act(b.dataset.act)});
 let holdAx=null;
 window.addEventListener('keyup',e=>{if(holdAx&&e.code==='Key'+holdAx.toUpperCase()){holdAx=null;if(op){state.lock=null;if(lastPM)cv.dispatchEvent(new PointerEvent('pointermove',lastPM));renderHint()}}});
@@ -1847,7 +1856,7 @@ function updateLabels(){const p0=selP(),p=p0&&!(doorSim[p0.id]&&doorSim[p0.id].a
 function center(){const b=bbox();return new THREE.Vector3((b.x0+b.x1)/2*MM,(b.y0+b.y1)/2*MM,(b.z0+b.z1)/2*MM)}
 function radius(){const b=bbox();return Math.max(0.4,Math.hypot(b.x1-b.x0,b.y1-b.y0,b.z1-b.z0)*MM/2)}
 function focusSel(){const b=bbox(selPanels()),c=new THREE.Vector3((b.x0+b.x1)/2*MM,(b.y0+b.y1)/2*MM,(b.z0+b.z1)/2*MM),R=Math.max(0.05,Math.hypot(b.x1-b.x0,b.y1-b.y0,b.z1-b.z0)*MM/2),hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect)),d=R/Math.sin(hf)*1.25,dir=camera.position.clone().sub(controls.target).normalize();controls.target.copy(c);camera.position.copy(c).addScaledVector(dir,d);controls.update();lastMove=performance.now()}
-function fitView(){const c=center(),R=radius(),hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect)),d=R/Math.sin(hf)*(innerWidth<=760?1.05:1.15);const dir=new THREE.Vector3(0.62,0.42,0.78).normalize();controls.target.copy(c);camera.position.copy(c).addScaledVector(dir,d);controls.update();lastMove=performance.now()}
+function fitView(){const c=center(),R=radius(),hf=Math.atan(Math.tan(camera.fov*Math.PI/360)*Math.min(1,camera.aspect)),d=R/Math.sin(hf)*(innerWidth<=760?1.05:1.15);const dir=new THREE.Vector3(0.3,0.36,0.9).normalize();controls.target.copy(c);camera.position.copy(c).addScaledVector(dir,d);controls.update();lastMove=performance.now()}
 function lightDir(az,el){az*=Math.PI/180;el*=Math.PI/180;return new THREE.Vector3(Math.sin(az)*Math.cos(el),Math.sin(el),Math.cos(az)*Math.cos(el))}
 function aimLight(l,dir){const c=center(),R=radius()+0.9;l.target.position.copy(c);l.position.copy(c).addScaledVector(dir,R*3);const sc=l.shadow.camera;sc.left=sc.bottom=-R;sc.right=sc.top=R;sc.near=0.1;sc.far=R*6;sc.updateProjectionMatrix();l.target.updateMatrixWorld()}
 function fitShadows(){const L=LIGHTS[state.light];sun.color.setHex(view==='render'?L.col:0xfff6ec);aimLight(sun,lightDir(view==='render'?L.az:-30,view==='render'?L.el:52));ptSceneDirty=true}
@@ -2004,7 +2013,7 @@ function progress(){const pr=$('#rprog'),st=$('#rstat');
 let view='build',drawDirty=true,renderCamSet=false;
 function setView(v){if(typeof ASM!=='undefined'&&ASM)asmClose();if(!['build','render','drawings','export','catalog'].includes(v))v='build';if(op)opCancel();view=v;
   document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.v===v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';if(v==='export')asxList();$('#cat').hidden=v!=='catalog';if(v==='catalog')loadCat();
+  $('#stage').hidden=!(v==='build'||v==='render');$('#draw').hidden=v!=='drawings';$('#exp').hidden=v!=='export';$('#cat').hidden=v!=='catalog';if(v==='catalog')loadCat();
   const b3=v==='build';['#rail','#insp','#status','#inspRsz','#railRsz'].forEach(s=>$(s).hidden=!b3);if(!b3)Object.values(dls).forEach(d=>d.hidden=true);$('#vizbar').hidden=v!=='render';snapEl.hidden=true;faceHL.visible=faceHL2.visible=false;tapeClear();
   gridMinor.visible=gridMajor.visible=shadowPlane.visible=axesG.visible=guideG.visible=b3;room.visible=v==='render';Object.values(meshes).forEach(m=>m.children.forEach(c=>c.visible=b3));applyIso();
   if(v==='render'){controls.maxPolarAngle=Math.PI*0.495;buildRoom();renderer.shadowMap.type=THREE.PCFShadowMap;sun.shadow.mapSize.set(4096,4096);resetShadowMaps();renderer.setPixelRatio(baseDPR*state.q);resize();fitShadows();lastMove=performance.now();prevOK=false;syncSeg();ptSceneDirty=true;if(state.env==='wall'&&!capturing&&!renderCamSet){renderCam();renderCamSet=true}if(!capturing)loadPT();else ptExit()}
@@ -2309,12 +2318,11 @@ function zip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
     const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(14,0x21,true);ch.setUint32(16,crc,true);ch.setUint32(20,d.length,true);ch.setUint32(24,d.length,true);ch.setUint16(28,nm.length,true);ch.setUint32(42,off,true);cen.push(new Uint8Array(ch.buffer),nm);off+=30+nm.length+d.length});
   const cs=cen.reduce((s,a)=>s+a.length,0),end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cs,true);end.setUint32(16,off,true);
   return new Blob([...parts,...cen,new Uint8Array(end.buffer)])}
-$('#asxL').addEventListener('click',e=>{const b=e.target.closest('[data-al]');if(!b)return;$('#asxL').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
 $('#exp').addEventListener('click',e=>{const b=e.target.closest('[data-ex]');if(!b)return;if(!state.panels.length&&b.dataset.ex!=='json')return toast('В проекте нет деталей');const x=b.dataset.ex;
   if(x==='nestsvg')saveFile(fname('cutting-map.svg'),buildDrawing(true,true).svg);
   else if(x==='nestdxf')saveFile(fname('cutting-map.dxf'),nestDXF());
   else if(x==='zip'){const o=toOBJ();saveFile(fname('package.zip'),zip([{name:'model.rb',data:toRuby()},{name:'model.dae',data:toDAE()},{name:'model.obj',data:o.obj},{name:'model.mtl',data:o.mtl},{name:'details.dxf',data:detailsDXF()},{name:'nesting.dxf',data:nestDXF()},{name:'cutlist.csv',data:toCSV()},{name:'project.json',data:projJSON()}]))}
-  else if(x==='asm')asmPDF();else if(x==='asm3d'){setView('build');setTimeout(asmOpen,50)}
+  else if(x==='asm')asmDoc();
   else if(x==='pdf')makePDF();else if(x==='csv')saveFile(fname('cutlist.csv'),toCSV());else if(x==='svg')saveFile(fname('drawings.svg'),buildDrawing(true).svg);else if(x==='json')saveFile(fname('project.json'),projJSON())});
 
 async function importModel(f){const ext=f.name.split('.').pop().toLowerCase();
@@ -2373,7 +2381,7 @@ function passShots(W,H,dirs){const V=v3Init(),g=V.g,fov0=V.cam.fov,el0=V.el;V.el
 async function captureProduct(W,H,views,env){const pv=view,penv=state.env,pcam=camera.position.clone(),ptg=controls.target.clone();capturing=true;
   try{state.env=env||'studio';setView('render');buildRoom();renderer.setPixelRatio(1);renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
     const c=center(),Rr=radius(),bx=bbox(),cs=[];for(let i=0;i<8;i++)cs.push(new THREE.Vector3((i&1?bx.x1:bx.x0)*MM,(i&2?bx.y1:bx.y0)*MM,(i&4?bx.z1:bx.z0)*MM));const res=[];
-    for(const vw of views||[{dir:[-0.55,0.3,0.85],fill:0.95}]){const dir=new THREE.Vector3(...(vw.dir||[0,0,1])).normalize();let d=Rr/Math.sin(camera.fov*Math.PI/360);controls.target.copy(c);
+    for(const vw of views||[{dir:[-0.3,0.3,0.9],fill:0.95}]){const dir=new THREE.Vector3(...(vw.dir||[0,0,1])).normalize();let d=Rr/Math.sin(camera.fov*Math.PI/360);controls.target.copy(c);
     if(vw.fov){camera.fov=vw.fov;camera.updateProjectionMatrix()}if(vw.pos){camera.position.set(...vw.pos);controls.target.set(...vw.tg);camera.lookAt(controls.target);camera.updateMatrixWorld()}else if(vw.cam){(vw.cam==='front'?frontCam:renderCam)();camera.lookAt(controls.target);camera.updateMatrixWorld()}else{for(let it=0;it<3;it++){camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c);camera.updateMatrixWorld();let m=0;cs.forEach(v=>{const q=v.clone().project(camera);m=Math.max(m,Math.abs(q.x),Math.abs(q.y))});d*=Math.max(0.3,m/vw.fill)}
     camera.position.copy(c).addScaledVector(dir,d);camera.lookAt(c)}
     if(acc)['rt','a','b','pv'].forEach(k=>acc[k].dispose());acc=null;accTargets();renderer.toneMapping=THREE.NoToneMapping;outMat.uniforms.vig.value=0;
