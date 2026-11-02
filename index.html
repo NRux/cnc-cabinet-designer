@@ -1037,9 +1037,11 @@ function infer(mx,my,o={}){const ex=o.exclude||new Set(),list=state.panels.filte
   const vis=v=>camera.position.distanceTo(v)<=occl;let best=null,bd=SNAP_PX;
   const G=new Map(list.map(p=>[p.id,snapGeo(p)]));
   for(const p of list)for(const v of G.get(p.id).pts){if(!vis(v))continue;const s=scr(v),d=Math.hypot(s.x-mx,s.y-my);if(d<bd){bd=d;best={pt:v.clone(),type:'end',id:p.id}}}
+  if(!o.noGuides)for(const dd of state.dims||[]){const A=new THREE.Vector3(...dd[0]).multiplyScalar(MM),B=new THREE.Vector3(...dd[1]).multiplyScalar(MM);for(const v of [A,B,A.clone().add(B).multiplyScalar(.5)]){if(!vis(v))continue;const s=scr(v),d=Math.hypot(s.x-mx,s.y-my);if(s.z<1&&d<bd){bd=d;best={pt:v,type:'end',mark:1}}}}
   if(!o.noGuides&&state.guides.length>1){let xd=best?bd:SNAP_PX;for(const q of guideX()){if(camera.position.distanceTo(q.pt)>occl+0.03)continue;const s=scr(q.pt),d=Math.hypot(s.x-mx,s.y-my);if(s.z<1&&d<xd){xd=d;best={pt:q.pt,type:'gx',id:q.id}}}}
   if(!best){bd=SNAP_PX*.9;for(const p of list)for(const [A,B] of G.get(p.id).segs){const m=A.clone().add(B).multiplyScalar(.5);if(!vis(m))continue;const s=scr(m),d=Math.hypot(s.x-mx,s.y-my);if(d<bd){bd=d;best={pt:m,type:'mid',id:p.id,seg:[A,B]}}}}
   if(!best){let ed=SNAP_PX*.6;for(const p of list)for(const [A,B] of G.get(p.id).segs){const d=segDistPx(mx,my,A,B);if(d<ed){const pt=rayLine(A,B.clone().sub(A),true);if(!vis(pt))continue;ed=d;best={pt,type:'edge',id:p.id,seg:[A,B]}}}}
+  if(!best&&!o.noGuides){let ed=SNAP_PX*.6;for(const dd of state.dims||[]){const A=new THREE.Vector3(...dd[0]).multiplyScalar(MM),B=new THREE.Vector3(...dd[1]).multiplyScalar(MM),d=segDistPx(mx,my,A,B);if(d<ed){const pt=rayLine(A,B.clone().sub(A),true);if(!vis(pt))continue;ed=d;best={pt,type:'edge',seg:[A,B],mark:1}}}}
   if(!best&&!o.noGuides){let gd=9;for(const g of state.guides){const P=new THREE.Vector3(...g.p),D=new THREE.Vector3(...g.d),pt=rayLine(P,D);const s=scr(pt),q=rayHit2D(mx,my);const d=Math.hypot(s.x-mx,s.y-my);if(d<gd&&s.z<1){gd=d;best={pt,type:'guide',guide:g}}}}
   const lock=o.lock||null;
   if(o.from){if(lock){const base=best&&best.type!=='face'?best.pt:null;const pt=base?o.from.clone().addScaledVector(AXV[lock],base.clone().sub(o.from).dot(AXV[lock])):rayLine(o.from,AXV[lock]);return{pt,type:'lock',axis:lock,id:best&&best.id,from:base}}
@@ -1051,7 +1053,7 @@ function infer(mx,my,o={}){const ex=o.exclude||new Set(),list=state.panels.filte
 const SNAPN={align:['По линии с углом соседней доски','#d2342c'],gx:['Пересечение направляющих','#7a3fd0'],guide:['На направляющей','#5b5b60'],end:['Конечная точка','#1aa34a'],mid:['Середина','#11a3c8'],edge:['На ребре','#d2342c'],face:['На грани','#1f5fe0'],ground:['На полу','#8a8a8e']};
 const snapEl=$('#snapmk');
 function showSnap(s){if(!s||view!=='build'){snapEl.hidden=true;axisGuide.visible=false;return}const P=scr(s.pt);
-  let [txt,col]=SNAPN[s.type]||['',''];if(s.type==='axis'||s.type==='lock'){txt=(s.type==='lock'?'Зафиксировано: ':'')+{x:'по оси X',y:'по оси Y — вверх',z:'по оси Z — вглубь'}[s.axis];col=AXCSS[s.axis]}
+  let [txt,col]=SNAPN[s.type]||['',''];if(s.mark)txt=s.type==='edge'?'на разметке':'точка разметки';if(s.type==='axis'||s.type==='lock'){txt=(s.type==='lock'?'Зафиксировано: ':'')+{x:'по оси X',y:'по оси Y — вверх',z:'по оси Z — вглубь'}[s.axis];col=AXCSS[s.axis]}
   snapEl.hidden=false;snapEl.className='snapmk '+s.type;snapEl.style.setProperty('--c',col);snapEl.querySelector('span').textContent=txt;snapEl.style.transform=`translate(${P.x}px,${P.y}px)`;
   if((s.type==='axis'||s.type==='lock')&&op&&op.from){axisGuide.material.color.setHex(AXC[s.axis]);setLine(axisGuide,op.from.clone().addScaledVector(AXV[s.axis],-4),op.from.clone().addScaledVector(AXV[s.axis],4))}else axisGuide.visible=false}
 
