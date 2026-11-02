@@ -1449,7 +1449,7 @@ cv.addEventListener('pointermove',e=>{if(view!=='build')return;lastPM=e;const [m
     const sn=infer(mx,my);if(sn&&sn.type!=='face'&&sn.type!=='ground'){pt.copy(sn.pt);showSnap(sn)}else snapEl.hidden=true;const L=loc(p,pt);let r=Math.hypot(L[u]-op.cu,L[v]-op.cv);if(state.snap)r=Math.round(r);op.r=r4(r);circleShow();return}
   if(op&&op.type==='rect'){const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);const ai=AX.indexOf(op.a),pl=op.from.getComponent(ai);let pt;
     if(s.type==='face'||s.type==='ground'){pt=new THREE.Vector3();const n=AXV[op.a];if(!ray.ray.intersectPlane(new THREE.Plane(n.clone(),-pl),pt))return}else pt=s.pt.clone();pt.setComponent(ai,pl);op.cur=pt;previewRect();return}
-  if(op&&op.type==='tape'){if(op.line){tapeParallel(mx,my);return}const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);tapeShow(op.from,s.pt);return}
+  if(op&&op.type==='tape'){if(op.line){tapeParallel(mx,my);return}const s=infer(mx,my,{from:op.from,lock:state.lock});if(!s)return;showSnap(s);op.to=s.pt.clone();tapeShow(op.from,s.pt);return}
   if(op&&op.type==='mag'){const h=ray.intersectObjects(panelMeshes(),false)[0];if(h&&h.object.userData.id!==op.p.id){const n=h.face.normal,a=domAxis(n);showFace(faceHL,panelById(h.object.userData.id),a,Math.sign(n.getComponent(AX.indexOf(a))))}else faceHL.visible=false;return}
   if(t==='board'||t==='tape'||t==='move'||t==='circle'){const s=infer(mx,my);showSnap(s);setHover(s&&s.id!=null&&t==='move'?s.id:null);return}
   if(t==='push'&&state.sub&&e.shiftKey){const s=infer(mx,my,{exclude:new Set([state.sub.id])});showSnap(s&&s.type!=='face'&&s.type!=='ground'?s:null);faceHL.visible=false;cv.style.cursor='crosshair';return}
@@ -1610,6 +1610,7 @@ function applyVCB(txt){txt=txt.trim().replace(/мм|mm/gi,'').trim().replace(/,/
   if(op.type==='offset'){finishOffset(v);return}
   if(op.type==='rot'){if(op.stage<2){op.stage=2;op.v0=op.v0||new THREE.Vector3(1,0,0)}applyRot(v);finishRot();return}
   if(op.type==='tape'&&op.line&&op.w&&op.w.lengthSq()>1e-10){v*=(UNITS[state.units]||UNITS.mm)[0];const w=op.w.clone().normalize().multiplyScalar(v*MM);state.guides.push({p:op.line.P.clone().add(w).toArray(),d:op.line.D.toArray()});buildGuides();save();opEnd();tapeClear();toast('Направляющая на '+fmtU(v));return}
+  if(op.type==='tape'&&!op.line){const d=op.to&&op.to.clone().sub(op.from);if(!d||d.lengthSq()<1e-10)return toast('Сначала покажите направление мышью');v*=(UNITS[state.units]||UNITS.mm)[0];const f=op.from,B=f.clone().add(d.normalize().multiplyScalar(v*MM));state.dims.push([f.toArray().map(x=>+(x/MM).toFixed(1)),B.toArray().map(x=>+(x/MM).toFixed(1))]);opEnd();tapeClear();dimRebuild();save();toast('Отрезок '+fmtU(r4(v))+' · удалить — инструмент D, клик по подписи');return}
   if(op.type==='tape')return}
 vcbEl.addEventListener('keydown',e=>{if(e.key==='Enter'){applyVCB(vcbEl.value);vcbEl.value='';vcbEl.blur();e.preventDefault()}else if(e.key==='Escape'){vcbEl.value='';vcbEl.blur()}e.stopPropagation()});
 
