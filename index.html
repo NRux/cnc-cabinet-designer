@@ -424,10 +424,10 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
           <button class="btn pri" data-ex="pdf">Скачать PDF</button>
         </div>
         <div class="ex">
-          <span class="fmt">PDF · ВИДЕО</span>
+          <span class="fmt">PDF · A4</span>
           <h4>Инструкция по сборке</h4>
-          <p>Подробная PDF-инструкция: подготовка, комплектация, каждый шаг с рисунком, крепежом и пояснениями — и видео сборки.</p>
-          <button class="btn pri" data-ex="asm">Скачать</button>
+          <p>Подготовка, комплектация, схемы сверления и каждый шаг с рисунком, крепежом и пояснениями.</p>
+          <button class="btn pri" data-ex="asm">Скачать PDF</button>
         </div>
         <div class="ex">
           <span class="fmt">CSV</span>
@@ -726,7 +726,7 @@ function hwInsp(p){const f=(k,l,u='мм',step='')=>`<label class="fld"><span>${l
 const HWLIM={pD:[16,40],pa:[8,300],pb:[8,300],pw:[8,200],pt:[0.5,6],pn:[0,6],pd:[1,20],pL:[150,1200],pH:[20,80],pT:[8,20],pext:[0,100]};
 function hwSet(p,k,v){const [lo,hi]=HWLIM[k]||[0,1e4];v=Math.max(lo,Math.min(hi,v));if(k==='pn')v=Math.round(v);p[k]=r4(v);hwFix(p);
   if(p.hw==='angle'&&/^Уголок/.test(p.name))p.name='Уголок '+p.pa+'×'+p.pb+'×'+p.pw;if(p.hw==='slide'&&/^Направляющая/.test(p.name))p.name='Направляющая '+p.pL}
-function hwList(){const g=new Map();state.panels.filter(p=>p.hw).forEach(p=>{const key=p.hw==='rod'?`Штанга для вешалок Ø${p.pD} мм, ${p.pL} мм`:p.hw==='hinge'?`Петля мебельная ${HOVN[p.ov||'full'].toLowerCase()}, чашка Ø${p.cup} мм, ${p.ang||105}°${p.soft?', с доводчиком':''}`:p.hw==='angle'?`Уголок металлический ${p.pa}×${p.pb}×${p.pw} мм, t=${p.pt} мм, ${2*(p.pn|0)} отв. Ø${p.pd} мм${p.prib?', с ребром':''}`:`Направляющая шариковая ${p.pL} мм, H=${p.pH} мм, ${p.psec===2?'частичное':'полное'} выдвижение`;g.set(key,(g.get(key)||0)+1)});const f=fasteners(state.panels);Object.entries(f.ct).forEach(([t,n])=>g.set('Конфирмат '+t,n));if(f.scr)g.set('Шуруп 3,5×16 (задние стенки)',f.scr);return[...g].map(([name,qty])=>({name,qty}))}
+function hwList(){const g=new Map();state.panels.filter(p=>p.hw).forEach(p=>{const key=p.hw==='rod'?`Штанга для вешалок Ø${p.pD} мм, ${p.pL} мм`:p.hw==='hinge'?`Петля мебельная ${HOVN[p.ov||'full'].toLowerCase()}, чашка Ø${p.cup} мм, ${p.ang||105}°${p.soft?', с доводчиком':''}`:p.hw==='angle'?`Уголок металлический ${p.pa}×${p.pb}×${p.pw} мм, t=${p.pt} мм, ${2*(p.pn|0)} отв. Ø${p.pd} мм${p.prib?', с ребром':''}`:`Направляющая шариковая ${p.pL} мм, H=${p.pH} мм, ${p.psec===2?'частичное':'полное'} выдвижение`;g.set(key,(g.get(key)||0)+1)});const f=fasteners(state.panels);Object.entries(f.ct).forEach(([t,n])=>g.set('Конфирмат '+t,n));if(f.hold)g.set('Держатель задней стенки',f.hold);if(f.scr)g.set('Шуруп 3,5×16 (задние стенки)',f.scr);return[...g].map(([name,qty])=>({name,qty}))}
 
 /* ---------- hinges & door physics ---------- */
 const HOV={full:18,half:9,inset:-2},HOVN={full:'Накладная',half:'Полунакладная',inset:'Вкладная'};
@@ -1125,8 +1125,8 @@ const EBN=['Длинная 1','Длинная 2','Короткая 1','Коро�
 function ebLen(p){const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a),e=p.eb||[];return((e[0]?d[0]:0)+(e[1]?d[0]:0)+(e[2]?d[1]:0)+(e[3]?d[1]:0))/1000}
 function applyHid(){state.panels.forEach(p=>{const m=meshes[p.id];if(m)m.visible=!(p.hid&&view==='build')})}
 /* ---------- fasteners, check, estimate ---------- */
-function fasteners(ps){let conf=0,scr=0;const ct={},ids=new Set(ps.map(p=>p.id));(state.conf&&state.conf.j||[]).forEach(j=>{if(ids.has(j.a)&&ids.has(j.b)){conf+=j.pts.length;ct[j.typ]=(ct[j.typ]||0)+j.pts.length}});const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.door);for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j];let k=-1,o=[];for(let m=0;m<3;m++){const x=AX[m],ov=ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]]);o.push(ov)}
-    const gaps=o.map(v=>v);for(let m=0;m<3;m++){if(Math.abs(o[m])<0.6&&o.filter((v,n)=>n!==m).every(v=>v>5)){k=m;break}}if(k<0)continue;const ax=AX[k];if(a.t===ax&&b.t===ax)continue;const L=Math.max(...o.filter((v,n)=>n!==k));const thin=Math.min(thick(a),thick(b))<=8;if(thin)scr+=Math.max(2,Math.ceil(L/150))}return{conf,scr,ct}}
+function fasteners(ps){let conf=0,scr=0,hold=0;const ct={},ids=new Set(ps.map(p=>p.id)),MK=new Set();(state.conf&&state.conf.j||[]).forEach(j=>{MK.add(j.a);MK.add(j.b)});(state.conf&&state.conf.j||[]).forEach(j=>{if(ids.has(j.a)&&ids.has(j.b)){const n=j.pts.length,k=CK(j);if(k==='conf'){conf+=n;ct[j.typ]=(ct[j.typ]||0)+n}else{scr+=n;if(k==='hold')hold+=n}}});const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.door);for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j];let k=-1,o=[];for(let m=0;m<3;m++){const x=AX[m],ov=ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]]);o.push(ov)}
+    const gaps=o.map(v=>v);for(let m=0;m<3;m++){if(Math.abs(o[m])<0.6&&o.filter((v,n)=>n!==m).every(v=>v>5)){k=m;break}}if(k<0)continue;const ax=AX[k];if(a.t===ax&&b.t===ax)continue;const L=Math.max(...o.filter((v,n)=>n!==k));const thin=Math.min(thick(a),thick(b))<=8;if(thin&&!MK.has(a.id)&&!MK.has(b.id))scr+=Math.max(2,Math.ceil(L/150))}return{conf,scr,ct,hold}}
 function checkProject(){const out=[],B=BRD(),[SW,SH]=getSheet(),W=SW-20,H=SH-20;
   for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j];if(a.rot||b.rot)continue;if(AX.every(x=>ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]])>0.5))out.push({id:a.id,t:`«${a.name}» пересекается с «${b.name}»`})}
   B.forEach(p=>{const d=AX.filter(a=>a!==p.t).map(a=>p[SZ[a]]).sort((a,b)=>b-a);if(!((d[0]<=W&&d[1]<=H)||(d[0]<=H&&d[1]<=W)))out.push({id:p.id,t:`«${p.name}» ${Math.round(d[0])}×${Math.round(d[1])} больше листа ${SW}×${SH}`});
@@ -1179,52 +1179,39 @@ const ASMTX=[
  'Фасады навешивайте последними. Выставьте зазоры 2–3 мм между фасадами и по краям, проверьте, что двери открываются свободно и не задевают друг друга.',
  'Установите фурнитуру: кронштейны штанги по одной высоте, проверьте уровнем. Ручки крепите по шаблону, чтобы они стояли на одной линии.'];
 
-async function asmVideo(){const st=asmSteps(),all=state.panels.filter(p=>!p.hid),bx=ps=>{const b=new THREE.Box3();ps.forEach(p=>b.expandByPoint(new THREE.Vector3(p.x*MM,p.y*MM,p.z*MM)).expandByPoint(new THREE.Vector3((p.x+p.w)*MM,(p.y+p.h)*MM,(p.z+p.d)*MM)));return b};
-  const mime=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));if(!mime)return null;
-  const VW=1280,VH=720,cv=document.createElement('canvas');cv.width=VW;cv.height=VH;const g=cv.getContext('2d'),stream=cv.captureStream(0),tr=stream.getVideoTracks()[0],rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:6e6}),ch=[];
-  rec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};const done=new Promise(r=>rec.onstop=r);rec.start();
-  const B3=bx(all),bbK=new Map();st.forEach(s=>bbK.set(s.key,bx(all.filter(p=>(p.prod?'p'+p.prod:p.grp?'g'+p.grp:'l')===s.key))));
-  const dirAt=a=>{const c=Math.cos(a),s=Math.sin(a),x=-0.3,z=0.9;return[x*c+z*s,0.34,-x*s+z*c]};
-  const frame=async(prev,cur,box,ang,dy,h1,h2,num)=>{const img=asmRender(VW,VH-90,prev,cur,dirAt(ang),box,dy,!num);g.fillStyle='#fff';g.fillRect(0,0,VW,VH);g.drawImage(img,0,70);
-    g.textBaseline='alphabetic';let x=40;if(num){g.fillStyle='#111';g.beginPath();g.arc(62,48,22,0,Math.PI*2);g.fill();g.font=PF(700,20);g.fillStyle='#fff';g.textAlign='center';g.fillText(String(num),62,55);g.textAlign='left';x=98}
-    g.font=PF(600,24);g.fillStyle='#111';g.fillText(h1,x,46);g.font=PF(400,15);g.fillStyle='#888';g.fillText(h2,x,68);drawLogo(g,40,VH-22,14);tr.requestFrame&&tr.requestFrame();await new Promise(r=>setTimeout(r,1000/30))};
-  let ang=0;const nb=all.filter(p=>!p.hw).length;
-  for(let f=0;f<60;f++){await frame([],all,B3,ang,0,state.name,`Инструкция по сборке · ${st.length} шагов · ${nb} деталей`,0);ang+=0.004}
-  const prevK=new Map();let n=0;for(const s of st){const pv=prevK.get(s.key)||[];prevK.set(s.key,pv);const cur=s.ids.map(panelById).filter(Boolean),prev=pv.map(panelById).filter(Boolean),box=bbK.get(s.key);n++;
-    for(let f=0;f<66;f++){const a=Math.min(1,f/20);await frame(prev,cur,box,ang,0.35*(1-a)*(1-a),s.title+(s.sub?' · '+s.sub:''),`${s.obj} · шаг ${n} из ${st.length} · ${cur.length} дет.`,n);ang+=0.004}pv.push(...s.ids)}
-  for(let f=0;f<120;f++){await frame([],all,B3,ang,0,'Готово',state.name,0);ang+=Math.PI*2/120}
-  rec.stop();await done;return{blob:new Blob(ch,{type:mime.split(';')[0]}),ext:mime.startsWith('video/mp4')?'mp4':'webm'}}
-async function asmDoc(){if(pdfBusy)return;if(!asmSteps().length)return toast('Сцена пустая');const pdf=await asmPDF(true);if(!pdf)return;pdfBusy=true;
-  try{toast('Записываю видео сборки…',60000);const v=await asmVideo();const files=[{name:'instrukciya-po-sborke.pdf',data:new Uint8Array(await pdf.arrayBuffer())}];if(v)files.push({name:'video-sborki.'+v.ext,data:new Uint8Array(await v.blob.arrayBuffer())});
-    window.__lastASM=files.map(f=>f.name+':'+f.data.length);await saveFile(fname('assembly.zip'),zip(files))}catch(e){console.error(e);toast('Не удалось собрать инструкцию')}finally{pdfBusy=false;if(cfgI>=0&&CAT&&CAT[cfgI])v3Build(CAT[cfgI].product.type,cfgP,true)}}
-
 /* ---------- confirmat marking ---------- */
-const CONFG=new THREE.Group();scene.add(CONFG);const CONFM=new THREE.MeshBasicMaterial({color:0xd2342c,depthTest:false,transparent:true}),CONFL=new THREE.LineBasicMaterial({color:0xd2342c,depthTest:false,transparent:true,opacity:.7});
+const CONFG=new THREE.Group();scene.add(CONFG);const CONFM2=new THREE.MeshBasicMaterial({color:0x1f5fe0,depthTest:false,transparent:true});const CONFM=new THREE.MeshBasicMaterial({color:0xd2342c,depthTest:false,transparent:true}),CONFL=new THREE.LineBasicMaterial({color:0xd2342c,depthTest:false,transparent:true,opacity:.7});
 function confSig(ids){return state.panels.filter(p=>ids.has(p.id)).map(p=>[p.id,p.x,p.y,p.z,p.w,p.h,p.d,p.t].join(',')).join(';')}
+const CK=j=>j.kind||'conf',CKN={conf:'Конфирмат',scr:'Шуруп',hold:'Держатель задней стенки'};
 function confCalc(ps,step,off){const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.door&&!p.hid),out=[],onA=new Map();
+  const spread=(L,st,of,min2)=>{if(L<2*of+20)return[L/2];const n=Math.max(min2?2:1,Math.ceil((L-2*of)/st)+1);return n===1?[L/2]:Array.from({length:n},(_,i)=>of+i*(L-2*of)/(n-1))};
   for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j],o=AX.map(x=>ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]]));const k=o.findIndex((v,m)=>Math.abs(v)<0.6&&o.every((w,n)=>n===m||w>5));if(k<0)continue;
-    const ax=AX[k];let A,P;if(a.t===ax&&b.t!==ax){A=a;P=b}else if(b.t===ax&&a.t!==ax){A=b;P=a}else continue;if(thick(A)<=8||thick(P)<14)continue;
+    const ax=AX[k];let A,P;if(a.t===ax&&b.t!==ax){A=a;P=b}else if(b.t===ax&&a.t!==ax){A=b;P=a}else continue;
     const tA=P.t,lA=AX.find(x=>x!==ax&&x!==tA);if(!lA)continue;const l0=Math.max(A[lA],P[lA]),L=Math.min(A[lA]+A[SZ[lA]],P[lA]+P[SZ[lA]])-l0;if(L<40)continue;
-    const n=L<2*off+20?1:Math.max(2,Math.ceil((L-2*off)/step)+1),pos=n===1?[L/2]:Array.from({length:n},(_,i)=>off+i*(L-2*off)/(n-1));
-    const toP=P[ax]>=A[ax]+thick(A)/2?1:-1,outer=toP>0?A[ax]:A[ax]+thick(A),c=P[tA]+thick(P)/2,arr=onA.get(A.id)||[];onA.set(A.id,arr);
-    const pts=pos.map(v=>{let q={};q[ax]=outer;q[tA]=c;q[lA]=l0+v;if(arr.some(r=>Math.hypot(r[tA]-q[tA],r[lA]-q[lA])<25))q[lA]+=v<L/2?32:-32;arr.push(q);return[+q.x.toFixed(1),+q.y.toFixed(1),+q.z.toFixed(1)]});
-    out.push({a:A.id,b:P.id,ax,s:toP,typ:thick(A)<=19?'7×50':'7×70',pts})}return out}
+    const TA=thick(A),TP=thick(P),toP=P[ax]>=A[ax]+TA/2?1:-1;let kind,typ,pos,plane,c;
+    if(TA<=8&&TP>=14){kind='scr';typ='3,5×16';pos=spread(L,150,30,true);plane=toP>0?A[ax]:A[ax]+TA;c=P[tA]+TP/2}
+    else if(TA>8&&TP<=8){kind='hold';typ='3,5×16';pos=spread(L,400,60,L>=200);plane=toP>0?A[ax]+TA:A[ax];const ac=A[tA]+A[SZ[tA]]/2,pc=P[tA]+TP/2;c=pc+Math.sign(ac-pc||1)*(TP/2+8)}
+    else if(TA>8&&TP>=14){kind='conf';typ=TA<=19?'7×50':'7×70';pos=spread(L,step,off,true);plane=toP>0?A[ax]:A[ax]+TA;c=P[tA]+TP/2}
+    else continue;
+    const arr=onA.get(A.id)||[];onA.set(A.id,arr);
+    const pts=pos.map(v=>{let q={};q[ax]=plane;q[tA]=c;q[lA]=l0+v;if(kind==='conf'&&arr.some(r=>Math.hypot(r[tA]-q[tA],r[lA]-q[lA])<25))q[lA]+=v<L/2?32:-32;arr.push(q);return[+q.x.toFixed(1),+q.y.toFixed(1),+q.z.toFixed(1)]});
+    out.push({a:A.id,b:P.id,ax,s:toP,kind,typ,pts})}return out}
 function confScope(){const c=state.ctx;if(c){const ids=new Set(ctxIds(c));return{ids,label:c.k==='g'?grpName(c.id):((state.prods||[]).find(r=>r.id===c.id)||{}).name||'Изделие'}}return{ids:new Set(state.panels.map(p=>p.id)),label:'Вся сцена'}}
 function confRun(){const S=confScope(),C=state.conf||{step:300,off:50,j:[]};const keep=(C.j||[]).filter(j=>!(S.ids.has(j.a)||S.ids.has(j.b)));const nj=confCalc(state.panels.filter(p=>S.ids.has(p.id)),C.step||300,C.off||50);
   pushUndo();state.conf={step:C.step||300,off:C.off||50,j:keep.concat(nj),sig:confSig(new Set(state.panels.map(p=>p.id)))};confDraw();save();renderInsp();toast(nj.length?`Размечено: ${nj.reduce((s,j)=>s+j.pts.length,0)} конфирматов на ${nj.length} стыках`:'Стыков под конфирмат не найдено')}
 function confClear(all){const S=confScope();if(!state.conf)return;pushUndo();state.conf.j=all?[]:state.conf.j.filter(j=>!(S.ids.has(j.a)||S.ids.has(j.b)));if(!state.conf.j.length)state.conf=null;confDraw();save();renderInsp()}
 function confDraw(){CONFG.children.slice().forEach(m=>{CONFG.remove(m);m.geometry&&m.geometry.dispose()});CONFG.visible=state.tool==='conf';if(!state.conf||!CONFG.visible)return;
-  const lp=[];state.conf.j.forEach(j=>{const A=panelById(j.a);if(!A)return;const T=thick(A);j.pts.forEach(q=>{const g=new THREE.CylinderGeometry(4.5*MM,4.5*MM,1.5*MM,16);if(j.ax==='x')g.rotateZ(Math.PI/2);if(j.ax==='z')g.rotateX(Math.PI/2);const m=new THREE.Mesh(g,CONFM);m.renderOrder=5;m.position.set(q[0]*MM,q[1]*MM,q[2]*MM);CONFG.add(m);
-    const e=q.slice();e[AX.indexOf(j.ax)]+=j.s*(T+(j.typ==='7×70'?70:50)-T);lp.push(q[0]*MM,q[1]*MM,q[2]*MM,e[0]*MM,e[1]*MM,e[2]*MM)})});
+  const lp=[];state.conf.j.forEach(j=>{const A=panelById(j.a);if(!A)return;const T=thick(A),kd=CK(j),rr=kd==='conf'?4.5:2.5;j.pts.forEach(q=>{const g=new THREE.CylinderGeometry(rr*MM,rr*MM,1.5*MM,16);if(j.ax==='x')g.rotateZ(Math.PI/2);if(j.ax==='z')g.rotateX(Math.PI/2);const m=new THREE.Mesh(g,kd==='conf'?CONFM:CONFM2);m.renderOrder=5;m.position.set(q[0]*MM,q[1]*MM,q[2]*MM);CONFG.add(m);
+    if(kd==='hold')return;const e=q.slice();e[AX.indexOf(j.ax)]+=j.s*(kd==='scr'?16:j.typ==='7×70'?70:50);lp.push(q[0]*MM,q[1]*MM,q[2]*MM,e[0]*MM,e[1]*MM,e[2]*MM)})});
   if(lp.length){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));const l=new THREE.LineSegments(g,CONFL);l.renderOrder=5;CONFG.add(l)}}
-function confHTML(){const S=confScope(),C=state.conf,js=(C&&C.j||[]).filter(j=>S.ids.has(j.a)||S.ids.has(j.b)),n=js.reduce((s,j)=>s+j.pts.length,0),ty={};js.forEach(j=>ty[j.typ]=(ty[j.typ]||0)+j.pts.length);
+function confHTML(){const S=confScope(),C=state.conf,js=(C&&C.j||[]).filter(j=>S.ids.has(j.a)||S.ids.has(j.b)),n=js.reduce((s,j)=>s+j.pts.length,0),ty={};js.forEach(j=>{const k=CK(j)==='conf'?'Конфирмат '+j.typ:CK(j)==='scr'?'Шуруп 3,5×16 (задняя стенка)':'Держатель задней стенки';ty[k]=(ty[k]||0)+j.pts.length});
   const stale=C&&C.sig&&C.sig!==confSig(new Set(state.panels.map(p=>p.id)));const nm=id=>{const p=panelById(id);return p?esc(p.name):'?'};
-  return`<div class="grp"><h2>Инструмент · J</h2><h3>Крепёж · конфирматы</h3><p class="note">Находит стыки «торец в плоскость» и размечает конфирматы: отступ от края, шаг, минимум 2 на стык. Отверстия не идут в чертежи фрезеровки — точные места сверления попадают в инструкцию по сборке. Пока разметки нет, конфирматы нигде в проекте не считаются.</p></div>
+  return`<div class="grp"><h2>Инструмент · J</h2><h3>Крепёж</h3><p class="note">Находит стыки и размечает крепёж: конфирматы для корпуса (шаг и отступ ниже), шурупы для накладной задней стенки (шаг 150 мм), держатели для вставной задней стенки (шаг 300 мм). Отверстия не идут в чертежи фрезеровки — точные места сверления попадают в инструкцию по сборке. Пока разметки нет, конфирматы нигде в проекте не считаются.</p></div>
   <div class="grp"><span class="lbl">Объект · клик по детали — выбрать изделие</span><b style="font:600 15px var(--f-display)">${esc(S.label)}</b>
   <div class="fld"><span>Шаг, мм</span><input class="txt" data-k="cstep" value="${C?C.step:300}"></div><div class="fld"><span>Отступ от края, мм</span><input class="txt" data-k="coff" value="${C?C.off:50}"></div>
   <div class="row"><button class="btn pri" data-act="cgo">${js.length?'Пересчитать':'Рассчитать и разметить'}</button>${js.length?'<button class="btn" data-act="cclr">Убрать</button>':''}</div>${stale&&js.length?'<p class="note" style="color:#d2342c;margin:0">Размеры изменились — пересчитайте разметку.</p>':''}</div>
-  ${js.length?`<div class="grp"><span class="lbl">Итого</span><div class="kv"><span>Стыков</span><b>${js.length}</b>${Object.entries(ty).map(([t,q])=>`<span>Конфирмат ${t}</span><b>${q} шт.</b>`).join('')}<span>Сверло</span><b>Ø7 + Ø4,5</b></div></div>
-  <div class="grp"><span class="lbl">Стыки · × — убрать</span>${js.map(j=>`<div class="row" style="flex-wrap:nowrap;font-size:12.5px"><span style="flex:1">${nm(j.a)} → ${nm(j.b)} · ${j.pts.length}× ${j.typ}</span><button class="btn" style="flex:none;width:30px;height:28px;padding:0" data-act="cdel" data-i="${C.j.indexOf(j)}" aria-label="Убрать">×</button></div>`).join('')}</div>`:''}`}
+  ${js.length?`<div class="grp"><span class="lbl">Итого</span><div class="kv"><span>Стыков</span><b>${js.length}</b>${Object.entries(ty).map(([t,q])=>`<span>${t}</span><b>${q} шт.</b>`).join('')}</div></div>
+  <div class="grp"><span class="lbl">Стыки · × — убрать</span>${js.map(j=>`<div class="row" style="flex-wrap:nowrap;font-size:12.5px"><span style="flex:1">${nm(j.a)} → ${nm(j.b)} · ${j.pts.length}× ${CK(j)==='conf'?j.typ:CK(j)==='scr'?'шуруп':'держатель'}</span><button class="btn" style="flex:none;width:30px;height:28px;padding:0" data-act="cdel" data-i="${C.j.indexOf(j)}" aria-label="Убрать">×</button></div>`).join('')}</div>`:''}`}
 let ASM=null;
 function asmOpen(){if(!state.panels.length)return toast('Сцена пустая');const st=asmSteps();ASM={st,i:st.length,play:0,t:0};$('#asmBar').hidden=false;asmPos();const r=$('#asmR');r.max=st.length;r.value=st.length;asmSet(st.length,false)}
 function asmPos(){const b=$('#asmBar');if(!b||b.hidden)return;b.style.left='';b.style.maxWidth='';if(innerWidth<=760)return;const par=b.offsetParent;if(!par)return;const pr=par.getBoundingClientRect();let L=16,Rr=pr.width-16;
@@ -1256,7 +1243,7 @@ async function asmPDF(ret){if(pdfBusy)return;const st=asmSteps();if(!st.length)r
     const foot=g=>{drawLogo(g,M,PH-28,10);g.font=PF(400,7);g.fillStyle='#999';g.textAlign='right';g.fillText(`Инструкция по сборке · ${state.name} · стр. ${pages.length}`,PW-M,PH-28);g.textAlign='left'};
     const T=(g,t,x,y,w,sz,col='#111')=>{g.font=PF(w,sz);g.fillStyle=col;g.fillText(t,x,y)};
     const W=(g,t,x,y,w,sz,col='#333',lh=sz*1.45,wt=400)=>{g.fillStyle=col;return wrap(g,t,x,y,w,lh,PF(wt,sz))};
-    const dot=(g,x,y,r,t)=>{g.fillStyle='#111';g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fill();g.font=PF(700,r*0.95);g.fillStyle='#fff';g.textAlign='center';g.fillText(String(t),x,y+r*0.34);g.textAlign='left'};
+    const dot=(g,x,y,r,t)=>{g.strokeStyle='#111';g.lineWidth=Math.max(0.7,r*0.09);g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.stroke();g.font=PF(600,r*(String(t).length>1?0.85:0.95));g.fillStyle='#111';g.textAlign='center';g.fillText(String(t),x,y+r*0.34);g.textAlign='left'};
     const allI=new Set(all.map(p=>p.id)),CJ=(state.conf&&state.conf.j||[]).filter(j=>allI.has(j.a)&&allI.has(j.b)),F0=fasteners(all),hH=Math.round((B3.max.y-B3.min.y)/MM),nb=all.filter(p=>!p.hw).length;
     /* cover */
     let g=np();T(g,'Инструкция по сборке',M,70,300,13,'#888');T(g,state.name,M,100,600,26);T(g,[`${nb} деталей`,`${st.length} шагов`,F0.conf?`${F0.conf} конфирматов`:'',F0.scr?`${F0.scr} шурупов`:''].filter(Boolean).join(' · '),M,120,400,10,'#666');
@@ -1282,15 +1269,15 @@ async function asmPDF(ret){if(pdfBusy)return;const st=asmSteps();if(!st.length)r
     y+=16;T(g,'Инструменты',M,y,600,13);y+=16;['Шуруповёрт, бита под конфирмат (шестигранник 4 мм)',...(CJ.length?['Сверла Ø7 и Ø4,5, зенкер Ø10 (или ступенчатое сверло под конфирмат)']:[]),'Сверло Ø2,5 под шурупы','Рулетка, уголок, уровень, карандаш','Киянка, струбцины (2 шт.)'].forEach(t=>{T(g,'—  '+t,M,y,400,9);y+=13});foot(g);
     /* drilling maps */
     if(CJ.length){const byA=new Map();CJ.forEach(j=>{if(!byA.has(j.a))byA.set(j.a,[]);byA.get(j.a).push(j)});const cards=new Map();
-      byA.forEach((js,id)=>{const A=panelById(id);if(!A)return;const [u,v]=AX.filter(a=>a!==A.t).sort((a,b)=>A[SZ[b]]-A[SZ[a]]),hs=[];js.forEach(j=>j.pts.forEach(q=>hs.push([+(q[AX.indexOf(u)]-A[u]).toFixed(1),+(q[AX.indexOf(v)]-A[v]).toFixed(1),j.typ])));
-        const key=(noOf.get(id)||0)+'|'+hs.map(h=>h[0]+','+h[1]).sort().join(';'),c=cards.get(key);if(c)c.q++;else cards.set(key,{A,u,v,hs,q:1,no:noOf.get(id)||0})});
-      g=np();T(g,'Схемы сверления',M,70,600,18);y=W(g,'Просверлите эти отверстия до сборки: Ø7 насквозь, с наружной стороны — зенковка Ø10 под головку. Размеры даны от угла с чёрной меткой. Торец второй детали досверливается Ø4,5 на 50 мм уже при сборке — через готовое отверстие, как по шаблону.',M,92,PW-2*M,9)+8;
+      byA.forEach((js,id)=>{const A=panelById(id);if(!A)return;const [u,v]=AX.filter(a=>a!==A.t).sort((a,b)=>A[SZ[b]]-A[SZ[a]]),hs=[];js.forEach(j=>j.pts.forEach(q=>hs.push([+(q[AX.indexOf(u)]-A[u]).toFixed(1),+(q[AX.indexOf(v)]-A[v]).toFixed(1),CK(j),j.typ])));
+        const key=(noOf.get(id)||0)+'|'+hs.map(h=>h[0]+','+h[1]+h[2]).sort().join(';'),c=cards.get(key);if(c)c.q++;else cards.set(key,{A,u,v,hs,q:1,no:noOf.get(id)||0})});
+      g=np();T(g,'Схемы сверления',M,70,600,18);y=W(g,'Просверлите эти отверстия до сборки. Красные — под конфирмат: Ø7 насквозь, с наружной стороны зенковка Ø10; торец второй детали досверливается Ø4,5 на 50 мм уже при сборке, через готовое отверстие. Синие — под шурупы задней стенки: Ø3 насквозь в стенке или Ø2,5 на 10 мм под держатель. Размеры — от угла с чёрной меткой.',M,92,PW-2*M,9)+8;
       for(const c of cards.values()){const L=c.A[SZ[c.u]],H=c.A[SZ[c.v]],sc=Math.min((PW-2*M-50)/L,150/H),w=L*sc,h=H*sc;if(y+h+80>PH-60){foot(g);g=np();y=70}
-        dot(g,M+8,y+4,8,c.no);T(g,`${c.A.name} · ${Math.round(L)} × ${Math.round(H)} мм${c.q>1?' · таких деталей: '+c.q:''}`,M+22,y+7,600,10);const ty={};c.hs.forEach(hh=>ty[hh[2]]=(ty[hh[2]]||0)+1);T(g,`${c.hs.length}× Ø7 насквозь + зенковка Ø10 · ${Object.entries(ty).map(([t,q])=>q+'× конфирмат '+t).join(', ')}`,M+22,y+19,400,8,'#666');
+        dot(g,M+8,y+4,8,c.no);T(g,`${c.A.name} · ${Math.round(L)} × ${Math.round(H)} мм${c.q>1?' · таких деталей: '+c.q:''}`,M+22,y+7,600,10);const ty={};c.hs.forEach(hh=>{const k=hh[2]==='conf'?'Ø7 насквозь + зенковка Ø10 (конфирмат '+hh[3]+')':hh[2]==='scr'?'Ø3 насквозь (шуруп 3,5×16)':'Ø2,5 гл. 10 (держатель задней стенки)';ty[k]=(ty[k]||0)+1});T(g,Object.entries(ty).map(([t,q])=>q+'× '+t).join(' · '),M+22,y+19,400,8,'#666');
         const x0=M+34,y0=y+34;g.strokeStyle='#111';g.lineWidth=0.8;g.fillStyle='#f6f1e7';g.fillRect(x0,y0,w,h);g.strokeRect(x0,y0,w,h);g.fillStyle='#111';g.beginPath();g.moveTo(x0,y0+h);g.lineTo(x0+9,y0+h);g.lineTo(x0,y0+h-9);g.fill();
         const us=[...new Set(c.hs.map(q=>Math.round(q[0])))].sort((a,b)=>a-b),vs=[...new Set(c.hs.map(q=>Math.round(q[1])))].sort((a,b)=>a-b);
         g.strokeStyle='rgba(210,52,44,.35)';g.lineWidth=0.4;c.hs.forEach(([hu,hv])=>{const X=x0+hu*sc,Y=y0+h-hv*sc;g.beginPath();g.moveTo(X,Y);g.lineTo(X,y0+h+7);g.moveTo(X,Y);g.lineTo(x0-7,Y);g.stroke()});
-        c.hs.forEach(([hu,hv])=>{g.fillStyle='#d2342c';g.beginPath();g.arc(x0+hu*sc,y0+h-hv*sc,2.6,0,Math.PI*2);g.fill()});
+        c.hs.forEach(([hu,hv,kd])=>{g.fillStyle=kd==='conf'?'#d2342c':'#1f5fe0';g.beginPath();g.arc(x0+hu*sc,y0+h-hv*sc,kd==='conf'?2.6:1.8,0,Math.PI*2);g.fill()});
         g.font=PF(500,6.5);g.fillStyle='#d2342c';let lx=-1e9;us.forEach(a=>{const X=x0+a*sc;if(X-lx<7)return;lx=X;g.save();g.translate(X-2.3,y0+h+9);g.rotate(Math.PI/2);g.fillText(String(a),0,0);g.restore()});
         let ly2=1e9;g.textAlign='right';vs.forEach(b=>{const Y=y0+h-b*sc;if(ly2-Y<7)return;ly2=Y;g.fillText(String(b),x0-9,Y+2.2)});g.textAlign='left';y=y0+h+34}
       foot(g)}
@@ -1299,12 +1286,12 @@ async function asmPDF(ret){if(pdfBusy)return;const st=asmSteps();if(!st.length)r
     const SIDE={left:'петли слева',right:'петли справа',top:'петли сверху',bottom:'петли снизу'};let n=0;
     for(const s of st){const prevIds=prevK.get(s.key)||[];prevK.set(s.key,prevIds);const cur=s.ids.map(panelById).filter(Boolean),prev=prevIds.map(panelById).filter(Boolean);
       const grp=new Map();cur.forEach(p=>{const k=p.hw?'hw:'+p.hw:noOf.get(p.id)||0;if(!grp.has(k))grp.set(k,{p,q:0});grp.get(k).q++});
-      const fb=fasteners(prev),fa=fasteners(prev.concat(cur)),dc=fa.conf-fb.conf,dsr=fa.scr-fb.scr,links=asmLinks(cur,prev),rk=asmRank(cur[0]||{name:''});
+      const fb=fasteners(prev),fa=fasteners(prev.concat(cur)),dc=fa.conf-fb.conf,dsr=fa.scr-fb.scr,dh=fa.hold-fb.hold,links=asmLinks(cur,prev),rk=asmRank(cur[0]||{name:''});
       const doors=cur.filter(p=>p.door).map(p=>{const I=doorInfo(p);return`${p.name} № ${noOf.get(p.id)||''}: ${SIDE[I.side]}`});
       const card=(lx,ly,cw,maxY)=>{T(g,'Детали шага',lx,ly,600,9);ly+=14;grp.forEach(({p,q},k)=>{if(ly>maxY)return;const d=AX.filter(a=>a!==p.t).map(a=>Math.round(p[SZ[a]])).sort((a,b)=>b-a);g.fillStyle='#f3f1ed';g.fillRect(lx,ly-9,cw,24);
           if(!p.hw)dot(g,lx+10,ly+3,6.5,k);T(g,`${q}×`,lx+22,ly+6,700,11);T(g,(p.hw?(p.hw==='rod'?'Штанга':'Фурнитура'):p.name).slice(0,24),lx+44,ly+2,500,7.5);T(g,p.hw?'':`${d[0]} × ${d[1]} × ${Math.round(thick(p))}`,lx+44,ly+11,400,7,'#777');ly+=28});
-        if(dc>0||dsr>0){ly+=4;T(g,'Крепёж',lx,ly,600,9);ly+=13;if(dc>0){T(g,`${dc}× конфирмат 7×50`,lx,ly,400,8.5);ly+=12}if(dsr>0){T(g,`${dsr}× шуруп 3,5×16`,lx,ly,400,8.5);ly+=12}}return ly};
-      const how=(lx,ly,cw,sz)=>{if(!TX)return ly;T(g,'Как собрать',lx,ly,600,9);ly=W(g,ASMTX[rk]||ASMTX[6],lx,ly+13,cw,sz)+2;
+        if(dc>0||dsr>0||dh>0){ly+=4;T(g,'Крепёж',lx,ly,600,9);ly+=13;if(dc>0){T(g,`${dc}× конфирмат 7×50`,lx,ly,400,8.5);ly+=12}if(dsr>0){T(g,`${dsr}× шуруп 3,5×16`,lx,ly,400,8.5);ly+=12}if(dh>0){T(g,`${dh}× держатель задней стенки`,lx,ly,400,8.5);ly+=12}}return ly};
+      const how=(lx,ly,cw,sz)=>{if(!TX)return ly;T(g,'Как собрать',lx,ly,600,9);ly=W(g,dh>0?'Вставьте заднюю стенку в проём корпуса до упора и выставьте корпус по диагоналям — разница не больше 2 мм. Закрепите стенку держателями изнутри: шуруп 3,5×16 в отверстие Ø2,5 по схеме сверления, держатель прижимает стенку к корпусу.':ASMTX[rk]||ASMTX[6],lx,ly+13,cw,sz)+2;
         if(links.length)ly=W(g,'Крепится к: '+links.slice(0,6).join(', ')+'.',lx,ly,cw,sz,'#111',sz*1.45,500)+2;
         if(dc>0){const cs=new Set(cur.map(p=>p.id)),ps=new Set(prev.map(p=>p.id)).add(-1),nos=[...new Set(CJ.filter(j=>(cs.has(j.a)||cs.has(j.b))&&(cs.has(j.a)||ps.has(j.a))&&(cs.has(j.b)||ps.has(j.b))).map(j=>noOf.get(j.a)).filter(Boolean))].sort((a,b)=>a-b);ly=W(g,`Конфирматы: ${dc} шт. Отверстия Ø7 — в деталях № ${nos.join(', ')} (см. «Схемы сверления»). Приложите деталь, прижмите струбциной, досверлите торец Ø4,5 на 50 мм через отверстие и вкрутите конфирмат.`,lx,ly,cw,sz)+2}
         doors.forEach(t=>ly=W(g,t,lx,ly,cw,sz,'#111',sz*1.45,500));return ly};
@@ -2370,7 +2357,7 @@ $('#exp').addEventListener('click',e=>{const b=e.target.closest('[data-ex]');if(
   if(x==='nestsvg')saveFile(fname('cutting-map.svg'),buildDrawing(true,true).svg);
   else if(x==='nestdxf')saveFile(fname('cutting-map.dxf'),nestDXF());
   else if(x==='zip'){const o=toOBJ();saveFile(fname('package.zip'),zip([{name:'model.rb',data:toRuby()},{name:'model.dae',data:toDAE()},{name:'model.obj',data:o.obj},{name:'model.mtl',data:o.mtl},{name:'details.dxf',data:detailsDXF()},{name:'nesting.dxf',data:nestDXF()},{name:'cutlist.csv',data:toCSV()},{name:'project.json',data:projJSON()}]))}
-  else if(x==='asm')asmDoc();
+  else if(x==='asm')asmPDF();
   else if(x==='pdf')makePDF();else if(x==='csv')saveFile(fname('cutlist.csv'),toCSV());else if(x==='svg')saveFile(fname('drawings.svg'),buildDrawing(true).svg);else if(x==='json')saveFile(fname('project.json'),projJSON())});
 
 async function importModel(f){const ext=f.name.split('.').pop().toLowerCase();
