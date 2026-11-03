@@ -1091,10 +1091,11 @@ const fmtMM=v=>{v=Math.round(v*10000)/10000;return String(v).replace('.',',')+' 
 function faceRect(p,a){const [u,v]=AX.filter(q=>q!==a);return{u,v,Su:p[SZ[u]],Sv:p[SZ[v]]}}
 
 /* ---------- magnet helpers (contact & alignment) ---------- */
-function magnet(p,a,val,ex){const sz=p[SZ[a]];let best=val,bd=MAG;
+function markC(a){const k=AX.indexOf(a),r=[];(state.flines||[]).forEach(l=>{const q=panelById(l.p);if(q&&!q.rot&&Math.abs(l.a[k]-l.b[k])<0.01)r.push(q[a]+l.a[k])});(state.lines||[]).forEach(([A,B])=>{if(Math.abs(A[k]-B[k])<0.01)r.push(A[k])});return r}
+function magnet(p,a,val,ex){const sz=p[SZ[a]];let best=val,bd=MAG;for(const c of markC(a)){let d=Math.abs(val-c);if(d<bd){bd=d;best=c}d=Math.abs(val+sz-c);if(d<bd){bd=d;best=c-sz}}
   for(const o of state.panels){if(o.id===p.id||(ex&&ex.has(o.id)))continue;for(const c of [o[a],o[a]+o[SZ[a]]]){let d=Math.abs(val-c);if(d<bd){bd=d;best=c}d=Math.abs(val+sz-c);if(d<bd){bd=d;best=c-sz}}}
   if(a==='y'&&Math.abs(val)<bd)best=0;return best}
-function magnetEdge(p,a,e){let best=e,bd=MAG;for(const o of state.panels){if(o.id===p.id)continue;for(const c of [o[a],o[a]+o[SZ[a]]]){const d=Math.abs(e-c);if(d<bd){bd=d;best=c}}}return best}
+function magnetEdge(p,a,e){let best=e,bd=MAG;for(const c of markC(a)){const d=Math.abs(e-c);if(d<bd){bd=d;best=c}}for(const o of state.panels){if(o.id===p.id)continue;for(const c of [o[a],o[a]+o[SZ[a]]]){const d=Math.abs(e-c);if(d<bd){bd=d;best=c}}}return best}
 
 /* ---------- interaction ---------- */
 let drag=null,downXY=null,lastMove=0,camDirty=true,op=null,copyMode=false,lastCopy=null;
