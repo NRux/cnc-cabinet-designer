@@ -1201,17 +1201,17 @@ const CONFG=new THREE.Group();scene.add(CONFG);const CONFM2=new THREE.MeshBasicM
 function confSig(ids){return state.panels.filter(p=>ids.has(p.id)).map(p=>[p.id,p.x,p.y,p.z,p.w,p.h,p.d,p.t].join(',')).join(';')}
 const CK=j=>j.kind||'conf',isTop=p=>/Столешниц/.test(p.name);
 const HLB={brk:()=>'Ø3 гл. 12 (мебельный уголок — стык под углом; во второй детали — по месту)',scr2:()=>'Ø3 насквозь (шуруп 4×30 через пласть)',rod:()=>'Ø2,5 гл. 10 (держатель штанги, 2 шурупа)',mang:()=>'Ø2,5 гл. 10 (металлический уголок)',conf:(t,b)=>b?'Ø5 гл. '+(t==='7×70'?72:52)+' в торец — при сборке (конфирмат '+t+')':'Ø7 насквозь + зенковка Ø10 (конфирмат '+t+')',scr:()=>'Ø3 насквозь (шуруп 3,5×16)',hold:()=>'Ø2,5 гл. 10 (держатель задней стенки)',angle:()=>'Ø3 гл. 12 (мебельный уголок)',tie:()=>'Ø5 насквозь (межсекционная стяжка)',pin:()=>'Ø5 гл. 10 (полкодержатель)',hinge:(t,b)=>b?'Ø2,5 гл. 10 (планка петли, 2 на петлю)':'Ø35 гл. 13 (чашка петли '+t+')',slide:(t,b)=>b?'Ø2,5 гл. 8 (направляющая, бок ящика)':'Ø2,5 гл. 10 (направляющая '+t+', корпус)'};
-function confCalc(ps,step,off){const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.door&&!p.hid),out=[],onA=new Map(),OPT=Object.assign({pins:false,hinge:true,slide:true},state.conf&&state.conf.opt||{});
+function confCalc(ps,step,off){const B=ps.filter(p=>!p.hw&&!p.rot&&!p.door&&!p.hid),out=[],onA=new Map(),OPT=Object.assign({pins:false,hinge:true,slide:true},state.conf&&state.conf.opt||{});
   const spread=(L,st,of,min2)=>{if(L<2*of+20)return[L/2];const n=Math.max(min2?2:1,Math.ceil((L-2*of)/st)+1);return n===1?[L/2]:Array.from({length:n},(_,i)=>of+i*(L-2*of)/(n-1))};
   const touch=(q,P,sgn)=>{const t=P.t,T=thick(P),f=sgn>0?P[t]+T:P[t],g=sgn>0?q[t]:q[t]+q[SZ[t]];return Math.abs(f-g)<0.6&&AX.filter(x=>x!==t).every(x=>ovl(q[x],q[x]+q[SZ[x]],P[x],P[x]+P[SZ[x]])>5)};
   const inner=(P,A)=>{let pl=0,mi=0;B.forEach(q=>{if(q===P||q===A||isTop(q))return;if(touch(q,P,1))pl++;if(touch(q,P,-1))mi++});if(pl!==mi)return pl>mi?1:-1;const t=P.t;return Math.sign(A[t]+A[SZ[t]]/2-(P[t]+thick(P)/2))||1};
   const R1=v=>+v.toFixed(1),arrP=q=>[R1(q.x),R1(q.y),R1(q.z)];
-  for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j],o=AX.map(x=>ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]]));const k=o.findIndex((v,m)=>Math.abs(v)<0.6&&o.every((w,n)=>n===m||w>5));if(k<0)continue;
+  for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const a=B[i],b=B[j];if((a.drw||b.drw)&&a.drw!==b.drw)continue;const o=AX.map(x=>ovl(a[x],a[x]+a[SZ[x]],b[x],b[x]+b[SZ[x]]));const k=o.findIndex((v,m)=>Math.abs(v)<0.6&&o.every((w,n)=>n===m||w>5));if(k<0)continue;
     const ax=AX[k];
     if(a.t===ax&&b.t===ax){if(ax==='y'||thick(a)<14||thick(b)<14||isTop(a)||isTop(b))continue;const w=AX.find(x=>x!=='y'&&x!==ax),y0=Math.max(a.y,b.y),y1=Math.min(a.y+a.h,b.y+b.h),w0=Math.max(a[w],b[w]),w1=Math.min(a[w]+a[SZ[w]],b[w]+b[SZ[w]]);if(y1-y0<250||w1-w0<200)continue;
       const plane=b[ax]>a[ax]?a[ax]+thick(a):a[ax],ys=y1-y0<450?[(y0+y1)/2]:[y0+100,y1-100],pts=[];ys.forEach(yy=>[w0+60,w1-60].forEach(ww=>{const q={y:yy};q[ax]=plane;q[w]=ww;pts.push(arrP(q))}));
       out.push({a:a.id,b:b.id,ax,s:b[ax]>a[ax]?1:-1,kind:'tie',typ:'Ø5',pts,pts2:pts});continue}
-    let A,P;if(a.t===ax&&b.t!==ax){A=a;P=b}else if(b.t===ax&&a.t!==ax){A=b;P=a}else continue;if(isTop(P))continue;
+    let A,P;if(a.t===ax&&b.t!==ax){A=a;P=b}else if(b.t===ax&&a.t!==ax){A=b;P=a}else continue;if(isTop(P)||/Фасад/.test(A.name))continue;
     const tA=P.t,lA=AX.find(x=>x!==ax&&x!==tA);if(!lA)continue;const l0=Math.max(A[lA],P[lA]),L=Math.min(A[lA]+A[SZ[lA]],P[lA]+P[SZ[lA]])-l0;if(L<40)continue;
     const TA=thick(A),TP=thick(P),toP=P[ax]>=A[ax]+TA/2?1:-1,cf=toP>0?A[ax]+TA:A[ax];let kind,typ,pos,plane,c,pts2=null;
     if(isTop(A)){if(TP<14)continue;kind='angle';typ='20×20';pos=spread(L,400,80,true);plane=cf;const sd=inner(P,A);c=sd>0?P[tA]+TP+12:P[tA]-12;
@@ -1219,6 +1219,7 @@ function confCalc(ps,step,off){const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.do
     else if(TA<=8&&TP>=14){kind='scr';typ='3,5×16';pos=spread(L,150,30,true);plane=toP>0?A[ax]:A[ax]+TA;c=P[tA]+TP/2}
     else if(TA>8&&TP<=8){kind='hold';typ='3,5×16';pos=spread(L,400,60,L>=200);plane=cf;const sd=inner(P,A);c=P[tA]+TP/2+sd*(TP/2+8)}
     else if(TA>8&&TP>=14&&OPT.pins&&/Полка/.test(P.name)&&tA==='y'){kind='pin';typ='Ø5';pos=L>=160?[37,L-37]:[L/2];plane=cf;c=P.y-5}
+    else if(TA>8&&TP>=8&&TP<14){kind='scr2';typ='3,5×30';pos=spread(L,150,30,true);plane=toP>0?A[ax]:A[ax]+TA;c=P[tA]+TP/2}
     else if(TA>8&&TP>=14){kind='conf';typ=TA<=19?'7×50':'7×70';pos=spread(L,step,off,true);plane=toP>0?A[ax]:A[ax]+TA;c=P[tA]+TP/2}
     else continue;
     const arr=onA.get(A.id)||[];onA.set(A.id,arr);
@@ -1226,21 +1227,21 @@ function confCalc(ps,step,off){const B=ps.filter(p=>!p.hw&&!p.rot&&!p.drw&&!p.do
     const jj={a:A.id,b:P.id,ax,s:toP,kind,typ,pts,...(pts2?{pts2}:{})};
     if(kind==='conf'){const ia=AX.indexOf(ax);jj.plug=pts.filter(q=>!B.some(r=>r!==A&&r!==P&&(Math.abs(r[ax]-q[ia])<0.6||Math.abs(r[ax]+r[SZ[ax]]-q[ia])<0.6)&&AX.every((x,m)=>x===ax||(q[m]>r[x]&&q[m]<r[x]+r[SZ[x]])))).length}
     out.push(jj)}
-  {const done=new Set(out.map(j=>Math.min(j.a,j.b)+'_'+Math.max(j.a,j.b))),G=ps.filter(p=>!p.hw&&!p.drw&&!p.door&&!p.hid);
+  {const done=new Set(out.map(j=>Math.min(j.a,j.b)+'_'+Math.max(j.a,j.b))),G=ps.filter(p=>!p.hw&&!p.door&&!p.hid);
     const OB=p=>{const q=p.rot?rotQ(p):new THREE.Quaternion(),c=new THREE.Vector3(p.x+p.w/2,p.y+p.h/2,p.z+p.d/2),ax=[new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,1)].map(v=>v.applyQuaternion(q));return{p,c,ax,h:[p.w/2,p.h/2,p.d/2],ti:AX.indexOf(p.t),R:Math.hypot(p.w,p.h,p.d)/2}};
     const sd=(O,pt)=>{const d=pt.clone().sub(O.c),dq=[0,1,2].map(k=>Math.abs(d.dot(O.ax[k]))-O.h[k]);return dq.every(x=>x<0)?Math.max(...dq):Math.hypot(...dq.map(x=>Math.max(0,x)))};
     const smp=O=>{const r=[],n=7;for(let k=0;k<3;k++)for(const sg of[-1,1]){const [i,j]=[0,1,2].filter(x=>x!==k);for(let a=0;a<n;a++)for(let b=0;b<n;b++){const u=-1+2*a/(n-1),v=-1+2*b/(n-1);r.push(O.c.clone().addScaledVector(O.ax[k],sg*O.h[k]).addScaledVector(O.ax[i],u*O.h[i]).addScaledVector(O.ax[j],v*O.h[j]))}}return r};
     const OBs=new Map(G.map(p=>[p.id,OB(p)])),SM=new Map();const S_=p=>SM.get(p.id)||(SM.set(p.id,smp(OBs.get(p.id))),SM.get(p.id));
-    for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++){const a=G[i],b=G[j],key=Math.min(a.id,b.id)+'_'+Math.max(a.id,b.id);if(done.has(key))continue;const A0=OBs.get(a.id),B0=OBs.get(b.id);if(A0.c.distanceTo(B0.c)>A0.R+B0.R+2)continue;
+    for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++){const a=G[i],b=G[j],key=Math.min(a.id,b.id)+'_'+Math.max(a.id,b.id);if(done.has(key)||((a.drw||b.drw)&&a.drw!==b.drw))continue;const A0=OBs.get(a.id),B0=OBs.get(b.id);if(A0.c.distanceTo(B0.c)>A0.R+B0.R+2)continue;
       const PT=-Math.min(12,Math.max(3,Math.min(thick(a),thick(b))*0.7)),cp=S_(b).filter(q=>{const d=sd(A0,q);return d>PT&&d<1.2}).concat(S_(a).filter(q=>{const d=sd(B0,q);return d>PT&&d<1.2}));if(cp.length<2)continue;
       let e0=cp[0],e1=cp[1],md=-1;for(const x of cp)for(const y of cp){const d=x.distanceToSquared(y);if(d>md){md=d;e0=x;e1=y}}if(Math.sqrt(md)<30)continue;
       const nA=A0.ax[A0.ti],nB=B0.ax[B0.ti],dt=Math.abs(nA.dot(nB)),onFace=(O,pts)=>pts.filter(q=>Math.abs(Math.abs(q.clone().sub(O.c).dot(O.ax[O.ti]))-O.h[O.ti])<-PT+0.5).length>=pts.length*0.6;
       let F,E,kind,typ,st,of,ee=0;
-      if(dt>0.996){const tA=thick(a),tB=thick(b);F=tA<=tB?A0:B0;E=F===A0?B0:A0;kind='scr2';typ='4×30';st=200;of=40}
-      else{if(onFace(A0,cp)){F=A0;E=B0}else if(onFace(B0,cp)){F=B0;E=A0}else{F=A0;E=B0;ee=1}const tF=thick(F.p),tE=thick(E.p);if(!ee&&tF<=8&&tE>=14){kind='scr';typ='3,5×16';st=150;of=30}else if(!ee&&dt<0.09&&tF>8&&tE>=14){kind='conf';typ=tF<=19?'7×50':'7×70';st=step;of=off}else{kind='brk';typ='уголок';st=400;of=60}}
+      if(dt>0.996){const tA=thick(a),tB=thick(b);F=tA<=tB?A0:B0;E=F===A0?B0:A0;if(/Фасад/.test(F.p.name)&&!/Фасад/.test(E.p.name))[F,E]=[E,F];kind='scr2';typ='4×30';st=200;of=40}
+      else{if(onFace(A0,cp)){F=A0;E=B0}else if(onFace(B0,cp)){F=B0;E=A0}else{F=A0;E=B0;ee=1}if(/Фасад/.test(F.p.name))continue;const tF=thick(F.p),tE=thick(E.p);if(!ee&&tF<=8&&tE>=14){kind='scr';typ='3,5×16';st=150;of=30}else if(!ee&&dt<0.09&&tF>8&&tE>=14){kind='conf';typ=tF<=19?'7×50':'7×70';st=step;of=off}else{kind='brk';typ='уголок';st=400;of=60}}
       const nF=F.ax[F.ti],nE=E.ax[E.ti],sgE=Math.sign(E.c.clone().sub(F.c).dot(nF))||1,dir=e1.clone().sub(e0),L=dir.length();dir.normalize();
-      const pos=spread(L,st,of,L>=120),pts=pos.map(v=>{let q=e0.clone().addScaledVector(dir,v);if(kind!=='scr2'&&!ee)q.addScaledVector(nE,-q.clone().sub(E.c).dot(nE));const dn=q.clone().sub(F.c).dot(nF);
-        if(kind==='brk'){q.addScaledVector(nF,-dn+sgE*F.h[F.ti]);let w=F.c.clone().sub(q);w.addScaledVector(nF,-w.dot(nF));if(w.lengthSq()>1e-6)q.addScaledVector(w.normalize(),14)}else q.addScaledVector(nF,-dn-sgE*F.h[F.ti]);return[+q.x.toFixed(1),+q.y.toFixed(1),+q.z.toFixed(1)]});
+      let pts;if(kind==='scr2'){const [i1,i2]=[0,1,2].filter(k=>k!==F.ti),U=F.ax[i1],V=F.ax[i2],us=cp.map(q=>q.clone().sub(F.c).dot(U)),vs=cp.map(q=>q.clone().sub(F.c).dot(V)),u0=Math.min(...us),u1=Math.max(...us),v0=Math.min(...vs),v1=Math.max(...vs),iu=Math.min(40,(u1-u0)/4),iv=Math.min(40,(v1-v0)/4),UU=(u1-u0)<100?[(u0+u1)/2]:[u0+iu,u1-iu],VV=(v1-v0)<100?[(v0+v1)/2]:[v0+iv,v1-iv];pts=[];UU.forEach(a=>VV.forEach(b=>{const q=F.c.clone().addScaledVector(U,a).addScaledVector(V,b).addScaledVector(nF,-sgE*F.h[F.ti]);pts.push([+q.x.toFixed(1),+q.y.toFixed(1),+q.z.toFixed(1)])}))}else{const pos=spread(L,st,of,L>=120);pts=pos.map(v=>{let q=e0.clone().addScaledVector(dir,v);if(kind!=='scr2'&&!ee)q.addScaledVector(nE,-q.clone().sub(E.c).dot(nE));const dn=q.clone().sub(F.c).dot(nF);
+        if(kind==='brk'){q.addScaledVector(nF,-dn+sgE*F.h[F.ti]);let w=F.c.clone().sub(q);w.addScaledVector(nF,-w.dot(nF));if(w.lengthSq()>1e-6)q.addScaledVector(w.normalize(),14)}else q.addScaledVector(nF,-dn-sgE*F.h[F.ti]);return[+q.x.toFixed(1),+q.y.toFixed(1),+q.z.toFixed(1)]})}
       out.push({a:F.p.id,b:E.p.id,ax:F.p.t,s:sgE,n:(kind==='brk'?nF.clone().multiplyScalar(-sgE):nF.clone().multiplyScalar(sgE)).toArray().map(v=>+v.toFixed(4)),kind,typ,pts,gen:1})}}
   if(OPT.hinge)ps.filter(d=>d.door&&!d.hid&&!d.rot).forEach(d=>{const I=doorInfo(d),t=I.t,sa=I.sideAx,ea=I.eAx,T=thick(d),inn=I.s>0?d[t]:d[t]+T,Ld=d[SZ[ea]],n=Ld<=900?2:Ld<=1600?3:Ld<=2000?4:5,pos=n===2?[100,Ld-100]:Array.from({length:n},(_,i)=>100+i*(Ld-200)/(n-1)),cx=I.lo?d[sa]+22.5:d[sa]+d[SZ[sa]]-22.5;
     const pts=pos.map(v=>{const q={};q[t]=inn;q[sa]=cx;q[ea]=d[ea]+v;return arrP(q)});
