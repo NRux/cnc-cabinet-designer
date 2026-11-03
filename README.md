@@ -6,7 +6,7 @@ Design plywood furniture in the browser. Draw, cut, drill — get drawings and a
 
 ![Kitchen, doors and drawers open](docs/kitchen.png)
 
-## 道具 · Tools
+## Tools
 
 - SketchUp-like 3D modelling — push/pull, move, rotate, tape, snaps
 - Parametric furniture — wardrobe, kitchen, dresser, shelf, bedside, table
