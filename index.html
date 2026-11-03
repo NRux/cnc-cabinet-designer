@@ -1543,7 +1543,11 @@ function applyPush(amt){const p=op.p,s=op.start,a=op.a,k=SZ[a];let size=Math.max
   (p.feat||[]).forEach(f=>{const [u,v]=AX.filter(q=>q!==f.a);if(a===u||a===v){const S=p[SZ[a]],lo=a===u?'u0':'v0',hi=a===u?'u1':'v1';if(op.sign<0){const sh=size-s[k];f[lo]+=sh;f[hi]+=sh}f[lo]=Math.max(0,Math.min(f[lo],S-1));f[hi]=Math.max(f[lo]+1,Math.min(f[hi],S))}});
   buildMesh(p);updateInspVals();setVCB(a===p.t?'Толщина':'Расстояние',fmtMM(a===p.t?size:amt),false);showFace(faceHL,p,a,op.sign)}
 function applyRPush(amt){const p=op.p,T=p[SZ[op.a]];let d=Math.max(-3000,Math.min(T,op.start-amt));if(T-d<0.6)d=T;if(Math.abs(d)<0.0001)d=0;op.f.depth=r4(d);buildMesh(p);setVCB(op.f.depth>=T?'Сквозь':op.f.depth<0?'Выдавить':'Глубина',fmtMM(Math.abs(op.f.depth)),false);showRegion(faceHL,p,op.a,op.sign,op.f,Math.min(op.f.depth,T-0.6))}
-function finishSub(){if(!op)return;const p=op.p;opEnd();if(p)buildMesh(p);save();fitShadows();renderInsp()}
+function finishSub(){if(!op)return;const p=op.p;let np=null;
+  if(p&&!p.hw&&!p.rot&&op.type==='push'&&op.a===p.t){const s0=op.start,a=op.a,k=SZ[a],g=r4(p[k]-s0[k]);if(g>0.5){np={id:nextId++,name:'Накладка',x:s0.x,y:s0.y,z:s0.z,w:s0.w,h:s0.h,d:s0.d,t:a,mat:p.mat};np[k]=g;np[a]=op.sign>0?s0[a]+s0[k]:r4(s0[a]-g);p[a]=s0[a];p[k]=s0[k]}}
+  if(p&&!p.hw&&!p.rot&&op.type==='rpush'&&op.f&&op.f.depth<0&&!op.f.c){const f=op.f,a=op.a,k=SZ[a],[u,v]=AX.filter(q=>q!==a),g=r4(-f.depth),face=op.sign>0?p[a]+p[k]:p[a];np={id:nextId++,name:'Накладка',t:a,mat:p.mat};np[u]=r4(p[u]+f.u0);np[SZ[u]]=r4(f.u1-f.u0);np[v]=r4(p[v]+f.v0);np[SZ[v]]=r4(f.v1-f.v0);np[a]=op.sign>0?face:r4(face-g);np[k]=g;if(f.rr)np.cr=f.rr;p.feat=(p.feat||[]).filter(q=>q!==f)}
+  if(np){if(p.grp)np.grp=p.grp;state.panels.push(np)}
+  opEnd();if(p)buildMesh(p);if(np){buildMesh(np);setSel(np.id);toast('Выдавлено отдельной деталью «Накладка» — свой материал и размеры')}save();fitShadows();renderInsp()}
 /* move a selected face, edge, region or region edge */
 function startSubMove(pt){const S=state.sub,p=panelById(S.id);pushUndo();
   if(S.kind==='face'){op={type:'push',p,a:S.a,sign:S.s,from:pt.clone(),start:{...p}}}
