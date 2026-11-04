@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 </head>
 <body>
-<title>Artem Terekhov Bureau</title>
+<title>Cabinet Designer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -286,9 +286,9 @@ div.cf{grid-template-columns:1fr 2fr}.cseg{grid-template-columns:repeat(auto-fit
 
 <div class="app">
 <header>
-  <div class="brand" aria-label="artem terekhov">
+  <div class="brand" aria-label="Cabinet Designer">
 
-    <span class="wm">artem terekhov</span>
+    <span class="wm">Cabinet Designer</span>
   </div>
   <nav aria-label="Sections">
     <a href="#build" data-v="build">Designer</a>
@@ -2416,9 +2416,9 @@ function buildDrawing(forFile,nestOnly){const P=BRD();if(!P.length)return{svg:`<
   if(OV.length){oy+=rowH+k*1.5;rowH=0;OV.forEach(t=>{o.push(Tx(fx,oy,k*.9,'⚠ '+t,'s'));oy+=k*1.5})}
   secClose(oy+rowH-k*1.5);oy+=rowH+G*.4;
   if(nestOnly){o.push(Tx(fx,oy,k*1.1,'Parts','mh'));oy+=k*1.8;parts.forEach(pt=>{o.push(`<rect x="${f1(fx)}" y="${f1(oy-k*.9)}" width="${f1(k*1.1)}" height="${f1(k*1.1)}" style="fill:${NPAL[(pt.no-1)%NPAL.length]};stroke:#999"/>`,Tx(fx+k*1.7,oy,k*.9,`${pt.no} — ${pt.names.join(', ')} · ${pt.L} × ${pt.W} × ${pt.T} mm · ${MATS[pt.mat].short} · ${pt.qty} pcs.`,'s'));oy+=k*1.5});oy+=k*2}
-  const tw=k*26,th=k*8.4,tx=Math.max(ex-tw,fx),dt=new Date().toLocaleDateString('ru-RU');
+  const tw=k*26,th=k*8.4,tx=Math.max(ex-tw,fx),dt=new Date().toLocaleDateString('en-US');
   o.push(`<rect class="tb" x="${f1(tx)}" y="${f1(oy)}" width="${f1(tw)}" height="${f1(th)}"/><line class="tb" x1="${f1(tx)}" y1="${f1(oy+k*3)}" x2="${f1(tx+tw)}" y2="${f1(oy+k*3)}"/><line class="tb" x1="${f1(tx+tw*.55)}" y1="${f1(oy+k*3)}" x2="${f1(tx+tw*.55)}" y2="${f1(oy+th)}"/>`);
-  o.push(Tx(tx+k,oy+k*2,k*1.3,'artem terekhov','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Parts: ${BRD().length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Dimensions in mm','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
+  o.push(Tx(tx+k,oy+k*2,k*1.3,'Cabinet Designer','h'),Tx(tx+k,oy+k*4.8,k*.95,state.name,'s'),Tx(tx+k,oy+k*6.6,k*.8,`Parts: ${BRD().length}`,'s'),Tx(tx+tw*.55+k,oy+k*4.8,k*.8,'Dimensions in mm','s'),Tx(tx+tw*.55+k,oy+k*6.6,k*.8,dt,'s'));
   oy+=th;ex=Math.max(ex,tx+tw);
   {const Wd=ex+k*4;for(let i=SEC.length-1;i>=0;i--){const S=SEC[i];if(S.y1==null)continue;o.splice(S.i,0,`<rect class="secbg" x="${f1(-k*1.6)}" y="${f1(S.y0-k*2.8)}" width="${f1(Wd)}" height="${f1(S.y1-S.y0+k*2.8)}" rx="${f1(k*1.2)}"/>`)}}
   const box=[-k*2,-k*3,ex+k*6,oy+k*5];
@@ -2466,11 +2466,11 @@ function toDAE(){const mats=Object.entries(MATS);let geo='',nodes='';
     geo+=`<geometry id="g${i}" name="${esc(p.name)}"><mesh><source id="g${i}-p"><float_array id="g${i}-pa" count="24">${c}</float_array><technique_common><accessor source="#g${i}-pa" count="8" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source><source id="g${i}-n"><float_array id="g${i}-na" count="18">${NRM.flat().join(' ')}</float_array><technique_common><accessor source="#g${i}-na" count="6" stride="3"><param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source><vertices id="g${i}-v"><input semantic="POSITION" source="#g${i}-p"/></vertices><triangles material="m_${p.mat}" count="12"><input semantic="VERTEX" source="#g${i}-v" offset="0"/><input semantic="NORMAL" source="#g${i}-n" offset="1"/><p>${tri}</p></triangles></mesh></geometry>`;
     nodes+=`<node id="n${i}" name="${esc(p.name)}_${thick(p)}mm"><instance_geometry url="#g${i}"><bind_material><technique_common><instance_material symbol="m_${p.mat}" target="#m_${p.mat}"/></technique_common></bind_material></instance_geometry></node>`});
   return`<?xml version="1.0" encoding="utf-8"?>
-<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1"><asset><contributor><authoring_tool>Artyom Terekhov Bureau</authoring_tool></contributor><unit name="millimeter" meter="0.001"/><up_axis>Y_UP</up_axis></asset>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1"><asset><contributor><authoring_tool>Cabinet Designer</authoring_tool></contributor><unit name="millimeter" meter="0.001"/><up_axis>Y_UP</up_axis></asset>
 <library_effects>${mats.map(([k,m])=>`<effect id="e_${k}"><profile_COMMON><technique sid="c"><lambert><diffuse><color>${m.col.join(' ')} 1</color></diffuse></lambert></technique></profile_COMMON></effect>`).join('')}</library_effects>
 <library_materials>${mats.map(([k,m])=>`<material id="m_${k}" name="${k}"><instance_effect url="#e_${k}"/></material>`).join('')}</library_materials>
 <library_geometries>${geo}</library_geometries><library_visual_scenes><visual_scene id="s" name="${esc(state.name)}">${nodes}</visual_scene></library_visual_scenes><scene><instance_visual_scene url="#s"/></scene></COLLADA>`}
-function toOBJ(){let s='# Artyom Terekhov Bureau · mm\nmtllib model.mtl\n',vi=1;BRD().forEach(p=>{s+=`o ${p.name.replace(/\s/g,'_')}_${p.id}\nusemtl ${p.mat}\n`;cornersMM(p).forEach(c=>s+=`v ${c.join(' ')}\n`);FACES.forEach(f=>s+=`f ${f.map(i=>i+vi).join(' ')}\n`);vi+=8});
+function toOBJ(){let s='# Cabinet Designer · mm\nmtllib model.mtl\n',vi=1;BRD().forEach(p=>{s+=`o ${p.name.replace(/\s/g,'_')}_${p.id}\nusemtl ${p.mat}\n`;cornersMM(p).forEach(c=>s+=`v ${c.join(' ')}\n`);FACES.forEach(f=>s+=`f ${f.map(i=>i+vi).join(' ')}\n`);vi+=8});
   return{obj:s,mtl:Object.entries(MATS).map(([k,m])=>`newmtl ${k}\nKd ${m.col.join(' ')}\n`).join('\n')}}
 function dxf(lines,texts){let s='0\nSECTION\n2\nHEADER\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n';
   lines.forEach(([x1,y1,x2,y2,l])=>s+=`0\nLINE\n8\n${l}\n10\n${x1}\n20\n${y1}\n30\n0\n11\n${x2}\n21\n${y2}\n31\n0\n`);texts.forEach(([x,y,h,t,l])=>s+=`0\nTEXT\n8\n${l}\n10\n${x}\n20\n${y}\n30\n0\n40\n${h}\n1\n${t}\n`);return s+'0\nENDSEC\n0\nEOF\n'}
@@ -2482,18 +2482,18 @@ function detailsDXF(){const L=[],T=[];let x=0;partsList().forEach(p=>{L.push(...
 function nestDXF(){const L=[],T=[];let y=0;nestAll().forEach(g=>g.sheets.forEach((s,i)=>{L.push(...rectL(0,y,g.SW,g.SH,'SHEET'));T.push([0,y+g.SH+30,30,`${g.T}mm ${tr[g.mat]} sheet ${i+1}/${g.sheets.length}`,'TEXT']);
   s.parts.forEach(p=>{const py=y+g.SH-p.y-p.h;L.push(...rectL(p.x,py,p.w,p.h,'CUT'));T.push([p.x+10,py+10,Math.min(30,p.h/3),`D${p.no}`,'TEXT'])});y+=g.SH+200}));return dxf(L,T)}
 function toRuby(){const C=(x,y,z)=>`Geom::Point3d.new(${r4(x)}.mm,${r4(-z)}.mm,${r4(y)}.mm)`;const col={birch:[226,205,164],oiled:[214,174,122],black:[42,40,38]};
-  let rb=`# artem terekhov — model for SketchUp: ${state.name}\n# SketchUp → Window → Ruby Console → load 'path/to/model.rb', then File → Save As .skp\nmodel=Sketchup.active_model\nmodel.start_operation('artem terekhov',true)\nents=model.active_entities\nmats={}\n`;
-  Object.entries(MATS).forEach(([k,m])=>{rb+=`mats['${k}']=(model.materials['AT ${m.short}']||model.materials.add('AT ${m.short}'))\nmats['${k}'].color=Sketchup::Color.new(${col[k].join(',')})\n`});
-  rb+=`def at_face(ents,pts,out)\n  f=ents.add_face(pts)\n  f.reverse! if f.normal.dot(out)<0\n  f\nend\n`;
+  let rb=`# Cabinet Designer — model for SketchUp: ${state.name}\n# SketchUp → Window → Ruby Console → load 'path/to/model.rb', then File → Save As .skp\nmodel=Sketchup.active_model\nmodel.start_operation('Cabinet Designer',true)\nents=model.active_entities\nmats={}\n`;
+  Object.entries(MATS).forEach(([k,m])=>{rb+=`mats['${k}']=(model.materials['Cabinet ${m.short}']||model.materials.add('Cabinet ${m.short}'))\nmats['${k}'].color=Sketchup::Color.new(${col[k].join(',')})\n`});
+  rb+=`def cabinet_face(ents,pts,out)\n  f=ents.add_face(pts)\n  f.reverse! if f.normal.dot(out)<0\n  f\nend\n`;
   const OUT={x:'Geom::Vector3d.new(1,0,0)',y:'Geom::Vector3d.new(0,0,1)',z:'Geom::Vector3d.new(0,-1,0)'};
   BRD().forEach(p=>{const n=p.name.replace(/'/g,"\\'");rb+=`g=ents.add_group\ng.name='${n} ${thick(p)}mm'\ne=g.entities\n`;
-    rb+=`f=at_face(e,[${C(p.x,p.y,p.z)},${C(p.x+p.w,p.y,p.z)},${C(p.x+p.w,p.y,p.z+p.d)},${C(p.x,p.y,p.z+p.d)}],Geom::Vector3d.new(0,0,-1))\nf.pushpull(-${r4(p.h)}.mm)\n`;
+    rb+=`f=cabinet_face(e,[${C(p.x,p.y,p.z)},${C(p.x+p.w,p.y,p.z)},${C(p.x+p.w,p.y,p.z+p.d)},${C(p.x,p.y,p.z+p.d)}],Geom::Vector3d.new(0,0,-1))\nf.pushpull(-${r4(p.h)}.mm)\n`;
     (p.feat||[]).filter(f=>Math.abs(f.depth)>0.01).forEach(f=>{const [u,v]=AX.filter(q=>q!==f.a),T=p[SZ[f.a]],F=f.s>0?p[f.a]+T:p[f.a];const P=(uu,vv)=>{const o={};o[u]=p[u]+uu;o[v]=p[v]+vv;o[f.a]=F;return C(o.x,o.y,o.z)};
-      const out=f.s>0?OUT[f.a]:OUT[f.a]+'.reverse';rb+=f.c?`ed=e.add_circle(${P((f.u0+f.u1)/2,(f.v0+f.v1)/2)},${OUT[f.a]},${r4((f.u1-f.u0)/2)}.mm,48)\nf=ed[0].faces.min_by{|x|x.area}\nf.reverse! if f.normal.dot(${out})<0\nf.pushpull(`:`f=at_face(e,[${P(f.u0,f.v0)},${P(f.u1,f.v0)},${P(f.u1,f.v1)},${P(f.u0,f.v1)}],${out})\nf.pushpull(${f.depth>0?'-':''}${r4(Math.min(Math.abs(f.depth),T))}.mm)\n`});
+      const out=f.s>0?OUT[f.a]:OUT[f.a]+'.reverse';rb+=f.c?`ed=e.add_circle(${P((f.u0+f.u1)/2,(f.v0+f.v1)/2)},${OUT[f.a]},${r4((f.u1-f.u0)/2)}.mm,48)\nf=ed[0].faces.min_by{|x|x.area}\nf.reverse! if f.normal.dot(${out})<0\nf.pushpull(`:`f=cabinet_face(e,[${P(f.u0,f.v0)},${P(f.u1,f.v0)},${P(f.u1,f.v1)},${P(f.u0,f.v1)}],${out})\nf.pushpull(${f.depth>0?'-':''}${r4(Math.min(Math.abs(f.depth),T))}.mm)\n`});
     rb+=`g.material=mats['${p.mat}']\n`;if(p.rot){const c=pCenter(p),q=rotQ(p);if(q.w<0)q.set(-q.x,-q.y,-q.z,-q.w);const an=2*Math.acos(Math.min(1,q.w)),sn=Math.sin(an/2)||1,f=v=>(+v.toFixed(9));rb+=`g.transform!(Geom::Transformation.rotation(${C(c.x*1000,c.y*1000,c.z*1000)},Geom::Vector3d.new(${f(q.x/sn)},${f(-q.z/sn)},${f(q.y/sn)}),${f(an*180/Math.PI)}.degrees))\n`}});
   rb+=`model.commit_operation\nUI.messagebox('Done: ${BRD().length} parts. Save the model as .skp')\n`;return rb}
 function toCSV(){const rows=[['No.','Name','Length, mm','Width, mm','Thickness, mm','Quantity','Material','Area, m²']];partsList().forEach(p=>rows.push(['P'+p.no,p.names.join(', '),p.L,p.W,p.T,p.qty,MATS[p.mat].name+(p.cn?', '+p.cn:''),(p.L*p.W*p.qty/1e6).toFixed(3).replace('.',',')]));return'﻿'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n')}
-const projJSON=()=>JSON.stringify({app:'bureau-tereKhov',version:2,name:state.name,panels:state.panels,guides:state.guides,prods:state.prods||[],conf:state.conf||null},null,1);
+const projJSON=()=>JSON.stringify({app:'cnc-cabinet-designer',version:2,name:state.name,panels:state.panels,guides:state.guides,prods:state.prods||[],conf:state.conf||null},null,1);
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
 function zip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
@@ -2541,9 +2541,8 @@ $('#openFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)ret
 
 
 /* ---------- PDF product sheet ---------- */
-const MARK=new Path2D('M20 112 C36 112 42 98 47 84 L70 20 L96 98 C99 108 108 109 114 100 L138 64 H198 M170 30 L151 106 C148 116 157 119 164 113');
 const PF=(w,sz)=>`${w} ${sz}px Onest, "Helvetica Neue", Arial, sans-serif`;
-function drawLogo(g,x,y,h){g.save();g.fillStyle='#111';g.font=PF(700,h*0.82);if('letterSpacing' in g)g.letterSpacing=(-h*0.04)+'px';g.fillText('artem terekhov',x,y-h*0.12);g.restore()}
+function drawLogo(g,x,y,h){g.save();g.fillStyle='#111';g.font=PF(700,h*0.82);if('letterSpacing' in g)g.letterSpacing=(-h*0.04)+'px';g.fillText('Cabinet Designer',x,y-h*0.12);g.restore()}
 function wrap(g,t,x,y,w,lh,font){g.font=font;let line='';for(const word of t.split(' ')){const test=line?line+' '+word:word;if(g.measureText(test).width>w&&line){g.fillText(line,x,y);y+=lh;line=word}else line=test}if(line)g.fillText(line,x,y);return y+lh}
 function drawViews(g,x0,y0,wA,hA){const b=bbox(),W=b.x1-b.x0,H=b.y1-b.y0,D=b.z1-b.z0,gap=34,k=Math.min((wA-2*gap)/(2*W+D),(hA-26)/Math.max(H,D));
   const box=(x,y,w,h)=>{g.fillStyle='#fff';g.fillRect(x,y,w,h);g.strokeRect(x,y,w,h)};g.strokeStyle='#111';g.lineWidth=0.55;
@@ -2582,7 +2581,7 @@ function sheetPages(imgs){const PW=595.28,PH=841.89,S=2480/PW,M=45,pages=[];
   const area=BRD().reduce((a,p)=>{const d=AX.filter(q=>q!==p.t).map(q=>p[SZ[q]]);return a+d[0]*d[1]},0)/1e6;
   const thks=[...new Set(BRD().map(thick))].sort((a,c)=>c-a),mats=[...new Set(BRD().map(p=>p.mat))];
   let g=newPage();g.fillStyle='#111';
-  g.font=PF(600,19);g.fillText(state.name,M,72);g.font=PF(300,14);g.fillText('Plywood furniture',M,90);g.font=PF(400,8);g.fillText(`Design: Artyom Terekhov, ${new Date().getFullYear()}`,M,110);
+  g.font=PF(600,19);g.fillText(state.name,M,72);g.font=PF(300,14);g.fillText('Plywood furniture',M,90);g.font=PF(400,8);g.fillText(`Generated with Cabinet Designer · ${new Date().getFullYear()}`,M,110);
   wrap(g,`${state.name} consists of ${BRD().length} parts birch plywood with thicknesses ${thks.join(', ')} mm. Dimensions ${nf(W)} × ${nf(D)} × ${nf(H)} mm. Parts are cut from ${sheets} ${sheets===1?'sheet':'sheets'} ${state.sheet.replace('x','×')} mm, plywood area ${area.toFixed(2)} m². The face veneer grain runs along the long side of each part.`,M,132,205,11.5,PF(400,8));
   drawViews(g,285,58,PW-M-285,120);
   const gap=10,iw=(PW-2*M-2*gap)/3,ih=iw*imgs[0].height/imgs[0].width;g.font=PF(400,7);g.fillStyle='#111';
