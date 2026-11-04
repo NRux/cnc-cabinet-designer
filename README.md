@@ -1,12 +1,10 @@
-# Terekhov Bureau — plywood furniture designer
+# Cabinet Designer
 
 Design plywood furniture in the browser. Draw, cut, drill — get drawings and a cutting map.
 
-→ **https://qwekurasa.github.io/terekhov-bureau/**
+![Kitchen project with drawers open](docs/kitchen.png)
 
-![Kitchen, doors and drawers open](docs/kitchen.png)
-
-## 道具 · Tools
+## Tools
 
 - SketchUp-like 3D modelling — push/pull, move, rotate, tape, snaps
 - Parametric furniture — wardrobe, kitchen, dresser, shelf, bedside, table
@@ -23,7 +21,7 @@ Design plywood furniture in the browser. Draw, cut, drill — get drawings and a
 ## Run locally
 
 ```bash
-git clone https://github.com/qwekurasa/terekhov-bureau && cd terekhov-bureau
+git clone https://github.com/NRux/cnc-cabinet-designer.git && cd cnc-cabinet-designer
 python3 -m http.server 8080
 ```
 
