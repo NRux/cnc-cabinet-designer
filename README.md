@@ -25,7 +25,18 @@ git clone https://github.com/NRux/cnc-cabinet-designer.git && cd cnc-cabinet-des
 python3 -m http.server 8080
 ```
 
-One file, no build step.
+The site runs without a build step. Its pinned JavaScript dependencies are committed under `vendor/`, so it does not load executable code from a CDN at runtime.
+
+To update dependencies or the inline application script, run:
+
+```bash
+npm ci
+npm run vendor
+npm run csp:update
+npm test
+```
+
+`csp:update` refreshes the Content Security Policy hashes after changes to the inline module or import map.
 
 ## Support
 
