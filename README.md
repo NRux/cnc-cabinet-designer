@@ -4,7 +4,7 @@ Design plywood furniture in the browser. Draw, cut, drill — get drawings and a
 
 → **https://qwekurasa.github.io/terekhov-bureau/**
 
-![Kitchen, doors and drawers open](docs/kitchen.png)
+![Kitchen project with drawers open](docs/kitchen.png)
 
 ## Tools
 
